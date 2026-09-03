@@ -9,7 +9,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export function Input({ label, error, helperText, fullWidth = true, className = '', ...props }: InputProps) {
-  const id = props.id || `input-${Math.random()}`;
+  const generatedId = React.useId();
+  const id = props.id || generatedId;
 
   return (
     <div className={fullWidth ? styles.fullWidth : ''}>

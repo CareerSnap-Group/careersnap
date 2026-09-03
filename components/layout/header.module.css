@@ -28,15 +28,10 @@
   white-space: nowrap;
 }
 
-.logoIcon {
-  font-size: 1.5rem;
-}
-
-.logoText {
-  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-700));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.logoImage {
+  display: block;
+  width: min(181px, 45vw);
+  height: auto;
 }
 
 .logo:hover {

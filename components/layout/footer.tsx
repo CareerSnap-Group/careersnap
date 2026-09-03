@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './footer.module.css';
 
 export function Footer() {
@@ -7,10 +8,9 @@ export function Footer() {
       <div className={styles.container}>
         {/* Brand Section */}
         <div className={styles.section}>
-          <div className={styles.brand}>
-            <span className={styles.brandIcon}>📸</span>
-            <span className={styles.brandText}>CareerSnap</span>
-          </div>
+          <Link href="/" className={styles.brand} aria-label="CareerSnap home">
+            <Image src="/careersnap-logo.png" alt="CareerSnap" width={217} height={48} className={styles.brandImage} />
+          </Link>
           <p className={styles.tagline}>Find work that moves your career forward.</p>
         </div>
 

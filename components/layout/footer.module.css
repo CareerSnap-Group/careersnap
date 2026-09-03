@@ -24,22 +24,14 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-lg);
-  color: white;
+  width: fit-content;
   margin-bottom: var(--spacing-sm);
 }
 
-.brandIcon {
-  font-size: 1.5rem;
-}
-
-.brandText {
-  background: linear-gradient(135deg, #7a96ff, #a3b8ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.brandImage {
+  display: block;
+  width: min(181px, 45vw);
+  height: auto;
 }
 
 .tagline {

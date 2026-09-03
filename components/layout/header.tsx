@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import styles from './header.module.css';
 import { Button } from '@/components/ui/button';
@@ -12,9 +13,15 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         {/* Logo */}
-        <Link href="/" className={styles.logo}>
-          <span className={styles.logoIcon}>📸</span>
-          <span className={styles.logoText}>CareerSnap</span>
+        <Link href="/" className={styles.logo} aria-label="CareerSnap home">
+          <Image
+            src="/careersnap-logo.png"
+            alt="CareerSnap"
+            width={217}
+            height={48}
+            className={styles.logoImage}
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}
