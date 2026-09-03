@@ -17,6 +17,7 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [nextPath, setNextPath] = useState('/profile');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,14 +40,19 @@ export default function LoginPage() {
       return;
     }
 
-    const { error: authError } = await createClient().auth.signInWithPassword({ email, password });
-    if (authError) {
-      setError(authError.message);
-      return;
-    }
+    setLoading(true);
+    try {
+      const { error: authError } = await createClient().auth.signInWithPassword({ email, password });
+      if (authError) {
+        setError(authError.message);
+        return;
+      }
 
-    router.push(nextPath);
-    router.refresh();
+      router.push(nextPath);
+      router.refresh();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleSignIn = async () => {
@@ -56,11 +62,15 @@ export default function LoginPage() {
       return;
     }
 
+    setLoading(true);
     const { error: authError } = await createClient().auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}` },
-    });
-    if (authError) setError(authError.message);
+        provider: 'google',
+        options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}` },
+      });
+    if (authError) {
+      setError(authError.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -105,8 +115,8 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            <Button type="submit" fullWidth size="lg" className={styles.submitButton}>
-              Sign In
+            <Button type="submit" fullWidth size="lg" className={styles.submitButton} disabled={loading}>
+              {loading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
 
@@ -115,8 +125,8 @@ export default function LoginPage() {
           </div>
 
           <div className={styles.socialButtons}>
-            <Button variant="outline" fullWidth onClick={handleGoogleSignIn}>
-              Continue with Google
+            <Button variant="outline" fullWidth onClick={handleGoogleSignIn} disabled={loading}>
+              {loading ? 'Connecting...' : 'Continue with Google'}
             </Button>
             <Button variant="outline" fullWidth>
               Continue with LinkedIn

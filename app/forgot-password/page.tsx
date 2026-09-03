@@ -14,6 +14,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -29,15 +30,20 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    const { error: authError } = await createClient().auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/update-password`,
-    });
-    if (authError) {
-      setError(authError.message);
-      return;
-    }
+    setLoading(true);
+    try {
+      const { error: authError } = await createClient().auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/update-password`,
+      });
+      if (authError) {
+        setError(authError.message);
+        return;
+      }
 
-    setSubmitted(true);
+      setSubmitted(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -73,8 +79,8 @@ export default function ForgotPasswordPage() {
                 fullWidth
               />
 
-              <Button type="submit" fullWidth size="lg" className={styles.submitButton}>
-                Send Reset Link
+              <Button type="submit" fullWidth size="lg" className={styles.submitButton} disabled={loading}>
+                {loading ? 'Sending...' : 'Send Reset Link'}
               </Button>
 
               <div className={styles.backLink}>

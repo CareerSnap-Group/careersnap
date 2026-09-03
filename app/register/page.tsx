@@ -21,6 +21,7 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,18 +62,44 @@ export default function RegisterPage() {
       return;
     }
 
-    const { data, error: authError } = await createClient().auth.signUp({
-      email: formData.email,
-      password: formData.password,
-      options: { data: { full_name: `${formData.firstName} ${formData.lastName}`.trim() } },
-    });
-    if (authError) {
-      setError(authError.message);
+    setLoading(true);
+    try {
+      const { data, error: authError } = await createClient().auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/profile`,
+          data: { full_name: `${formData.firstName} ${formData.lastName}`.trim() },
+        },
+      });
+      if (authError) {
+        setError(authError.message);
+        return;
+      }
+
+      if (data.session) router.push('/profile');
+      else setError('Account created. Check your email to verify your account before signing in.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setError('');
+    if (!isSupabaseConfigured()) {
+      setError('Connect your Supabase project by filling in .env.local first.');
       return;
     }
 
-    if (data.session) router.push('/profile');
-    else setError('Account created. Check your email to verify your account before signing in.');
+    setLoading(true);
+    const { error: authError } = await createClient().auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=/profile` },
+    });
+    if (authError) {
+      setError(authError.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -157,8 +184,8 @@ export default function RegisterPage() {
               </label>
             </div>
 
-            <Button type="submit" fullWidth size="lg" className={styles.submitButton}>
-              Create Account
+            <Button type="submit" fullWidth size="lg" className={styles.submitButton} disabled={loading}>
+              {loading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
 
@@ -167,8 +194,8 @@ export default function RegisterPage() {
           </div>
 
           <div className={styles.socialButtons}>
-            <Button variant="outline" fullWidth>
-              Sign up with Google
+            <Button variant="outline" fullWidth onClick={handleGoogleSignUp} disabled={loading}>
+              {loading ? 'Connecting...' : 'Sign up with Google'}
             </Button>
             <Button variant="outline" fullWidth>
               Sign up with LinkedIn
