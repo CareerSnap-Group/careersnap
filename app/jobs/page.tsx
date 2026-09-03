@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { Suspense, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/layout/header';
@@ -13,7 +13,7 @@ import { mockJobs, searchJobs, filterJobs } from '@/lib/mock-data';
 import { Job, JobType, ExperienceLevel, WorkLocation } from '@/lib/types';
 import styles from './jobs.module.css';
 
-export default function JobsPage() {
+function JobsContent() {
   const searchParams = useSearchParams();
   const initialKeyword = searchParams.get('keyword') || '';
   const initialLocation = searchParams.get('location') || '';
@@ -275,5 +275,13 @@ export default function JobsPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function JobsPage() {
+  return (
+    <Suspense fallback={<div className={styles.loading}>Loading jobs...</div>}>
+      <JobsContent />
+    </Suspense>
   );
 }

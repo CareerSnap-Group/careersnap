@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
             <div className={styles.successMessage}>
               <div className={styles.successIcon}>✓</div>
               <h2 className={styles.successTitle}>Check your email</h2>
-              <p className={styles.successText}>We've sent password reset instructions to {email}</p>
+              <p className={styles.successText}>We&apos;ve sent password reset instructions to {email}</p>
               <Link href="/login">
                 <Button fullWidth>Back to Login</Button>
               </Link>

@@ -24,7 +24,7 @@ export default function JobDetailsPage() {
         <div className={styles.notFound}>
           <div className={styles.notFoundContent}>
             <h1>Job not found</h1>
-            <p>The job you're looking for doesn't exist or has been removed.</p>
+            <p>The job you&apos;re looking for doesn&apos;t exist or has been removed.</p>
             <Link href="/jobs">
               <Button>Back to Jobs</Button>
             </Link>

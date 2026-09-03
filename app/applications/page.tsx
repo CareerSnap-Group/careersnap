@@ -130,15 +130,15 @@ export default function ApplicationsPage() {
                 </div>
                 <div className={styles.legendItem}>
                   <Badge variant="primary">Interview</Badge>
-                  <p>You've been invited to interview.</p>
+                  <p>You&apos;ve been invited to interview.</p>
                 </div>
                 <div className={styles.legendItem}>
                   <Badge variant="success">Offer</Badge>
-                  <p>You've received a job offer!</p>
+                  <p>You&apos;ve received a job offer!</p>
                 </div>
                 <div className={styles.legendItem}>
                   <Badge variant="danger">Rejected</Badge>
-                  <p>Unfortunately, you weren't selected.</p>
+                  <p>Unfortunately, you weren&apos;t selected.</p>
                 </div>
               </div>
             </div>

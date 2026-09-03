@@ -13,7 +13,7 @@ export default function NotFound() {
         <div className={styles.content}>
           <h1 className={styles.title}>404</h1>
           <h2 className={styles.heading}>Page Not Found</h2>
-          <p className={styles.description}>Sorry, we couldn't find the page you're looking for. It might have been moved or removed.</p>
+          <p className={styles.description}>Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been moved or removed.</p>
 
           <div className={styles.actions}>
             <Link href="/">
