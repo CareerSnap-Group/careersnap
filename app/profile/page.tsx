@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -8,9 +9,21 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { mockUserProfile } from '@/lib/mock-data';
 import styles from './profile.module.css';
+import { createClient } from '@/lib/supabase/browser';
+import { fetchProfile } from '@/lib/supabase/data';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 
 export default function ProfilePage() {
-  const profile = mockUserProfile;
+  const [profile, setProfile] = useState(mockUserProfile);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+    createClient().auth.getUser().then(async ({ data }) => {
+      if (!data.user) return;
+      const remoteProfile = await fetchProfile(data.user.id);
+      if (remoteProfile) setProfile(remoteProfile);
+    });
+  }, []);
 
   return (
     <div className={styles.page}>

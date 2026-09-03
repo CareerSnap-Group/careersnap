@@ -1,11 +1,15 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { mockApplications, getJobById } from '@/lib/mock-data';
+import { createClient } from '@/lib/supabase/browser';
+import { fetchApplications, type SupabaseApplication } from '@/lib/supabase/data';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 import styles from './applications.module.css';
 
 const statusColors = {
@@ -17,7 +21,16 @@ const statusColors = {
 } as const;
 
 export default function ApplicationsPage() {
-  const applications = mockApplications.map((app) => ({
+  const [remoteApplications, setRemoteApplications] = useState<SupabaseApplication[] | null>(null);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+    createClient().auth.getUser().then(async ({ data }) => {
+      if (data.user) setRemoteApplications(await fetchApplications(data.user.id));
+    });
+  }, []);
+
+  const applications = (remoteApplications || mockApplications).map((app) => ({
     ...app,
     job: getJobById(app.jobId),
   }));

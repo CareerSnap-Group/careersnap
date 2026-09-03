@@ -9,11 +9,25 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { mockJobs } from '@/lib/mock-data';
 import styles from './saved-jobs.module.css';
+import { createClient } from '@/lib/supabase/browser';
+import { fetchSavedJobIds, unsaveJob } from '@/lib/supabase/data';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 
 export default function SavedJobsPage() {
   const [savedJobs, setSavedJobs] = useState<typeof mockJobs>([]);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isSupabaseConfigured()) {
+      createClient().auth.getUser().then(async ({ data }) => {
+        if (!data.user) return;
+        setUserId(data.user.id);
+        const savedIds = await fetchSavedJobIds(data.user.id);
+        if (savedIds) setSavedJobs(mockJobs.filter((job) => savedIds.includes(job.id)));
+      });
+      return;
+    }
+
     // Load saved jobs from localStorage
     const saved = localStorage.getItem('savedJobs');
     if (saved) {
@@ -25,6 +39,10 @@ export default function SavedJobsPage() {
 
   const handleRemove = (jobId: string) => {
     setSavedJobs(savedJobs.filter((job) => job.id !== jobId));
+    if (userId) {
+      unsaveJob(userId, jobId);
+      return;
+    }
     const saved = localStorage.getItem('savedJobs');
     if (saved) {
       const savedIds = JSON.parse(saved).filter((id: string) => id !== jobId);

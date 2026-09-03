@@ -506,11 +506,11 @@ export function getJobById(id: string): Job | undefined {
   return mockJobs.find((job) => job.id === id);
 }
 
-export function searchJobs(query: string): Job[] {
-  if (!query.trim()) return mockJobs;
+export function searchJobs(query: string, jobs: Job[] = mockJobs): Job[] {
+  if (!query.trim()) return jobs;
 
   const lowerQuery = query.toLowerCase();
-  return mockJobs.filter(
+  return jobs.filter(
     (job) =>
       job.title.toLowerCase().includes(lowerQuery) ||
       job.company.name.toLowerCase().includes(lowerQuery) ||

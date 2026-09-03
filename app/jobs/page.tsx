@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useMemo } from 'react';
+import { Suspense, useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/layout/header';
@@ -12,6 +12,7 @@ import { Card } from '@/components/ui/card';
 import { mockJobs, searchJobs, filterJobs } from '@/lib/mock-data';
 import { Job, JobType, ExperienceLevel, WorkLocation } from '@/lib/types';
 import styles from './jobs.module.css';
+import { fetchPublishedJobs } from '@/lib/supabase/data';
 
 function JobsContent() {
   const searchParams = useSearchParams();
@@ -24,10 +25,17 @@ function JobsContent() {
   const [selectedExperience, setSelectedExperience] = useState<ExperienceLevel | ''>('');
   const [selectedWorkLocation, setSelectedWorkLocation] = useState<WorkLocation | ''>('');
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [availableJobs, setAvailableJobs] = useState(mockJobs);
+
+  useEffect(() => {
+    fetchPublishedJobs().then((jobs) => {
+      if (jobs?.length) setAvailableJobs(jobs);
+    });
+  }, []);
 
   // Filter and search jobs
   const filteredJobs = useMemo(() => {
-    let results = searchJobs(keyword);
+    let results = searchJobs(keyword, availableJobs);
 
     results = filterJobs(results, {
       jobType: selectedJobType,
@@ -37,7 +45,7 @@ function JobsContent() {
     });
 
     return results;
-  }, [keyword, location, selectedJobType, selectedExperience, selectedWorkLocation]);
+  }, [availableJobs, keyword, location, selectedJobType, selectedExperience, selectedWorkLocation]);
 
   const selectedJob = selectedJobId ? filteredJobs.find((j) => j.id === selectedJobId) : filteredJobs[0];
 

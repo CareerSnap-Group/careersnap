@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Header } from '@/components/layout/header';
@@ -10,12 +10,34 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { getJobById, mockJobs } from '@/lib/mock-data';
 import styles from './job-details.module.css';
+import { createClient } from '@/lib/supabase/browser';
+import { saveJob, unsaveJob, fetchSavedJobIds } from '@/lib/supabase/data';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 
 export default function JobDetailsPage() {
   const params = useParams();
   const jobId = params.id as string;
   const job = getJobById(jobId);
   const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured() || !job) return;
+    createClient().auth.getUser().then(async ({ data }) => {
+      if (!data.user) return;
+      const savedIds = await fetchSavedJobIds(data.user.id);
+      setIsSaved(Boolean(savedIds?.includes(job.id)));
+    });
+  }, [job]);
+
+  const toggleSaved = async () => {
+    const nextSaved = !isSaved;
+    setIsSaved(nextSaved);
+    if (!isSupabaseConfigured() || !job) return;
+    const { data } = await createClient().auth.getUser();
+    if (!data.user) return;
+    if (nextSaved) await saveJob(data.user.id, job.id);
+    else await unsaveJob(data.user.id, job.id);
+  };
 
   if (!job) {
     return (
@@ -54,7 +76,7 @@ export default function JobDetailsPage() {
           <div className={styles.headerActions}>
             <Button
               variant={isSaved ? 'secondary' : 'outline'}
-              onClick={() => setIsSaved(!isSaved)}
+              onClick={toggleSaved}
             >
               {isSaved ? '❤️ Saved' : '🤍 Save Job'}
             </Button>
@@ -183,7 +205,7 @@ export default function JobDetailsPage() {
               <Button
                 fullWidth
                 variant="outline"
-                onClick={() => setIsSaved(!isSaved)}
+                onClick={toggleSaved}
                 className={styles.saveButton}
               >
                 {isSaved ? '❤️ Saved' : '🤍 Save Job'}
