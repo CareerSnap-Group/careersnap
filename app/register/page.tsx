@@ -2,11 +2,14 @@
 
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import styles from './auth.module.css';
+import { createClient } from '@/lib/supabase/browser';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -18,6 +21,7 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,7 +31,7 @@ export default function RegisterPage() {
     }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -52,9 +56,23 @@ export default function RegisterPage() {
       return;
     }
 
-    // Mock register
-    console.log('Register:', formData);
-    alert('Registration functionality is not implemented yet. This is a UI mock.');
+    if (!isSupabaseConfigured()) {
+      setError('Connect your Supabase project by filling in .env.local first.');
+      return;
+    }
+
+    const { data, error: authError } = await createClient().auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: { data: { full_name: `${formData.firstName} ${formData.lastName}`.trim() } },
+    });
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
+
+    if (data.session) router.push('/profile');
+    else setError('Account created. Check your email to verify your account before signing in.');
   };
 
   return (

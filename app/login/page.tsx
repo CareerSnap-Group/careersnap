@@ -1,20 +1,30 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import styles from './auth.module.css';
+import { createClient } from '@/lib/supabase/browser';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  const [nextPath, setNextPath] = useState('/profile');
+  const router = useRouter();
 
-  const handleSubmit = (e: FormEvent) => {
+  useEffect(() => {
+    const next = new URLSearchParams(window.location.search).get('next');
+    if (next?.startsWith('/')) setNextPath(next);
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -24,9 +34,33 @@ export default function LoginPage() {
       return;
     }
 
-    // Mock login
-    console.log('Login:', { email, password, rememberMe });
-    alert('Login functionality is not implemented yet. This is a UI mock.');
+    if (!isSupabaseConfigured()) {
+      setError('Connect your Supabase project by filling in .env.local first.');
+      return;
+    }
+
+    const { error: authError } = await createClient().auth.signInWithPassword({ email, password });
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
+
+    router.push(nextPath);
+    router.refresh();
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    if (!isSupabaseConfigured()) {
+      setError('Connect your Supabase project by filling in .env.local first.');
+      return;
+    }
+
+    const { error: authError } = await createClient().auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}` },
+    });
+    if (authError) setError(authError.message);
   };
 
   return (
@@ -81,7 +115,7 @@ export default function LoginPage() {
           </div>
 
           <div className={styles.socialButtons}>
-            <Button variant="outline" fullWidth>
+            <Button variant="outline" fullWidth onClick={handleGoogleSignIn}>
               Continue with Google
             </Button>
             <Button variant="outline" fullWidth>

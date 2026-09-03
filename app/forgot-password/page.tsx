@@ -2,6 +2,8 @@
 
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/browser';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
@@ -13,7 +15,7 @@ export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -22,8 +24,19 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    // Mock submit
-    console.log('Reset password:', { email });
+    if (!isSupabaseConfigured()) {
+      setError('Connect your Supabase project by filling in .env.local first.');
+      return;
+    }
+
+    const { error: authError } = await createClient().auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/update-password`,
+    });
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
+
     setSubmitted(true);
   };
 

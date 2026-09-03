@@ -3,11 +3,29 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import styles from './header.module.css';
 import { Button } from '@/components/ui/button';
+import { createClient } from '@/lib/supabase/browser';
+import { isSupabaseConfigured } from '@/lib/supabase/config';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setSignedIn(Boolean(session?.user)));
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await createClient().auth.signOut();
+    setSignedIn(false);
+  };
 
   return (
     <header className={styles.header}>
@@ -45,12 +63,14 @@ export function Header() {
 
         {/* Auth Actions */}
         <div className={styles.actions}>
-          <Link href="/login" className={styles.signInLink}>
-            Sign In
-          </Link>
-          <Link href="/register">
-            <Button size="sm">Create Account</Button>
-          </Link>
+          {signedIn ? (
+            <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>
+          ) : (
+            <>
+              <Link href="/login" className={styles.signInLink}>Sign In</Link>
+              <Link href="/register"><Button size="sm">Create Account</Button></Link>
+            </>
+          )}
           <Link href="/employers" className={styles.employersLink}>
             For Employers
           </Link>
@@ -83,12 +103,14 @@ export function Header() {
             Profile
           </Link>
           <div className={styles.mobileActions}>
-            <Link href="/login" className={styles.mobileSignIn}>
-              Sign In
-            </Link>
-            <Link href="/register">
-              <Button fullWidth>Create Account</Button>
-            </Link>
+            {signedIn ? (
+              <Button variant="ghost" fullWidth onClick={handleSignOut}>Sign Out</Button>
+            ) : (
+              <>
+                <Link href="/login" className={styles.mobileSignIn}>Sign In</Link>
+                <Link href="/register"><Button fullWidth>Create Account</Button></Link>
+              </>
+            )}
             <Link href="/employers" className={styles.mobileEmployers}>
               For Employers
             </Link>
