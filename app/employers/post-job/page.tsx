@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import styles from './post-job.module.css';
@@ -52,7 +53,7 @@ export default function PostJobPage() {
 
         {submitted ? (
           <div className={styles.successCard}>
-            <div className={styles.successIcon}>✓</div>
+            <div className={styles.successIcon}><Icon name="check" /></div>
             <h2 className={styles.successTitle}>Job Posted Successfully!</h2>
             <p className={styles.successText}>Your job has been posted and will be visible to job seekers immediately.</p>
             <div className={styles.successActions}>

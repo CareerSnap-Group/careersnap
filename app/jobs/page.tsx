@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { mockJobs, searchJobs, filterJobs } from '@/lib/mock-data';
 import { Job, JobType, ExperienceLevel, WorkLocation } from '@/lib/types';
+import { Icon } from '@/components/icons';
 import styles from './jobs.module.css';
 import { fetchPublishedJobs } from '@/lib/supabase/data';
 
@@ -181,10 +182,10 @@ function JobsContent() {
                           <h3 className={styles.jobCardTitle}>{job.title}</h3>
                           <p className={styles.jobCardCompany}>{job.company.name}</p>
                           <div className={styles.jobCardInfo}>
-                            <p>📍 {job.location}</p>
+                            <p><Icon name="map-pin" />{job.location}</p>
                             {job.salary && (
                               <p>
-                                💰 {job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}
+                                <Icon name="dollar-sign" />{job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}
                               </p>
                             )}
                           </div>
@@ -242,7 +243,7 @@ function JobsContent() {
                         <h3 className={styles.sectionTitle}>Responsibilities</h3>
                         <ul>
                           {selectedJob.responsibilities.map((resp, idx) => (
-                            <li key={idx}>{resp}</li>
+                            <li key={idx}><Icon name="check" />{resp}</li>
                           ))}
                         </ul>
                       </div>
@@ -251,7 +252,7 @@ function JobsContent() {
                         <h3 className={styles.sectionTitle}>Requirements</h3>
                         <ul>
                           {selectedJob.requirements.map((req, idx) => (
-                            <li key={idx}>{req}</li>
+                            <li key={idx}><Icon name="check" />{req}</li>
                           ))}
                         </ul>
                       </div>
@@ -261,7 +262,7 @@ function JobsContent() {
                           <h3 className={styles.sectionTitle}>Benefits</h3>
                           <ul>
                             {selectedJob.benefits.map((benefit, idx) => (
-                              <li key={idx}>{benefit}</li>
+                              <li key={idx}><Icon name="check" />{benefit}</li>
                             ))}
                           </ul>
                         </div>

@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import styles from './auth.module.css';
@@ -59,7 +60,7 @@ export default function ForgotPasswordPage() {
 
           {submitted ? (
             <div className={styles.successMessage}>
-              <div className={styles.successIcon}>✓</div>
+              <div className={styles.successIcon}><Icon name="check" /></div>
               <h2 className={styles.successTitle}>Check your email</h2>
               <p className={styles.successText}>We&apos;ve sent password reset instructions to {email}</p>
               <Link href="/login">
@@ -84,7 +85,7 @@ export default function ForgotPasswordPage() {
               </Button>
 
               <div className={styles.backLink}>
-                <Link href="/login">← Back to login</Link>
+                <Link href="/login"><Icon name="chevron-left" />Back to login</Link>
               </div>
             </form>
           )}

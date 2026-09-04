@@ -12,6 +12,7 @@ import styles from './profile.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { fetchProfile } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { Icon } from '@/components/icons';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(mockUserProfile);
@@ -39,7 +40,7 @@ export default function ProfilePage() {
                 {profile.firstName} {profile.lastName}
               </h1>
               <p className={styles.headline}>{profile.headline}</p>
-              <p className={styles.location}>📍 {profile.location}</p>
+              <p className={styles.location}><Icon name="map-pin" />{profile.location}</p>
             </div>
           </div>
           <Link href="/settings">
@@ -183,7 +184,7 @@ export default function ProfilePage() {
               <div className={styles.cvUpload}>
                 <label className={styles.uploadBox}>
                   <input type="file" accept=".pdf,.doc,.docx" hidden />
-                  <span>📄 Choose file</span>
+                  <span><Icon name="file" />Choose file</span>
                 </label>
               </div>
               <p className={styles.cvHint}>PDF, DOC, or DOCX up to 5MB</p>
@@ -194,7 +195,7 @@ export default function ProfilePage() {
               <h3 className={styles.cardTitle}>Next Steps</h3>
               <div className={styles.nextSteps}>
                 <div className={styles.step}>
-                  <span className={styles.stepNumber}>✓</span>
+                  <span className={styles.stepNumber}><Icon name="check" /></span>
                   <span className={styles.stepText}>Profile created</span>
                 </div>
                 <div className={styles.step}>

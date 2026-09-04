@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import styles from './employers.module.css';
@@ -157,7 +158,7 @@ export default function EmployersPage() {
                 </Button>
                 <ul className={styles.featureList}>
                   {plan.features.map((feature, idx) => (
-                    <li key={idx}>✓ {feature}</li>
+                    <li key={idx}><Icon name="check" />{feature}</li>
                   ))}
                 </ul>
               </Card>

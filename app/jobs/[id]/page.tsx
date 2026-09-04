@@ -13,6 +13,7 @@ import styles from './job-details.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { saveJob, unsaveJob, fetchSavedJobIds } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { Icon } from '@/components/icons';
 
 export default function JobDetailsPage() {
   const params = useParams();
@@ -78,7 +79,7 @@ export default function JobDetailsPage() {
               variant={isSaved ? 'secondary' : 'outline'}
               onClick={toggleSaved}
             >
-              {isSaved ? '❤️ Saved' : '🤍 Save Job'}
+              <Icon name={isSaved ? 'heart' : 'heart-off'} />{isSaved ? 'Saved' : 'Save Job'}
             </Button>
           </div>
         </div>
@@ -86,27 +87,27 @@ export default function JobDetailsPage() {
         {/* Meta Information */}
         <div className={styles.meta}>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>📍 Location</span>
+            <span className={styles.metaLabel}><Icon name="map-pin" />Location</span>
             <span className={styles.metaValue}>{job.location}</span>
           </div>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>💼 Type</span>
+            <span className={styles.metaLabel}><Icon name="briefcase" />Type</span>
             <span className={styles.metaValue}>{job.jobType}</span>
           </div>
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>📊 Level</span>
+            <span className={styles.metaLabel}><Icon name="bar-chart" />Level</span>
             <span className={styles.metaValue}>{job.experienceLevel}</span>
           </div>
           {job.salary && (
             <div className={styles.metaItem}>
-              <span className={styles.metaLabel}>💰 Salary</span>
+              <span className={styles.metaLabel}><Icon name="dollar-sign" />Salary</span>
               <span className={styles.metaValue}>
                 {job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}/month
               </span>
             </div>
           )}
           <div className={styles.metaItem}>
-            <span className={styles.metaLabel}>📅 Posted</span>
+            <span className={styles.metaLabel}><Icon name="calendar" />Posted</span>
             <span className={styles.metaValue}>
               {Math.floor((new Date().getTime() - job.postedDate.getTime()) / (1000 * 60 * 60 * 24))} days ago
             </span>
@@ -137,7 +138,7 @@ export default function JobDetailsPage() {
               <h2 className={styles.sectionTitle}>Responsibilities</h2>
               <ul className={styles.list}>
                 {job.responsibilities.map((resp, idx) => (
-                  <li key={idx}>{resp}</li>
+                  <li key={idx}><Icon name="check" />{resp}</li>
                 ))}
               </ul>
             </section>
@@ -147,7 +148,7 @@ export default function JobDetailsPage() {
               <h2 className={styles.sectionTitle}>Requirements</h2>
               <ul className={styles.list}>
                 {job.requirements.map((req, idx) => (
-                  <li key={idx}>{req}</li>
+                  <li key={idx}><Icon name="check" />{req}</li>
                 ))}
               </ul>
             </section>
@@ -158,7 +159,7 @@ export default function JobDetailsPage() {
                 <h2 className={styles.sectionTitle}>Benefits</h2>
                 <ul className={styles.list}>
                   {job.benefits.map((benefit, idx) => (
-                    <li key={idx}>{benefit}</li>
+                    <li key={idx}><Icon name="check" />{benefit}</li>
                   ))}
                 </ul>
               </section>
@@ -190,7 +191,7 @@ export default function JobDetailsPage() {
             {/* Safety Notice */}
             <div className={styles.safetyNotice}>
               <p className={styles.safetyText}>
-                🔒 <strong>Verify employers and never share sensitive information.</strong> CareerSnap is a platform for legitimate recruitment. Always verify job offers and never send money upfront or share personal financial details before confirming employment.
+                <Icon name="lock" /><strong>Verify employers and never share sensitive information.</strong> CareerSnap is a platform for legitimate recruitment. Always verify job offers and never send money upfront or share personal financial details before confirming employment.
               </p>
             </div>
           </div>
@@ -208,7 +209,7 @@ export default function JobDetailsPage() {
                 onClick={toggleSaved}
                 className={styles.saveButton}
               >
-                {isSaved ? '❤️ Saved' : '🤍 Save Job'}
+                <Icon name={isSaved ? 'heart' : 'heart-off'} />{isSaved ? 'Saved' : 'Save Job'}
               </Button>
             </div>
 
@@ -222,7 +223,7 @@ export default function JobDetailsPage() {
                       <Card hoverable className={styles.similarJobCard}>
                         <h4 className={styles.similarJobTitle}>{similarJob.title}</h4>
                         <p className={styles.similarJobCompany}>{similarJob.company.name}</p>
-                        <p className={styles.similarJobLocation}>📍 {similarJob.location}</p>
+                        <p className={styles.similarJobLocation}><Icon name="map-pin" />{similarJob.location}</p>
                       </Card>
                     </Link>
                   ))}

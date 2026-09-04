@@ -353,16 +353,8 @@
   font-size: var(--font-size-base);
   color: var(--color-text-secondary);
   line-height: 1.6;
-  padding-left: var(--spacing-md);
-  position: relative;
-}
-
-.detailsSection li:before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: var(--color-success-500);
-  font-weight: bold;
+  display: flex;
+  align-items: flex-start;
 }
 
 .detailsActions {

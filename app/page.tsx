@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { mockJobs, mockCategories } from '@/lib/mock-data';
+import { Icon } from '@/components/icons';
 import styles from './page.module.css';
 
 export default function HomePage() {
@@ -83,10 +84,10 @@ export default function HomePage() {
                   </div>
 
                   <div className={styles.jobInfo}>
-                    <p className={styles.jobLocation}>📍 {job.location}</p>
+                    <p className={styles.jobLocation}><Icon name="map-pin" />{job.location}</p>
                     {job.salary && (
                       <p className={styles.jobSalary}>
-                        💰 {job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}/month
+                        <Icon name="dollar-sign" />{job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}/month
                       </p>
                     )}
                   </div>
@@ -150,7 +151,7 @@ export default function HomePage() {
                 <h3 className={styles.resourceTitle}>{resource.title}</h3>
                 <p className={styles.resourceDescription}>{resource.description}</p>
                 <Link href="/resources" className={styles.resourceLink}>
-                  Learn more →
+                  Learn more <Icon name="chevron-right" />
                 </Link>
               </Card>
             ))}

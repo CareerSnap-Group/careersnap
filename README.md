@@ -5,19 +5,19 @@ A modern, beautiful, and fully-featured job portal application built with Next.j
 ## Features
 
 ### Job Seekers
-- 🔍 Advanced job search with filters
-- 💼 Browse job listings by category
-- 💾 Save jobs for later
-- 📋 Track job applications
-- 👤 Complete professional profile
-- 🔐 Secure authentication
-- 📱 Fully responsive design
+- Advanced job search with filters
+- Browse job listings by category
+- Save jobs for later
+- Track job applications
+- Complete professional profile
+- Secure authentication
+- Fully responsive design
 
 ### Employers
-- 📝 Post job openings
-- 👥 Manage applications
-- 📊 Track job performance
-- 💡 Beautiful job listings
+- Post job openings
+- Manage applications
+- Track job performance
+- Beautiful job listings
 
 ### Design Features
 - Professional, modern UI
@@ -177,12 +177,12 @@ See `lib/mock-data.ts` for all sample data.
 
 ## Accessibility Features
 
-- ✓ Semantic HTML
-- ✓ ARIA labels and roles
-- ✓ Keyboard navigation
-- ✓ Focus indicators
-- ✓ Color contrast compliance
-- ✓ Skip to content links
+- Semantic HTML
+- ARIA labels and roles
+- Keyboard navigation
+- Focus indicators
+- Color contrast compliance
+- Skip to content links
 
 ## Performance
 
@@ -224,4 +224,4 @@ For issues and questions, please file an issue on GitHub.
 
 ---
 
-**Built with ❤️ by the CareerSnap Team**
+**Built by the CareerSnap Team**

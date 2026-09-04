@@ -175,17 +175,8 @@
   font-size: var(--font-size-base);
   line-height: 1.8;
   color: var(--color-text-secondary);
-  padding-left: var(--spacing-lg);
-  position: relative;
-}
-
-.list li:before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  font-weight: bold;
-  color: var(--color-success-500);
-  font-size: var(--font-size-lg);
+  display: flex;
+  align-items: flex-start;
 }
 
 .companyName {

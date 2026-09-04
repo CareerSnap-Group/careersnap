@@ -12,6 +12,7 @@ import styles from './saved-jobs.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { fetchSavedJobIds, unsaveJob } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { Icon } from '@/components/icons';
 
 export default function SavedJobsPage() {
   const [savedJobs, setSavedJobs] = useState<typeof mockJobs>([]);
@@ -86,15 +87,15 @@ export default function SavedJobsPage() {
                       <p className={styles.jobCompany}>{job.company.name}</p>
                     </div>
                     <button className={styles.removeButton} onClick={() => handleRemove(job.id)} title="Remove from saved">
-                      ❌
+                      <Icon name="x" />
                     </button>
                   </div>
 
                   <div className={styles.jobInfo}>
-                    <p>📍 {job.location}</p>
+                    <p><Icon name="map-pin" />{job.location}</p>
                     {job.salary && (
                       <p>
-                        💰 {job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}/month
+                        <Icon name="dollar-sign" />{job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}/month
                       </p>
                     )}
                   </div>
