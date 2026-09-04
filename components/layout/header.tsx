@@ -28,7 +28,15 @@ export function Header() {
         setRole(profile?.user_type || null);
       }
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setSignedIn(Boolean(session?.user)));
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSignedIn(Boolean(session?.user));
+      if (!session?.user) {
+        setRole(null);
+        return;
+      }
+      const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', session.user.id).maybeSingle();
+      setRole(profile?.user_type || null);
+    });
     return () => listener.subscription.unsubscribe();
   }, []);
 
@@ -71,9 +79,12 @@ export function Header() {
           {signedIn && role === 'employer' && (
             <>
               <Link href="/employer/dashboard" className={styles.navLink}>Employer Dashboard</Link>
+              <Link href="/employers/post-job" className={styles.navLink}>Post a Job</Link>
               <Link href="/employer/jobs" className={styles.navLink}>Jobs</Link>
               <Link href="/employer/applications" className={styles.navLink}>Applications</Link>
               <Link href="/employer/company" className={styles.navLink}>Company</Link>
+              <Link href="/employer/packages" className={styles.navLink}>Packages</Link>
+              <Link href="/employer/billing" className={styles.navLink}>Billing</Link>
             </>
           )}
         </nav>
@@ -120,9 +131,12 @@ export function Header() {
           {signedIn && role === 'employer' && (
             <>
               <Link href="/employer/dashboard" className={styles.mobileNavLink}>Employer Dashboard</Link>
+              <Link href="/employers/post-job" className={styles.mobileNavLink}>Post a Job</Link>
               <Link href="/employer/jobs" className={styles.mobileNavLink}>Jobs</Link>
               <Link href="/employer/applications" className={styles.mobileNavLink}>Applications</Link>
               <Link href="/employer/company" className={styles.mobileNavLink}>Company</Link>
+              <Link href="/employer/packages" className={styles.mobileNavLink}>Packages</Link>
+              <Link href="/employer/billing" className={styles.mobileNavLink}>Billing</Link>
             </>
           )}
           <div className={styles.mobileActions}>

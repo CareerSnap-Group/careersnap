@@ -51,11 +51,12 @@ export async function middleware(request: NextRequest) {
   }
 
   if (user) {
-    const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+    const { data: rawProfile } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+    const profile = rawProfile as unknown as { user_type: 'job_seeker' | 'employer'; role_initialized?: boolean } | null;
     const pathname = request.nextUrl.pathname;
     const isEmployerRoute = employerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
     const isSeekerRoute = seekerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
-    if (!profile?.user_type && pathname !== '/account-setup') {
+    if ((!profile?.user_type || profile.role_initialized === false) && pathname !== '/account-setup') {
       return NextResponse.redirect(new URL('/account-setup', request.url));
     }
     if (isEmployerRoute && profile?.user_type !== 'employer') {
