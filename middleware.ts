@@ -3,10 +3,22 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 import type { Database } from '@/lib/supabase/database.types';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { getSafeRedirectPath } from '@/lib/auth/redirect';
+
+const protectedPaths = ['/saved-jobs', '/applications', '/profile', '/employers/post-job'];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
+  const isProtectedPath = protectedPaths.some((path) => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(`${path}/`));
+
   if (!isSupabaseConfigured()) {
+    if (isProtectedPath) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = '/login';
+      loginUrl.search = '';
+      loginUrl.searchParams.set('next', `${request.nextUrl.pathname}${request.nextUrl.search}`);
+      return NextResponse.redirect(loginUrl);
+    }
     return response;
   }
 
@@ -28,13 +40,11 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  const protectedPaths = ['/saved-jobs', '/applications', '/profile', '/employers/post-job'];
-  const isProtectedPath = protectedPaths.some((path) => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(`${path}/`));
-
   if (isProtectedPath && !user) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = '/login';
-    loginUrl.searchParams.set('next', request.nextUrl.pathname);
+    loginUrl.search = '';
+    loginUrl.searchParams.set('next', getSafeRedirectPath(`${request.nextUrl.pathname}${request.nextUrl.search}`));
     return NextResponse.redirect(loginUrl);
   }
 

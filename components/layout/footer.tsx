@@ -22,12 +22,6 @@ export function Footer() {
               <Link href="/jobs">Find Jobs</Link>
             </li>
             <li>
-              <Link href="/saved-jobs">Saved Jobs</Link>
-            </li>
-            <li>
-              <Link href="/applications">Applications</Link>
-            </li>
-            <li>
               <Link href="/resources">Career Resources</Link>
             </li>
           </ul>

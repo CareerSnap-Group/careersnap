@@ -11,10 +11,13 @@ import { isSupabaseConfigured } from '@/lib/supabase/config';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [signedIn, setSignedIn] = useState(false);
+  const [signedIn, setSignedIn] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (!isSupabaseConfigured()) return;
+    if (!isSupabaseConfigured()) {
+      setSignedIn(false);
+      return;
+    }
 
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
@@ -50,20 +53,18 @@ export function Header() {
           <Link href="/resources" className={styles.navLink}>
             Career Resources
           </Link>
-          <Link href="/saved-jobs" className={styles.navLink}>
-            Saved Jobs
-          </Link>
-          <Link href="/applications" className={styles.navLink}>
-            Applications
-          </Link>
-          <Link href="/profile" className={styles.navLink}>
-            Profile
-          </Link>
+          {signedIn && (
+            <>
+              <Link href="/saved-jobs" className={styles.navLink}>Saved Jobs</Link>
+              <Link href="/applications" className={styles.navLink}>Applications</Link>
+              <Link href="/profile" className={styles.navLink}>Profile</Link>
+            </>
+          )}
         </nav>
 
         {/* Auth Actions */}
         <div className={styles.actions}>
-          {signedIn ? (
+          {signedIn === true ? (
             <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>
           ) : (
             <>
@@ -93,17 +94,15 @@ export function Header() {
           <Link href="/resources" className={styles.mobileNavLink}>
             Career Resources
           </Link>
-          <Link href="/saved-jobs" className={styles.mobileNavLink}>
-            Saved Jobs
-          </Link>
-          <Link href="/applications" className={styles.mobileNavLink}>
-            Applications
-          </Link>
-          <Link href="/profile" className={styles.mobileNavLink}>
-            Profile
-          </Link>
+          {signedIn && (
+            <>
+              <Link href="/saved-jobs" className={styles.mobileNavLink}>Saved Jobs</Link>
+              <Link href="/applications" className={styles.mobileNavLink}>Applications</Link>
+              <Link href="/profile" className={styles.mobileNavLink}>Profile</Link>
+            </>
+          )}
           <div className={styles.mobileActions}>
-            {signedIn ? (
+            {signedIn === true ? (
               <Button variant="ghost" fullWidth onClick={handleSignOut}>Sign Out</Button>
             ) : (
               <>

@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import styles from './auth.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { getSafeRedirectPath } from '@/lib/auth/redirect';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     const next = new URLSearchParams(window.location.search).get('next');
-    if (next?.startsWith('/')) setNextPath(next);
+    setNextPath(getSafeRedirectPath(next));
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -81,7 +82,7 @@ export default function LoginPage() {
         <div className={styles.formCard}>
           <div className={styles.formHeader}>
             <h1 className={styles.title}>Welcome Back</h1>
-            <p className={styles.subtitle}>Sign in to your CareerSnap account</p>
+            <p className={styles.subtitle}>{nextPath === '/saved-jobs' ? 'Sign in to view your saved jobs.' : nextPath === '/applications' ? 'Sign in to view your applications.' : nextPath === '/profile' ? 'Sign in to access your CareerSnap account.' : 'Sign in to your CareerSnap account'}</p>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.form}>

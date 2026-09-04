@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ export default function JobDetailsPage() {
   const jobId = params.id as string;
   const job = getJobById(jobId);
   const [isSaved, setIsSaved] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isSupabaseConfigured() || !job) return;
@@ -31,13 +32,25 @@ export default function JobDetailsPage() {
   }, [job]);
 
   const toggleSaved = async () => {
+    if (!job || !isSupabaseConfigured()) {
+      router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}`)}`);
+      return;
+    }
+    const { data } = await createClient().auth.getUser();
+    if (!data.user) {
+      router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}`)}`);
+      return;
+    }
     const nextSaved = !isSaved;
     setIsSaved(nextSaved);
-    if (!isSupabaseConfigured() || !job) return;
-    const { data } = await createClient().auth.getUser();
-    if (!data.user) return;
     if (nextSaved) await saveJob(data.user.id, job.id);
     else await unsaveJob(data.user.id, job.id);
+  };
+
+  const handleApply = async () => {
+    if (!isSupabaseConfigured() || !(await createClient().auth.getUser()).data.user) {
+      router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}?apply=1`)}`);
+    }
   };
 
   if (!job) {
@@ -200,7 +213,7 @@ export default function JobDetailsPage() {
           <aside className={styles.sidebar}>
             {/* Apply CTA */}
             <div className={styles.ctaBox}>
-              <Button fullWidth size="lg" className={styles.applyButton}>
+              <Button fullWidth size="lg" className={styles.applyButton} onClick={handleApply}>
                 Apply Now
               </Button>
               <Button
