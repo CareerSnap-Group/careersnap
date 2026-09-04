@@ -51,8 +51,11 @@ export async function middleware(request: NextRequest) {
   }
 
   if (user) {
-    const { data: rawProfile } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
-    const profile = rawProfile as unknown as { user_type: 'job_seeker' | 'employer'; role_initialized?: boolean } | null;
+    const { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+    const legacyProfile = profileError?.code === '42703'
+      ? (await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle()).data
+      : null;
+    const profile = (rawProfile || legacyProfile) as unknown as { user_type: 'job_seeker' | 'employer'; role_initialized?: boolean } | null;
     const pathname = request.nextUrl.pathname;
     const isEmployerRoute = employerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
     const isSeekerRoute = seekerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));

@@ -9,9 +9,11 @@ export async function requireRole(role: AccountRole) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: rawProfile } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+  const { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
   const profile = rawProfile as unknown as { user_type: AccountRole; role_initialized?: boolean } | null;
-  if (!profile || profile.role_initialized === false) redirect('/account-setup');
+  const legacyProfile = profileError?.code === '42703';
+  if (!profile && !legacyProfile) redirect('/account-setup');
+  if (profile?.role_initialized === false) redirect('/account-setup');
   if (profile?.user_type !== role) redirect(role === 'employer' ? '/job-seeker/dashboard' : '/employer/dashboard');
   return { supabase, user, profile: profile as Database['public']['Tables']['profiles']['Row'] };
 }

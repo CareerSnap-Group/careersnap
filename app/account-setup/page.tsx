@@ -9,10 +9,11 @@ export default async function AccountSetupPage() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
-  const { data: rawProfile } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+  const { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
   const profile = rawProfile as unknown as { user_type: 'job_seeker' | 'employer'; role_initialized?: boolean } | null;
   if (profile?.user_type === 'employer') redirect('/employer/dashboard');
-  const { data: rawRoleState } = await supabase.from('profiles').select('role_initialized').eq('id', user.id).maybeSingle();
+  if (profileError?.code === '42703' && profile?.user_type === 'job_seeker') redirect('/job-seeker/dashboard');
+  const { data: rawRoleState, error: roleStateError } = await supabase.from('profiles').select('role_initialized').eq('id', user.id).maybeSingle();
   const roleState = rawRoleState as unknown as { role_initialized: boolean } | null;
   return <main className={styles.page}><div className={styles.container}><Card className={styles.legendCard}><h1 className={styles.title}>Complete your CareerSnap account</h1><p className={styles.subtitle}>{roleState?.role_initialized ? 'Your account is ready. Continue to your dashboard.' : 'Choose the experience that fits how you will use CareerSnap.'}</p>{roleState?.role_initialized ? <Link href="/job-seeker/dashboard" className={styles.actionLink}>Continue to your dashboard</Link> : <RoleForm />}</Card></div></main>;
 }
