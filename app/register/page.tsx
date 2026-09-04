@@ -150,14 +150,14 @@ export default function RegisterPage() {
             />
 
             <fieldset className={styles.accountType}>
-              <legend className={styles.accountTypeLegend}>How will you use CareerSnap?</legend>
+              <legend className={styles.accountTypeLegend}>What are you here to do?</legend>
               <label className={`${styles.accountTypeOption} ${userType === 'job_seeker' ? styles.accountTypeSelected : ''}`}>
                 <input type="radio" name="userType" value="job_seeker" checked={userType === 'job_seeker'} onChange={() => setUserType('job_seeker')} />
-                <span><strong>I&apos;m looking for a job</strong><small>Find jobs, save opportunities, manage applications and build your career.</small></span>
+                <span><strong>Job Seeker</strong><small>Find jobs, apply for opportunities, save jobs and manage your career profile.</small></span>
               </label>
               <label className={`${styles.accountTypeOption} ${userType === 'employer' ? styles.accountTypeSelected : ''}`}>
                 <input type="radio" name="userType" value="employer" checked={userType === 'employer'} onChange={() => setUserType('employer')} />
-                <span><strong>I&apos;m hiring</strong><small>Post jobs, find candidates and manage your recruitment.</small></span>
+                <span><strong>Employer</strong><small>Create jobs, find candidates and manage applications.</small></span>
               </label>
             </fieldset>
 

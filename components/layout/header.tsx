@@ -12,6 +12,7 @@ import { isSupabaseConfigured } from '@/lib/supabase/config';
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [role, setRole] = useState<'job_seeker' | 'employer' | null>(null);
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
@@ -20,7 +21,13 @@ export function Header() {
     }
 
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    supabase.auth.getUser().then(async ({ data }) => {
+      setSignedIn(Boolean(data.user));
+      if (data.user) {
+        const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', data.user.id).maybeSingle();
+        setRole(profile?.user_type || null);
+      }
+    });
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setSignedIn(Boolean(session?.user)));
     return () => listener.subscription.unsubscribe();
   }, []);
@@ -28,6 +35,7 @@ export function Header() {
   const handleSignOut = async () => {
     await createClient().auth.signOut();
     setSignedIn(false);
+    setRole(null);
   };
 
   return (
@@ -53,11 +61,19 @@ export function Header() {
           <Link href="/resources" className={styles.navLink}>
             Career Resources
           </Link>
-          {signedIn && (
+          {signedIn && role === 'job_seeker' && (
             <>
               <Link href="/saved-jobs" className={styles.navLink}>Saved Jobs</Link>
               <Link href="/applications" className={styles.navLink}>Applications</Link>
               <Link href="/profile" className={styles.navLink}>Profile</Link>
+            </>
+          )}
+          {signedIn && role === 'employer' && (
+            <>
+              <Link href="/employer/dashboard" className={styles.navLink}>Employer Dashboard</Link>
+              <Link href="/employer/jobs" className={styles.navLink}>Jobs</Link>
+              <Link href="/employer/applications" className={styles.navLink}>Applications</Link>
+              <Link href="/employer/company" className={styles.navLink}>Company</Link>
             </>
           )}
         </nav>
@@ -94,11 +110,19 @@ export function Header() {
           <Link href="/resources" className={styles.mobileNavLink}>
             Career Resources
           </Link>
-          {signedIn && (
+          {signedIn && role === 'job_seeker' && (
             <>
               <Link href="/saved-jobs" className={styles.mobileNavLink}>Saved Jobs</Link>
               <Link href="/applications" className={styles.mobileNavLink}>Applications</Link>
               <Link href="/profile" className={styles.mobileNavLink}>Profile</Link>
+            </>
+          )}
+          {signedIn && role === 'employer' && (
+            <>
+              <Link href="/employer/dashboard" className={styles.mobileNavLink}>Employer Dashboard</Link>
+              <Link href="/employer/jobs" className={styles.mobileNavLink}>Jobs</Link>
+              <Link href="/employer/applications" className={styles.mobileNavLink}>Applications</Link>
+              <Link href="/employer/company" className={styles.mobileNavLink}>Company</Link>
             </>
           )}
           <div className={styles.mobileActions}>

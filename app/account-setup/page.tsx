@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import styles from '../applications/applications.module.css';
+import { RoleForm } from './role-form';
 
 export default async function AccountSetupPage() {
   const supabase = createClient();
@@ -10,5 +11,7 @@ export default async function AccountSetupPage() {
   if (!user) redirect('/login');
   const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
   if (profile?.user_type === 'employer') redirect('/employer/dashboard');
-  return <main className={styles.page}><div className={styles.container}><Card className={styles.legendCard}><h1 className={styles.title}>Complete your CareerSnap account</h1><p className={styles.subtitle}>Your account is ready. Finish your profile to get the most relevant experience.</p><Link href="/job-seeker/dashboard" className={styles.actionLink}>Continue to your dashboard</Link></Card></div></main>;
+  const { data: rawRoleState } = await supabase.from('profiles').select('role_initialized').eq('id', user.id).maybeSingle();
+  const roleState = rawRoleState as unknown as { role_initialized: boolean } | null;
+  return <main className={styles.page}><div className={styles.container}><Card className={styles.legendCard}><h1 className={styles.title}>Complete your CareerSnap account</h1><p className={styles.subtitle}>{roleState?.role_initialized ? 'Your account is ready. Continue to your dashboard.' : 'Choose the experience that fits how you will use CareerSnap.'}</p>{roleState?.role_initialized ? <Link href="/job-seeker/dashboard" className={styles.actionLink}>Continue to your dashboard</Link> : <RoleForm />}</Card></div></main>;
 }
