@@ -11,6 +11,7 @@ import styles from './auth.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { getSafeRedirectPath } from '@/lib/auth/redirect';
+import { getAuthRedirectUrl } from '@/lib/auth/url';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -68,9 +69,9 @@ export default function LoginPage() {
 
     setLoading(true);
     const { error: authError } = await createClient().auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}` },
-      });
+      provider: 'google',
+      options: { redirectTo: `${getAuthRedirectUrl('/auth/callback')}?next=${encodeURIComponent(nextPath)}` },
+    });
     if (authError) {
       setError(authError.message);
       setLoading(false);

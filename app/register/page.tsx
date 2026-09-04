@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import styles from './auth.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { getAuthRedirectUrl } from '@/lib/auth/url';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -69,7 +70,7 @@ export default function RegisterPage() {
         email: formData.email,
         password: formData.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: getAuthRedirectUrl('/auth/callback'),
           data: { full_name: `${formData.firstName} ${formData.lastName}`.trim(), user_type: userType },
         },
       });
@@ -95,7 +96,7 @@ export default function RegisterPage() {
     setLoading(true);
     const { error: authError } = await createClient().auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/account-setup` },
+      options: { redirectTo: `${getAuthRedirectUrl('/auth/callback')}?next=/account-setup` },
     });
     if (authError) {
       setError(authError.message);

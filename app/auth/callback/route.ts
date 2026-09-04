@@ -16,20 +16,25 @@ export async function GET(request: Request) {
     return NextResponse.redirect(loginUrl);
   }
 
+  if (!code) {
+    console.error('[CareerSnap OAuth callback] missing authorization code', { callback: requestUrl.pathname });
+    const loginUrl = new URL('/login', requestUrl.origin);
+    loginUrl.searchParams.set('error', 'Google sign-in did not return an authorization code.');
+    return NextResponse.redirect(loginUrl);
+  }
+
   const supabase = createClient();
-  if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (error) {
-      console.error('[CareerSnap OAuth callback] exchangeCodeForSession failed', {
-        name: error.name,
-        message: error.message,
-        status: error.status,
-        code: error.code,
-      });
-      const loginUrl = new URL('/login', requestUrl.origin);
-      loginUrl.searchParams.set('error', 'Authentication callback failed. Please try again.');
-      return NextResponse.redirect(loginUrl);
-    }
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  if (error) {
+    console.error('[CareerSnap OAuth callback] exchangeCodeForSession failed', {
+      name: error.name,
+      message: error.message,
+      status: error.status,
+      code: error.code,
+    });
+    const loginUrl = new URL('/login', requestUrl.origin);
+    loginUrl.searchParams.set('error', 'Authentication callback failed. Please try again.');
+    return NextResponse.redirect(loginUrl);
   }
 
   const { data: { user } } = await supabase.auth.getUser();
