@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
-  const [nextPath, setNextPath] = useState('/profile');
+  const [nextPath, setNextPath] = useState('/account-setup');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -43,13 +43,16 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const { error: authError } = await createClient().auth.signInWithPassword({ email, password });
+      const client = createClient();
+      const { error: authError } = await client.auth.signInWithPassword({ email, password });
       if (authError) {
         setError(authError.message);
         return;
       }
 
-      router.push(nextPath);
+      const { data: profile } = await client.from('profiles').select('user_type').eq('id', (await client.auth.getUser()).data.user?.id || '').maybeSingle();
+      const dashboard = profile?.user_type === 'employer' ? '/employer/dashboard' : profile?.user_type === 'job_seeker' ? '/job-seeker/dashboard' : '/account-setup';
+      router.push(nextPath === '/account-setup' ? dashboard : nextPath);
       router.refresh();
     } finally {
       setLoading(false);

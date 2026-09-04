@@ -18,5 +18,10 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(new URL(next, requestUrl.origin));
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.redirect(new URL('/login', requestUrl.origin));
+  const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+  const destination = profile?.user_type === 'employer' ? '/employer/dashboard' : profile?.user_type === 'job_seeker' ? '/job-seeker/dashboard' : '/account-setup';
+  return NextResponse.redirect(new URL(next === '/account-setup' ? destination : next, requestUrl.origin));
 }

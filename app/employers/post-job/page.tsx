@@ -26,6 +26,7 @@ export default function PostJobPage() {
     benefits: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -35,9 +36,12 @@ export default function PostJobPage() {
     }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('Job posting:', formData);
+    setError('');
+    const response = await fetch('/api/employer/jobs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+    const result = await response.json() as { error?: string };
+    if (!response.ok) { setError(result.error || 'We could not post this job.'); return; }
     setSubmitted(true);
   };
 
@@ -67,6 +71,7 @@ export default function PostJobPage() {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className={styles.form}>
+            {error && <div className={styles.error}>{error}</div>}
             {/* Job Basic Information */}
             <fieldset className={styles.fieldset}>
               <legend className={styles.fieldsetTitle}>Job Information</legend>

@@ -5,7 +5,9 @@ import type { Database } from '@/lib/supabase/database.types';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { getSafeRedirectPath } from '@/lib/auth/redirect';
 
-const protectedPaths = ['/saved-jobs', '/applications', '/profile', '/employers/post-job'];
+const protectedPaths = ['/saved-jobs', '/applications', '/profile', '/employers/post-job', '/job-seeker', '/employer'];
+const employerPaths = ['/employer', '/employers/post-job'];
+const seekerPaths = ['/job-seeker', '/saved-jobs', '/applications', '/profile'];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -46,6 +48,22 @@ export async function middleware(request: NextRequest) {
     loginUrl.search = '';
     loginUrl.searchParams.set('next', getSafeRedirectPath(`${request.nextUrl.pathname}${request.nextUrl.search}`));
     return NextResponse.redirect(loginUrl);
+  }
+
+  if (user) {
+    const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+    const pathname = request.nextUrl.pathname;
+    const isEmployerRoute = employerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+    const isSeekerRoute = seekerPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+    if (!profile?.user_type && pathname !== '/account-setup') {
+      return NextResponse.redirect(new URL('/account-setup', request.url));
+    }
+    if (isEmployerRoute && profile?.user_type !== 'employer') {
+      return NextResponse.redirect(new URL('/job-seeker/dashboard', request.url));
+    }
+    if (isSeekerRoute && profile?.user_type !== 'job_seeker') {
+      return NextResponse.redirect(new URL('/employer/dashboard', request.url));
+    }
   }
 
   return response;

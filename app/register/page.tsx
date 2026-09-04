@@ -19,6 +19,7 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
   });
+  const [userType, setUserType] = useState<'job_seeker' | 'employer'>('job_seeker');
   const [error, setError] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,8 +69,8 @@ export default function RegisterPage() {
         email: formData.email,
         password: formData.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/profile`,
-          data: { full_name: `${formData.firstName} ${formData.lastName}`.trim() },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: { full_name: `${formData.firstName} ${formData.lastName}`.trim(), user_type: userType },
         },
       });
       if (authError) {
@@ -77,7 +78,7 @@ export default function RegisterPage() {
         return;
       }
 
-      if (data.session) router.push('/profile');
+      if (data.session) router.push(userType === 'employer' ? '/employer/dashboard' : '/job-seeker/dashboard');
       else setError('Account created. Check your email to verify your account before signing in.');
     } finally {
       setLoading(false);
@@ -94,7 +95,7 @@ export default function RegisterPage() {
     setLoading(true);
     const { error: authError } = await createClient().auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/profile` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=/account-setup` },
     });
     if (authError) {
       setError(authError.message);
@@ -146,6 +147,18 @@ export default function RegisterPage() {
               onChange={handleChange}
               fullWidth
             />
+
+            <fieldset className={styles.accountType}>
+              <legend className={styles.accountTypeLegend}>How will you use CareerSnap?</legend>
+              <label className={`${styles.accountTypeOption} ${userType === 'job_seeker' ? styles.accountTypeSelected : ''}`}>
+                <input type="radio" name="userType" value="job_seeker" checked={userType === 'job_seeker'} onChange={() => setUserType('job_seeker')} />
+                <span><strong>I&apos;m looking for a job</strong><small>Find jobs, save opportunities, manage applications and build your career.</small></span>
+              </label>
+              <label className={`${styles.accountTypeOption} ${userType === 'employer' ? styles.accountTypeSelected : ''}`}>
+                <input type="radio" name="userType" value="employer" checked={userType === 'employer'} onChange={() => setUserType('employer')} />
+                <span><strong>I&apos;m hiring</strong><small>Post jobs, find candidates and manage your recruitment.</small></span>
+              </label>
+            </fieldset>
 
             <Input
               type="password"
