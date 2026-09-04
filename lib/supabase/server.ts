@@ -11,19 +11,12 @@ export function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
+        getAll() {
+          return cookieStore.getAll();
         },
-        set(name: string, value: string, options: Parameters<typeof cookieStore.set>[2]) {
+        setAll(cookiesToSet) {
           try {
-            cookieStore.set({ name, value, ...options });
-          } catch {
-            // Server Components cannot always write cookies; middleware refreshes sessions.
-          }
-        },
-        remove(name: string, options: Parameters<typeof cookieStore.set>[2]) {
-          try {
-            cookieStore.set({ name, value: '', ...options });
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
           } catch {
             // Server Components cannot always write cookies; middleware refreshes sessions.
           }
