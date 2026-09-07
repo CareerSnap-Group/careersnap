@@ -13,8 +13,6 @@ const registerPath = '/register?role=employer';
 export function EmployerPublicHeader() {
   const [open, setOpen] = useState(false);
   const links = <>
-    <Link href="/jobs" className={styles.navLink}>Find Jobs</Link>
-    <Link href="/resources" className={styles.navLink}>Career Resources</Link>
     <Link href={postJobPath} className={styles.navLink}>Post a Job</Link>
     <Link href={findCvsPath} className={styles.navLink}>Find CVs</Link>
   </>;
