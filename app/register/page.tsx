@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Header } from '@/components/layout/header';
@@ -11,6 +11,7 @@ import styles from './auth.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { getAuthRedirectUrl } from '@/lib/auth/url';
+import { getSafeRedirectPath } from '@/lib/auth/redirect';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -25,6 +26,11 @@ export default function RegisterPage() {
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const requestedRole = new URLSearchParams(window.location.search).get('role');
+    if (requestedRole === 'employer') setUserType('employer');
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -79,7 +85,9 @@ export default function RegisterPage() {
         return;
       }
 
-      if (data.session) router.push(userType === 'employer' ? '/employer/dashboard' : '/job-seeker/dashboard');
+      const defaultDestination = userType === 'employer' ? '/employer/dashboard' : '/job-seeker/dashboard';
+      const destination = getSafeRedirectPath(new URLSearchParams(window.location.search).get('next'), defaultDestination);
+      if (data.session) router.push(destination);
       else setError('Account created. Check your email to verify your account before signing in.');
     } finally {
       setLoading(false);

@@ -21,6 +21,7 @@ export default function LoginPage() {
   const [nextPath, setNextPath] = useState('/account-setup');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const employerIntent = nextPath === '/employers/post-job' || nextPath.startsWith('/employer/');
 
   useEffect(() => {
     const next = new URLSearchParams(window.location.search).get('next');
@@ -141,7 +142,7 @@ export default function LoginPage() {
           <div className={styles.signup}>
             <p>
               Don&apos;t have an account?{' '}
-              <Link href="/register" className={styles.signupLink}>
+              <Link href={employerIntent ? `/register?role=employer&next=${encodeURIComponent(nextPath)}` : '/register'} className={styles.signupLink}>
                 Create account
               </Link>
             </p>

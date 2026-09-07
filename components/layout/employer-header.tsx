@@ -9,8 +9,8 @@ import { Button } from '@/components/ui/button';
 import styles from './employer-header.module.css';
 
 const links = [
-  ['/employer/dashboard', 'Employer Dashboard'], ['/employers/post-job', 'Post a Job'],
-  ['/employer/jobs', 'My Jobs'], ['/employer/applications', 'Applications'],
+  ['/employer/dashboard', 'Dashboard'], ['/employers/post-job', 'Post a Job'], ['/employer/cvs', 'Find CVs'],
+  ['/employer/jobs', 'Jobs'], ['/employer/applications', 'Applications'],
   ['/employer/company', 'Company'], ['/employer/packages', 'Packages'], ['/employer/billing', 'Billing'],
 ] as const;
 

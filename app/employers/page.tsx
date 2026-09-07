@@ -1,28 +1,36 @@
-'use client';
-
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 import { Header } from '@/components/layout/header';
+import { EmployerHeader } from '@/components/layout/employer-header';
+import { EmployerPublicHeader } from '@/components/layout/employer-public-header';
 import { Footer } from '@/components/layout/footer';
 import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import styles from './employers.module.css';
 
-export default function EmployersPage() {
+export default async function EmployersPage() {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = user ? await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle() : { data: null };
+  const isEmployer = profile?.user_type === 'employer';
+  const isJobSeeker = profile?.user_type === 'job_seeker';
+  const pageHeader = !user ? <EmployerPublicHeader /> : isEmployer ? <EmployerHeader /> : <Header />;
+  const employerCtas = !isJobSeeker;
   return (
     <div className={styles.page}>
-      <Header />
+      {pageHeader}
 
       {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>Find your next great hire</h1>
           <p className={styles.heroSubtitle}>Post jobs and connect with thousands of qualified candidates actively searching for opportunities.</p>
-          <Link href="/employers/post-job">
+          {employerCtas && <Link href={!user ? '/login?next=%2Femployers%2Fpost-job' : '/employers/post-job'}>
             <Button size="lg" className={styles.ctaButton}>
               Post a Job
             </Button>
-          </Link>
+          </Link>}
         </div>
       </section>
 
@@ -173,11 +181,11 @@ export default function EmployersPage() {
           <div className={styles.ctaContent}>
             <h2 className={styles.ctaTitle}>Ready to start hiring?</h2>
             <p className={styles.ctaSubtitle}>Post your first job today and connect with qualified candidates</p>
-            <Link href="/employers/post-job">
+            {employerCtas && <Link href={!user ? '/login?next=%2Femployers%2Fpost-job' : '/employers/post-job'}>
               <Button size="lg" style={{ marginTop: 'var(--spacing-lg)' }}>
                 Post Your First Job
               </Button>
-            </Link>
+            </Link>}
           </div>
         </div>
       </section>
