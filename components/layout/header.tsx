@@ -63,12 +63,10 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav className={styles.desktopNav}>
-          <Link href="/jobs" className={styles.navLink}>
-            Find Jobs
-          </Link>
-          <Link href="/resources" className={styles.navLink}>
-            Career Resources
-          </Link>
+          {role !== 'employer' && <>
+            <Link href="/jobs" className={styles.navLink}>Find Jobs</Link>
+            <Link href="/resources" className={styles.navLink}>Career Resources</Link>
+          </>}
           {signedIn && role === 'job_seeker' && (
             <>
               <Link href="/saved-jobs" className={styles.navLink}>Saved Jobs</Link>
@@ -99,9 +97,7 @@ export function Header() {
               <Link href="/register"><Button size="sm">Create Account</Button></Link>
             </>
           )}
-          <Link href="/employers" className={styles.employersLink}>
-            For Employers
-          </Link>
+          {signedIn === false && <Link href="/employers" className={styles.employersLink}>For Employers</Link>}
         </div>
 
         {/* Mobile Menu Button */}
@@ -115,12 +111,10 @@ export function Header() {
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
         <nav className={styles.mobileNav}>
-          <Link href="/jobs" className={styles.mobileNavLink}>
-            Find Jobs
-          </Link>
-          <Link href="/resources" className={styles.mobileNavLink}>
-            Career Resources
-          </Link>
+          {role !== 'employer' && <>
+            <Link href="/jobs" className={styles.mobileNavLink}>Find Jobs</Link>
+            <Link href="/resources" className={styles.mobileNavLink}>Career Resources</Link>
+          </>}
           {signedIn && role === 'job_seeker' && (
             <>
               <Link href="/saved-jobs" className={styles.mobileNavLink}>Saved Jobs</Link>
@@ -148,9 +142,7 @@ export function Header() {
                 <Link href="/register"><Button fullWidth>Create Account</Button></Link>
               </>
             )}
-            <Link href="/employers" className={styles.mobileEmployers}>
-              For Employers
-            </Link>
+            {signedIn === false && <Link href="/employers" className={styles.mobileEmployers}>For Employers</Link>}
           </div>
         </nav>
       )}

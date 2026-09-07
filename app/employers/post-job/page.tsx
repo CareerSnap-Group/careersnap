@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
-import { Header } from '@/components/layout/header';
+import { EmployerHeader as Header } from '@/components/layout/employer-header';
 import { Footer } from '@/components/layout/footer';
 import { Icon } from '@/components/icons';
 import { Button } from '@/components/ui/button';

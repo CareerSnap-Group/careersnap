@@ -1,5 +1,5 @@
 import { getEmployerContext } from '@/lib/auth/server';
-import { Header } from '@/components/layout/header';
+import { EmployerHeader as Header } from '@/components/layout/employer-header';
 import { Footer } from '@/components/layout/footer';
 import { Card } from '@/components/ui/card';
 import styles from '../../applications/applications.module.css';

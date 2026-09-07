@@ -9,6 +9,10 @@ const protectedPaths = ['/saved-jobs', '/applications', '/profile', '/employers/
 const employerPaths = ['/employer', '/employers/post-job'];
 const seekerPaths = ['/job-seeker', '/saved-jobs', '/applications', '/profile'];
 
+function dashboardForRole(role: 'job_seeker' | 'employer') {
+  return role === 'employer' ? '/employer/dashboard' : '/job-seeker/dashboard';
+}
+
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
   const isProtectedPath = protectedPaths.some((path) => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(`${path}/`));
@@ -62,11 +66,14 @@ export async function middleware(request: NextRequest) {
     if ((!profile?.user_type || profile.role_initialized === false) && pathname !== '/account-setup') {
       return NextResponse.redirect(new URL('/account-setup', request.url));
     }
+    if (pathname === '/account-setup' && profile?.user_type && profile.role_initialized !== false) {
+      return NextResponse.redirect(new URL(dashboardForRole(profile.user_type), request.url));
+    }
     if (isEmployerRoute && profile?.user_type !== 'employer') {
-      return NextResponse.redirect(new URL('/job-seeker/dashboard', request.url));
+      return NextResponse.redirect(new URL(profile?.user_type === 'job_seeker' ? '/job-seeker/dashboard' : '/account-setup', request.url));
     }
     if (isSeekerRoute && profile?.user_type !== 'job_seeker') {
-      return NextResponse.redirect(new URL('/employer/dashboard', request.url));
+      return NextResponse.redirect(new URL(profile?.user_type === 'employer' ? '/employer/dashboard' : '/account-setup', request.url));
     }
   }
 
