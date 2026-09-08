@@ -101,6 +101,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
 }
 
 body {
@@ -109,7 +110,7 @@ body {
   font-weight: var(--font-weight-regular);
   line-height: 1.5;
   color: var(--color-text-primary);
-  background-color: var(--color-background-primary);
+  background-color: #ffffff;
 }
 
 a {
