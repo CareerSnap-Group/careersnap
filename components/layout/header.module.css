@@ -41,6 +41,18 @@
   justify-content: space-between;
 }
 
+@media (min-width: 1024px) {
+  .container {
+    max-width: none;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .landingHeader .container {
+    max-width: none;
+  }
+}
+
 .logo {
   display: flex;
   align-items: center;

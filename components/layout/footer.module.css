@@ -26,11 +26,15 @@
   .footer {
     padding: 2.75rem var(--spacing-md) 1.75rem;
     margin-top: 4rem;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .container,
   .bottom {
-    max-width: 1200px;
+    max-width: none;
+    padding-left: 32px;
+    padding-right: 32px;
   }
 
   .brand {
