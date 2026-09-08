@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 
-export function Header() {
+export function Header({ variant }: { variant?: 'landing' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [role, setRole] = useState<'job_seeker' | 'employer' | null>(null);
@@ -47,7 +47,7 @@ export function Header() {
   };
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''}`}>
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="CareerSnap home">

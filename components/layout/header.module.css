@@ -7,6 +7,30 @@
   z-index: 100;
 }
 
+.landingHeader {
+  box-shadow: none;
+}
+
+.landingHeader .container {
+  max-width: 1200px;
+  height: 64px;
+}
+
+.landingHeader .desktopNav {
+  margin-left: var(--spacing-xl);
+  gap: var(--spacing-lg);
+}
+
+.landingHeader .navLink,
+.landingHeader .signInLink,
+.landingHeader .employersLink {
+  font-size: var(--font-size-sm);
+}
+
+.landingHeader .actions {
+  gap: var(--spacing-lg);
+}
+
 .container {
   max-width: 1280px;
   margin: 0 auto;

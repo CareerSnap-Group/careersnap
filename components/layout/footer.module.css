@@ -22,6 +22,64 @@
 .bottom p { margin: 0; }
 .legal { display: flex; flex-wrap: wrap; gap: var(--spacing-lg); }
 
+@media (min-width: 769px) {
+  .footer {
+    padding: 2.75rem var(--spacing-md) 1.75rem;
+    margin-top: 4rem;
+  }
+
+  .container,
+  .bottom {
+    max-width: 1200px;
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .navigation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 2rem;
+  }
+
+  .section {
+    min-width: 0;
+  }
+
+  .sectionTrigger {
+    display: none;
+  }
+
+  .links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    margin: 0;
+  }
+
+  .links a,
+  .legal a {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .bottom {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+    padding-top: 1.5rem;
+    margin-top: 1.75rem;
+  }
+
+  .legal {
+    gap: 2rem;
+  }
+}
+
 @media (max-width: 768px) {
   .footer { padding-top: var(--spacing-xl); }
   .brand { margin-bottom: var(--spacing-lg); }
