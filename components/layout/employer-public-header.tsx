@@ -20,6 +20,10 @@ export function EmployerPublicHeader() {
     <Link href="/employers" className={styles.logo} aria-label="CareerSnap employer services"><Image src="/careersnap-logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
     <nav className={styles.nav}>{links}</nav>
     <div className={styles.actions}><Link href="/login" className={styles.signIn}>Sign In</Link><Link href={registerPath}><Button size="sm">Create Account</Button></Link></div>
-    <button type="button" className={styles.menuButton} onClick={() => setOpen(!open)} aria-label="Toggle employer menu">Menu</button>
+    <button type="button" className={styles.menuButton} onClick={() => setOpen(!open)} aria-label="Toggle employer menu" aria-expanded={open}>
+      <span className={styles.menuIcon} aria-hidden="true" />
+      <span className={styles.menuIcon} aria-hidden="true" />
+      <span className={styles.menuIcon} aria-hidden="true" />
+    </button>
   </div>{open && <nav className={styles.mobileNav}>{links}<Link href="/login" className={styles.signIn}>Sign In</Link><Link href={registerPath}><Button fullWidth>Create Account</Button></Link></nav>}</header>;
 }
