@@ -30,21 +30,14 @@
   margin: 0 auto;
 }
 
-.heroBrand {
-  display: block;
-  width: min(260px, 68vw);
-  height: auto;
-  margin: 6.75rem auto 2.5rem;
-}
-
 .heroTitle {
   max-width: 700px;
-  margin: 0 auto 1.125rem;
-  font-size: clamp(2.25rem, 4vw, 3.5rem);
-  font-weight: var(--font-weight-bold);
+  margin: 2.5rem auto 0.9rem;
+  font-size: clamp(1.75rem, 2.6vw, 2.35rem);
+  font-weight: var(--font-weight-semibold);
   color: #202124;
-  letter-spacing: -0.01em;
-  line-height: 1.08;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .heroSubtitle {
@@ -498,13 +491,10 @@
     min-height: 0;
   }
 
-  .heroBrand {
-    margin-top: 4.5rem;
-    margin-bottom: 1.75rem;
-  }
-
   .heroTitle {
-    font-size: clamp(2rem, 8vw, 2.75rem);
+    margin-top: 2rem;
+    font-size: clamp(1.7rem, 6.5vw, 2.1rem);
+    line-height: 1.18;
   }
 
   .jobsGrid {

@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -72,15 +71,6 @@ export default function HomePage() {
               </div>
             </form>
 
-            <Image
-              src="/careersnap-logo.png"
-              alt="CareerSnap"
-              width={300}
-              height={66}
-              className={styles.heroBrand}
-              style={{ height: 'auto' }}
-              priority
-            />
             <h1 className={styles.heroTitle}>Find work that moves your career forward</h1>
             <p className={styles.heroSubtitle}>Discover opportunities from leading companies, explore new roles, and take the next step in your career.</p>
             {isLoggedOut ? (
