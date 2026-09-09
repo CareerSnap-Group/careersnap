@@ -19,6 +19,7 @@ type IconName =
   | 'facebook'
   | 'instagram'
   | 'tiktok'
+  | 'user'
   | 'youtube'
   | 'x';
 
@@ -47,6 +48,7 @@ const paths: Record<IconName, JSX.Element> = {
   facebook: <path fill="currentColor" stroke="none" d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.6 1.7-1.6h1.8V3.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.5v3h2.8v8h3.2Z" />,
   instagram: <><rect x="3.5" y="3.5" width="17" height="17" rx="4.5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></>,
   tiktok: <path fill="currentColor" stroke="none" d="M14.4 3h3.1c.2 1.7 1.1 3.1 2.5 4v3.2c-1.5-.1-2.9-.6-4-1.5v6.1c0 3.7-2.4 6.1-5.8 6.1-3 0-5.2-2.1-5.2-5 0-3.1 2.5-5.3 5.8-5.3.3 0 .7 0 1 .1v3.2c-.3-.1-.6-.2-1-.2-1.5 0-2.5.8-2.5 2.1 0 1.2.9 2 2.1 2 1.4 0 2.2-1 2.2-2.9V3Z" />,
+  user: <><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></>,
   youtube: <path fill="currentColor" stroke="none" d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.8 2.8 0 0 0-2 2C2 9 2 12 2 12s0 3 .4 4.8a2.8 2.8 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.8.4-4.8.4-4.8s0-3-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z" />,
   x: <><path d="M18 6 6 18" /><path d="m6 6 12 12" /></>,
 };

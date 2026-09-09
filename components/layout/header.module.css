@@ -166,8 +166,84 @@
   margin-left: auto;
 }
 
+.mobileHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.mobileSignInControl,
+.mobileProfileLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.mobileSignInControl {
+  gap: 0.15rem;
+  padding: 0 0.45rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.mobileSignInControl :global(svg) {
+  margin: 0 0 0 0.15rem;
+}
+
+.mobileSignInControl:hover,
+.mobileProfileLink:hover {
+  color: var(--color-primary-600);
+  background-color: var(--color-primary-50);
+}
+
+.mobileSignInControl:focus-visible,
+.mobileProfileLink:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.mobileProfileLink {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.mobileAvatarImage,
+.mobileAvatarInitials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.mobileAvatarImage {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.mobileAvatarInitials {
+  background-color: var(--color-primary-600);
+  color: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+}
+
 @media (min-width: 1024px) {
   .mobileMenuButton {
+    display: none;
+  }
+
+  .mobileHeaderActions {
     display: none;
   }
 }
