@@ -53,20 +53,23 @@ export function Footer() {
             );
           })}
         </nav>
-        <nav className={styles.socialLinks} aria-label="CareerSnap social media">
-          {socialLinks.map((social) => (
-            <a
-              key={social.name}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.socialLink}
-              aria-label={social.name}
-            >
-              <Icon name={social.icon} size={20} />
-            </a>
-          ))}
-        </nav>
+        <section className={styles.socialSection} aria-labelledby="footer-social-title">
+          <h2 id="footer-social-title" className={styles.socialTitle}>Let&apos;s connect</h2>
+          <nav className={styles.socialLinks} aria-label="CareerSnap social media">
+            {socialLinks.map((social) => (
+              <a
+                key={social.name}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.socialLink}
+                aria-label={social.name}
+              >
+                <Icon name={social.icon} size={20} />
+              </a>
+            ))}
+          </nav>
+        </section>
       </div>
       <div className={styles.bottom}>
         <p>&copy; {year} CareerSnap. All rights reserved.</p>
