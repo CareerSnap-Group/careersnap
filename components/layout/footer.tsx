@@ -10,7 +10,7 @@ const sections = [
   { title: 'Sign in', links: [['/login', 'Sign in']] },
   { title: 'Job Seekers', links: [['/resources', 'Help'], ['/employers', 'Browse companies'], ['/jobs', 'Browse jobs']] },
   { title: 'Employers', links: [['/employers', 'Help Centre'], ['/employers/post-job', 'Post a job'], ['/employers', 'Employer Events']] },
-  { title: 'About', links: [['/', 'About']] },
+  { title: 'About', links: [['/about', 'About']] },
 ] as const;
 
 const socialLinks = [
