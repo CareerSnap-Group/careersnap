@@ -104,7 +104,7 @@ export default function RegisterPage() {
     setLoading(true);
     const { error: authError } = await createClient().auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${getAuthRedirectUrl('/auth/callback')}?next=/account-setup` },
+      options: { redirectTo: `${getAuthRedirectUrl('/auth/callback')}?next=/account-setup&role=${encodeURIComponent(userType)}` },
     });
     if (authError) {
       setError(authError.message);

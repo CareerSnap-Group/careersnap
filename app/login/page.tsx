@@ -52,8 +52,15 @@ export default function LoginPage() {
         return;
       }
 
-      const { data: profile } = await client.from('profiles').select('user_type').eq('id', (await client.auth.getUser()).data.user?.id || '').maybeSingle();
-      const dashboard = profile?.user_type === 'employer' ? '/employer/dashboard' : profile?.user_type === 'job_seeker' ? '/job-seeker/dashboard' : '/account-setup';
+      const { data: rawProfile } = await client.from('profiles').select('user_type, role_initialized').eq('id', (await client.auth.getUser()).data.user?.id || '').maybeSingle();
+      const profile = rawProfile as unknown as { user_type: 'job_seeker' | 'employer' | null; role_initialized?: boolean } | null;
+      const dashboard = profile?.role_initialized === false
+        ? '/account-setup'
+        : profile?.user_type === 'employer'
+          ? '/employer/dashboard'
+          : profile?.user_type === 'job_seeker'
+            ? '/job-seeker/dashboard'
+            : '/account-setup';
       router.push(nextPath === '/account-setup' ? dashboard : nextPath);
       router.refresh();
     } finally {

@@ -15,5 +15,6 @@ export default async function AccountSetupPage() {
   if (profile?.user_type && profile.role_initialized !== false) {
     redirect(profile.user_type === 'employer' ? '/employer/dashboard' : '/job-seeker/dashboard');
   }
-  return <main className={styles.page}><div className={styles.container}><Card className={styles.legendCard}><h1 className={styles.title}>Complete your CareerSnap account</h1><p className={styles.subtitle}>Choose the experience that fits how you will use CareerSnap.</p><RoleForm /></Card></div></main>;
+  const initialRole = profile?.role_initialized === false ? profile.user_type : undefined;
+  return <main className={styles.page}><div className={styles.container}><Card className={styles.legendCard}><h1 className={styles.title}>Complete your CareerSnap account</h1><p className={styles.subtitle}>Choose the experience that fits how you will use CareerSnap.</p><RoleForm initialRole={initialRole} /></Card></div></main>;
 }

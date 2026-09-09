@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import styles from './role-form.module.css';
 
-export function RoleForm() {
-  const [role, setRole] = useState<'job_seeker' | 'employer'>('job_seeker');
+export function RoleForm({ initialRole }: { initialRole?: 'job_seeker' | 'employer' }) {
+  const [role, setRole] = useState<'job_seeker' | 'employer'>(initialRole || 'job_seeker');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
