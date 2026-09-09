@@ -13,6 +13,14 @@ const sections = [
   { title: 'About', links: [['/', 'About']] },
 ] as const;
 
+const socialLinks = [
+  { name: 'Facebook', href: 'https://www.facebook.com/careersnaphq', icon: 'facebook' },
+  { name: 'Instagram', href: 'https://www.instagram.com/careersnaphq', icon: 'instagram' },
+  { name: 'X', href: 'https://x.com/careersnaphq', icon: 'x' },
+  { name: 'TikTok', href: 'https://www.tiktok.com/@careersnaphq', icon: 'tiktok' },
+  { name: 'YouTube', href: 'https://www.youtube.com/@careersnaphq', icon: 'youtube' },
+] as const;
+
 export function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
   const year = new Date().getFullYear();
@@ -44,6 +52,20 @@ export function Footer() {
               </section>
             );
           })}
+        </nav>
+        <nav className={styles.socialLinks} aria-label="CareerSnap social media">
+          {socialLinks.map((social) => (
+            <a
+              key={social.name}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.socialLink}
+              aria-label={social.name}
+            >
+              <Icon name={social.icon} size={20} />
+            </a>
+          ))}
         </nav>
       </div>
       <div className={styles.bottom}>
