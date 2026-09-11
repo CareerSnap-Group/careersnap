@@ -52,7 +52,12 @@ export default function LoginPage() {
         return;
       }
 
-      const { data: rawProfile } = await client.from('profiles').select('user_type, role_initialized').eq('id', (await client.auth.getUser()).data.user?.id || '').maybeSingle();
+      const { data: authUser } = await client.auth.getUser();
+      const { data: rawProfile, error: profileError } = await client.from('profiles').select('user_type, role_initialized').eq('id', authUser.user?.id || '').maybeSingle();
+      if (profileError) {
+        setError('Signed in, but we could not load your account role. Please try again.');
+        return;
+      }
       const profile = rawProfile as unknown as { user_type: 'job_seeker' | 'employer' | null; role_initialized?: boolean } | null;
       const dashboard = profile?.role_initialized === false
         ? '/account-setup'

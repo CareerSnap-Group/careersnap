@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import styles from './role-form.module.css';
 
 export function RoleForm({ initialRole }: { initialRole?: 'job_seeker' | 'employer' }) {
-  const [role, setRole] = useState<'job_seeker' | 'employer'>(initialRole || 'job_seeker');
+  const [role, setRole] = useState<'job_seeker' | 'employer' | null>(initialRole || null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const submit = async () => {
+    if (!role) { setError('Choose an account type to continue.'); return; }
     setLoading(true);
     setError('');
     const response = await fetch('/api/account/role', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role }) });

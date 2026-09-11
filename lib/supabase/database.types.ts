@@ -26,7 +26,7 @@ export type Database = {
 };
 
 type Timestamps = { created_at: string; updated_at: string };
-type Profile = Timestamps & { id: string; full_name: string | null; email: string | null; phone: string | null; location: string | null; headline: string | null; bio: string | null; profile_photo_url: string | null; user_type: Database['public']['Enums']['user_type']; role_initialized: boolean };
+type Profile = Timestamps & { id: string; full_name: string | null; email: string | null; phone: string | null; location: string | null; headline: string | null; bio: string | null; profile_photo_url: string | null; user_type: Database['public']['Enums']['user_type'] | null; role_initialized: boolean };
 type ProfileInsert = Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>> & Pick<Profile, 'id'>;
 type ProfileUpdate = Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>>;
 type Experience = Timestamps & { id: string; user_id: string; job_title: string; company_name: string; location: string | null; start_date: string; end_date: string | null; is_current: boolean; description: string | null };
