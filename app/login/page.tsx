@@ -53,7 +53,13 @@ export default function LoginPage() {
       }
 
       const { data: authUser } = await client.auth.getUser();
-      const { data: rawProfile, error: profileError } = await client.from('profiles').select('user_type, role_initialized').eq('id', authUser.user?.id || '').maybeSingle();
+      const profileQuery = client.from('profiles').select('user_type, role_initialized').eq('id', authUser.user?.id || '').maybeSingle();
+      let { data: rawProfile, error: profileError } = await profileQuery;
+      if (profileError?.code === '42703') {
+        const legacyProfile = await client.from('profiles').select('user_type').eq('id', authUser.user?.id || '').maybeSingle();
+        rawProfile = legacyProfile.data ? { ...legacyProfile.data, role_initialized: true } : null;
+        profileError = legacyProfile.error;
+      }
       if (profileError) {
         setError('Signed in, but we could not load your account role. Please try again.');
         return;

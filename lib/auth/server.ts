@@ -9,7 +9,12 @@ export async function requireRole(role: AccountRole) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+  let { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+  if (profileError?.code === '42703') {
+    const legacyProfile = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+    rawProfile = legacyProfile.data ? { ...legacyProfile.data, role_initialized: true } : null;
+    profileError = legacyProfile.error;
+  }
   const profile = rawProfile as unknown as { user_type: AccountRole | null; role_initialized?: boolean } | null;
   if (profileError) redirect('/login?error=Unable+to+load+account+role');
   if (!profile) redirect('/account-setup');

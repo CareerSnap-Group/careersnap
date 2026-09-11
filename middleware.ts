@@ -55,8 +55,14 @@ export async function middleware(request: NextRequest) {
   }
 
   if (user) {
-    const { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+    let { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+    if (profileError?.code === '42703') {
+      const legacyProfile = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+      rawProfile = legacyProfile.data ? { ...legacyProfile.data, role_initialized: true } : null;
+      profileError = legacyProfile.error;
+    }
     if (profileError) {
+      if (request.nextUrl.pathname === '/login') return response;
       const errorUrl = new URL('/login', request.url);
       errorUrl.searchParams.set('error', 'Unable to load account role');
       return NextResponse.redirect(errorUrl);
