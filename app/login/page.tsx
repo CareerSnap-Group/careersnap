@@ -19,12 +19,14 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [nextPath, setNextPath] = useState('/account-setup');
+  const [hasExplicitNext, setHasExplicitNext] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const employerIntent = nextPath === '/employers/post-job' || nextPath.startsWith('/employer/');
 
   useEffect(() => {
     const next = new URLSearchParams(window.location.search).get('next');
+    setHasExplicitNext(Boolean(next));
     setNextPath(getSafeRedirectPath(next));
   }, []);
 
@@ -72,7 +74,7 @@ export default function LoginPage() {
           : profile?.user_type === 'job_seeker'
             ? '/job-seeker/dashboard'
             : '/account-setup';
-      router.push(nextPath === '/account-setup' ? dashboard : nextPath);
+      router.push(hasExplicitNext && nextPath !== '/account-setup' ? nextPath : dashboard);
       router.refresh();
     } finally {
       setLoading(false);

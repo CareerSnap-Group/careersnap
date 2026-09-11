@@ -5,6 +5,7 @@ export async function POST(request: Request) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Please sign in to complete account setup.' }, { status: 401 });
+  console.info('[CareerSnap role diagnostic] authenticated user', { userId: user.id });
   const body = await request.json() as { role?: string };
   if (body.role !== 'job_seeker' && body.role !== 'employer') return NextResponse.json({ error: 'Choose a valid account type.' }, { status: 400 });
   const { data, error } = await supabase.rpc('complete_role_onboarding' as never, { selected_role: body.role } as never);
@@ -17,7 +18,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'We could not complete account setup.' }, { status: 500 });
   }
 
-  const { data: profile, error: profileError } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+  let { data: profile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+  if (profileError?.code === '42703') {
+    const legacyProfile = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+    profile = legacyProfile.data ? { ...legacyProfile.data, role_initialized: true } : null;
+    profileError = legacyProfile.error;
+  }
+  console.info('[CareerSnap role diagnostic] profile lookup', {
+    userId: user.id,
+    profileFound: Boolean(profile),
+    userType: profile?.user_type ?? null,
+    roleInitialized: profile?.role_initialized ?? null,
+    error: profileError ? { code: profileError.code, message: profileError.message } : null,
+  });
   if (profileError) {
     console.error('[CareerSnap role onboarding] profile lookup failed', { code: profileError.code, message: profileError.message });
     return NextResponse.json({ error: 'We could not complete account setup.' }, { status: 500 });
