@@ -77,7 +77,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
 
         {/* Desktop Navigation */}
         <nav className={styles.desktopNav}>
-          {role !== 'employer' && <>
+          {(signedIn === false || (signedIn === true && role === 'job_seeker')) && <>
             <Link href="/jobs" className={styles.navLink}>Find Jobs</Link>
             <Link href="/resources" className={styles.navLink}>Career Resources</Link>
           </>}
@@ -146,7 +146,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
         <nav className={styles.mobileNav}>
-          {role !== 'employer' && <>
+          {(signedIn === false || (signedIn === true && role === 'job_seeker')) && <>
             <Link href="/jobs" className={styles.mobileNavLink}>Find Jobs</Link>
             <Link href="/resources" className={styles.mobileNavLink}>Career Resources</Link>
           </>}
