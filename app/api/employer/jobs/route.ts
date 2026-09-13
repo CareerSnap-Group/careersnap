@@ -12,8 +12,9 @@ export async function POST(request: Request) {
   const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
   if (profile?.user_type !== 'employer') return NextResponse.json({ error: "You don't have access to employer tools." }, { status: 403 });
 
-  const body = await request.json() as { jobTitle?: string; company?: string; location?: string; workLocation?: string; jobType?: string; experienceLevel?: string; salaryMin?: string; salaryMax?: string; currency?: string; description?: string; responsibilities?: string; requirements?: string; benefits?: string };
+  const body = await request.json() as { jobTitle?: string; company?: string; location?: string; workLocation?: string; jobType?: string; experienceLevel?: string; salaryMin?: string; salaryMax?: string; currency?: string; description?: string; responsibilities?: string; requirements?: string; benefits?: string; status?: string };
   if (!body.jobTitle || !body.company || !body.location || !body.description || !body.requirements) return NextResponse.json({ error: 'Please complete the required job details.' }, { status: 400 });
+  if (body.status && !['draft', 'published'].includes(body.status)) return NextResponse.json({ error: 'That job status is not supported.' }, { status: 400 });
 
   let { data: membership } = await supabase.from('employer_users').select('company_id').eq('user_id', user.id).limit(1).maybeSingle();
   if (!membership) {
@@ -22,11 +23,12 @@ export async function POST(request: Request) {
     membership = { company_id: company.id };
   }
 
+  const status = body.status || 'published';
   const { error } = await supabase.from('jobs').insert({
     company_id: membership.company_id, created_by: user.id, title: body.jobTitle, slug: `${slugify(body.jobTitle)}-${Date.now()}`,
     description: body.description, responsibilities: (body.responsibilities || '').split('\n').filter(Boolean), requirements: body.requirements.split('\n').filter(Boolean), benefits: (body.benefits || '').split('\n').filter(Boolean),
     location: body.location, work_location: body.workLocation || 'hybrid', job_type: body.jobType || 'full-time', experience_level: body.experienceLevel || 'mid',
-    salary_min: body.salaryMin ? Number(body.salaryMin) : null, salary_max: body.salaryMax ? Number(body.salaryMax) : null, salary_currency: body.currency || 'ZAR', status: 'published', published_at: new Date().toISOString(), expires_at: null,
+    salary_min: body.salaryMin ? Number(body.salaryMin) : null, salary_max: body.salaryMax ? Number(body.salaryMax) : null, salary_currency: body.currency || 'ZAR', status, published_at: status === 'published' ? new Date().toISOString() : null, expires_at: null,
   });
   if (error) return NextResponse.json({ error: error.message.includes('can_create_job') ? 'Your current plan has reached its active job limit.' : 'We could not post this job.' }, { status: 400 });
   return NextResponse.json({ ok: true });
