@@ -19,7 +19,7 @@ export type Database = {
     Functions: Record<string, never>;
     Enums: {
       user_type: 'job_seeker' | 'employer';
-      application_status: 'applied' | 'viewed' | 'interview' | 'offer' | 'rejected';
+      application_status: 'applied' | 'viewed' | 'submitted' | 'reviewing' | 'shortlisted' | 'interview' | 'offer' | 'hired' | 'rejected';
     };
     CompositeTypes: Record<string, never>;
   };

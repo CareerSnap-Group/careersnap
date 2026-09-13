@@ -14,12 +14,15 @@ import { createClient } from '@/lib/supabase/browser';
 import { saveJob, unsaveJob, fetchSavedJobIds } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Icon } from '@/components/icons';
+import { ApplicationForm } from './application-form';
 
 export default function JobDetailsPage() {
   const params = useParams();
   const jobId = params.id as string;
   const job = getJobById(jobId);
   const [isSaved, setIsSaved] = useState(false);
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [applicationSubmitted, setApplicationSubmitted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,6 +31,7 @@ export default function JobDetailsPage() {
       if (!data.user) return;
       const savedIds = await fetchSavedJobIds(data.user.id);
       setIsSaved(Boolean(savedIds?.includes(job.id)));
+      if (new URLSearchParams(window.location.search).get('apply') === '1') setShowApplicationForm(true);
     });
   }, [job]);
 
@@ -48,9 +52,16 @@ export default function JobDetailsPage() {
   };
 
   const handleApply = async () => {
-    if (!isSupabaseConfigured() || !(await createClient().auth.getUser()).data.user) {
+    if (!isSupabaseConfigured()) {
       router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}?apply=1`)}`);
+      return;
     }
+    const { data } = await createClient().auth.getUser();
+    if (!data.user) {
+      router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}?apply=1`)}`);
+      return;
+    }
+    setShowApplicationForm(true);
   };
 
   if (!job) {
@@ -213,9 +224,7 @@ export default function JobDetailsPage() {
           <aside className={styles.sidebar}>
             {/* Apply CTA */}
             <div className={styles.ctaBox}>
-              <Button fullWidth size="lg" className={styles.applyButton} onClick={handleApply}>
-                Apply Now
-              </Button>
+              {applicationSubmitted ? <p className={styles.applicationSuccess}><Icon name="check" />Application submitted</p> : <Button fullWidth size="lg" className={styles.applyButton} onClick={handleApply}>Apply Now</Button>}
               <Button
                 fullWidth
                 variant="outline"
@@ -225,6 +234,8 @@ export default function JobDetailsPage() {
                 <Icon name={isSaved ? 'heart' : 'heart-off'} />{isSaved ? 'Saved' : 'Save Job'}
               </Button>
             </div>
+
+            {showApplicationForm && !applicationSubmitted && <ApplicationForm jobId={jobId} onSubmitted={() => { setShowApplicationForm(false); setApplicationSubmitted(true); }} />}
 
             {/* Similar Jobs */}
             {similarJobs.length > 0 && (

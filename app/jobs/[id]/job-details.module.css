@@ -272,6 +272,110 @@
   font-size: var(--font-size-base);
 }
 
+.applicationCard {
+  background-color: var(--color-background-primary);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.applicationHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+  margin-bottom: var(--spacing-lg);
+}
+
+.applicationHeader .sectionTitle {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-xs);
+}
+
+.applicationHeader .sectionText {
+  font-size: var(--font-size-sm);
+}
+
+.closeApplication {
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0;
+}
+
+.applicationForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.applicationLabel {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.applicationSelect,
+.applicationTextarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font: inherit;
+  padding: 0.7rem 0.75rem;
+}
+
+.applicationTextarea {
+  resize: vertical;
+}
+
+.applicationSelect:focus,
+.applicationTextarea:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
+}
+
+.applicationHint,
+.applicationError,
+.applicationSuccess {
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.applicationHint {
+  color: var(--color-text-secondary);
+}
+
+.applicationError {
+  color: #b42318;
+}
+
+.applicationSuccess {
+  align-items: center;
+  color: #166534;
+  display: flex;
+  font-weight: var(--font-weight-semibold);
+  justify-content: center;
+  min-height: 3rem;
+}
+
+.applicationActions {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .applicationActions {
+    flex-direction: column;
+  }
+}
+
 .saveButton {
   font-weight: var(--font-weight-medium);
 }

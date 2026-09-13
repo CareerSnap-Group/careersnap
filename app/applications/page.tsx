@@ -15,8 +15,12 @@ import styles from './applications.module.css';
 const statusColors = {
   applied: 'secondary',
   viewed: 'primary',
+  submitted: 'secondary',
+  reviewing: 'primary',
+  shortlisted: 'primary',
   interview: 'primary',
   offer: 'success',
+  hired: 'success',
   rejected: 'danger',
 } as const;
 
