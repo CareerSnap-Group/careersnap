@@ -26,18 +26,20 @@ const statusColors = {
 
 export default function ApplicationsPage() {
   const [remoteApplications, setRemoteApplications] = useState<SupabaseApplication[] | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isSupabaseConfigured()) return;
+    if (!isSupabaseConfigured()) { setLoading(false); return; }
     createClient().auth.getUser().then(async ({ data }) => {
       if (data.user) setRemoteApplications(await fetchApplications(data.user.id));
+      else setRemoteApplications([]);
+      setLoading(false);
     });
   }, []);
 
-  const applications = (remoteApplications || mockApplications).map((app) => ({
-    ...app,
-    job: getJobById(app.jobId),
-  }));
+  const applications = isSupabaseConfigured()
+    ? (remoteApplications || [])
+    : mockApplications.map((app) => ({ ...app, job: getJobById(app.jobId) }));
 
   const getStatusLabel = (status: string) => {
     return status.charAt(0).toUpperCase() + status.slice(1);
@@ -53,7 +55,7 @@ export default function ApplicationsPage() {
           <p className={styles.subtitle}>Keep track of your job applications and next steps</p>
         </div>
 
-        {applications.length === 0 ? (
+        {loading ? <div className={styles.emptyState}><div className={styles.emptyContent}><p className={styles.emptyDescription}>Loading your applications...</p></div></div> : applications.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyContent}>
               <h2 className={styles.emptyTitle}>No applications yet</h2>
@@ -103,10 +105,10 @@ export default function ApplicationsPage() {
                     {applications.map((app) => (
                       <tr key={app.id} className={styles.tableRow}>
                         <td className={styles.cellJob}>
-                          {app.job?.title || 'Job Removed'}
+                          {app.job?.title || 'Job no longer available'}
                         </td>
                         <td className={styles.cellCompany}>
-                          {app.job?.company.name || 'N/A'}
+                          {app.job?.company.name || 'Unavailable'}
                         </td>
                         <td className={styles.cell}>
                           {app.appliedDate.toLocaleDateString()}

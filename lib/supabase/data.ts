@@ -105,16 +105,36 @@ export async function fetchProfile(userId: string): Promise<UserProfile | null> 
   };
 }
 
-export type SupabaseApplication = Pick<Application, 'id' | 'jobId' | 'status'> & { appliedDate: Date; nextStep?: string };
+export type SupabaseApplication = Pick<Application, 'id' | 'jobId' | 'status'> & { appliedDate: Date; nextStep?: string; job: Job | null };
 
 export async function fetchApplications(userId: string): Promise<SupabaseApplication[] | null> {
   if (!isSupabaseConfigured()) return null;
-  const { data, error } = await supabase().from('applications').select('id, job_id, status, created_at').eq('user_id', userId).order('created_at', { ascending: false });
+  const client = supabase();
+  const { data, error } = await client.from('applications').select('id, job_id, status, created_at').eq('user_id', userId).order('created_at', { ascending: false });
   if (error || !data) return null;
+  const jobIds = data.map((row) => row.job_id);
+  const { data: jobRows } = jobIds.length ? await client.from('jobs').select('*, companies (id, name, description, industry, location)').in('id', jobIds) : { data: [] };
+  const jobsById = new Map((jobRows as unknown as DatabaseJob[] || []).map((row) => [row.id, toJob(row)]));
   return data.map((row) => ({
     id: row.id,
     jobId: row.job_id,
     status: row.status as SupabaseApplication['status'],
     appliedDate: new Date(row.created_at),
+    job: jobsById.get(row.job_id) || null,
   }));
+}
+
+export async function fetchSavedJobs(userId: string): Promise<Job[] | null> {
+  if (!isSupabaseConfigured()) return null;
+  const client = supabase();
+  const { data: savedRows, error: savedError } = await client.from('saved_jobs').select('job_id').eq('user_id', userId);
+  if (savedError || !savedRows) return null;
+  const jobIds = savedRows.map((row) => row.job_id);
+  if (jobIds.length === 0) return [];
+  const { data: jobRows, error: jobsError } = await client.from('jobs').select('*, companies (id, name, description, industry, location)').in('id', jobIds).eq('status', 'published');
+  if (jobsError || !jobRows) return [];
+  const now = Date.now();
+  return (jobRows as unknown as DatabaseJob[])
+    .filter((row) => !row.expires_at || new Date(row.expires_at).getTime() > now)
+    .map(toJob);
 }

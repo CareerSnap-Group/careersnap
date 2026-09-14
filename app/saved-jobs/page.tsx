@@ -8,23 +8,25 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { mockJobs } from '@/lib/mock-data';
+import type { Job } from '@/lib/types';
 import styles from './saved-jobs.module.css';
 import { createClient } from '@/lib/supabase/browser';
-import { fetchSavedJobIds, unsaveJob } from '@/lib/supabase/data';
+import { fetchSavedJobIds, fetchSavedJobs, unsaveJob } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Icon } from '@/components/icons';
 
 export default function SavedJobsPage() {
-  const [savedJobs, setSavedJobs] = useState<typeof mockJobs>([]);
+  const [savedJobs, setSavedJobs] = useState<Job[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isSupabaseConfigured()) {
       createClient().auth.getUser().then(async ({ data }) => {
         if (!data.user) return;
         setUserId(data.user.id);
-        const savedIds = await fetchSavedJobIds(data.user.id);
-        if (savedIds) setSavedJobs(mockJobs.filter((job) => savedIds.includes(job.id)));
+        setSavedJobs((await fetchSavedJobs(data.user.id)) || []);
+        setLoading(false);
       });
       return;
     }
@@ -36,6 +38,7 @@ export default function SavedJobsPage() {
       const jobs = mockJobs.filter((job) => savedIds.includes(job.id));
       setSavedJobs(jobs);
     }
+    setLoading(false);
   }, []);
 
   const handleRemove = (jobId: string) => {
@@ -66,7 +69,7 @@ export default function SavedJobsPage() {
           </Link>
         </div>
 
-        {savedJobs.length === 0 ? (
+        {loading ? <div className={styles.emptyState}><div className={styles.emptyContent}><p className={styles.emptyDescription}>Loading your saved jobs...</p></div></div> : savedJobs.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyContent}>
               <h2 className={styles.emptyTitle}>No saved jobs yet</h2>

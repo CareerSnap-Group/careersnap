@@ -44,9 +44,15 @@ export async function GET(request: Request) {
     console.error('[CareerSnap OAuth callback] session was not available after callback exchange');
     return NextResponse.redirect(new URL('/login?error=Authentication+callback+failed', requestUrl.origin));
   }
-  const { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
+  let { data: rawProfile, error: profileError } = await supabase.from('profiles').select('user_type, role_initialized').eq('id', user.id).maybeSingle();
   let profile = rawProfile as { user_type: 'job_seeker' | 'employer'; role_initialized?: boolean } | null;
-  if (profileError && profileError.code !== '42703') {
+  if (profileError?.code === '42703') {
+    const legacyProfile = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
+    rawProfile = legacyProfile.data ? { ...legacyProfile.data, role_initialized: true } : null;
+    profile = rawProfile as { user_type: 'job_seeker' | 'employer'; role_initialized?: boolean } | null;
+    profileError = legacyProfile.error;
+  }
+  if (profileError) {
     console.error('[CareerSnap OAuth callback] profile lookup failed', { code: profileError.code, message: profileError.message });
     return NextResponse.redirect(new URL('/login?error=Unable+to+load+account+role', requestUrl.origin));
   }
