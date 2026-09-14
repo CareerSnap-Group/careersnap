@@ -13,6 +13,7 @@ import { createClient } from '@/lib/supabase/browser';
 import { fetchProfile } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Icon } from '@/components/icons';
+import { ResumeManager } from './resume-manager';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(mockUserProfile);
@@ -181,13 +182,7 @@ export default function ProfilePage() {
             <Card className={styles.sidebarCard}>
               <h3 className={styles.cardTitle}>CV/Resume</h3>
               <p className={styles.cvDescription}>Upload your CV to include it in job applications.</p>
-              <div className={styles.cvUpload}>
-                <label className={styles.uploadBox}>
-                  <input type="file" accept=".pdf,.doc,.docx" hidden />
-                  <span><Icon name="file" />Choose file</span>
-                </label>
-              </div>
-              <p className={styles.cvHint}>PDF, DOC, or DOCX up to 5MB</p>
+              <ResumeManager />
             </Card>
 
             {/* Next Steps */}

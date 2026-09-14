@@ -361,6 +361,44 @@
   margin: 0;
 }
 
+.resumeManager {
+  display: flex;
+  flex-direction: column;
+}
+
+.resumeHint,
+.resumeError,
+.resumeSuccess {
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  margin: var(--spacing-sm) 0 0;
+}
+
+.resumeHint { color: var(--color-text-secondary); }
+.resumeError { color: #b42318; }
+.resumeSuccess { color: #166534; }
+
+.resumeList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.resumeRow {
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-md);
+}
+
+.resumeName,
+.resumeMeta { margin: 0; }
+.resumeName { color: var(--color-text-primary); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); word-break: break-word; }
+.resumeMeta { color: var(--color-text-tertiary); font-size: var(--font-size-xs); margin-top: var(--spacing-xs); }
+.resumeActions { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); }
+
 /* Next Steps */
 .nextSteps {
   display: flex;
