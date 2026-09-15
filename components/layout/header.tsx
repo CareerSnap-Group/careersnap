@@ -135,7 +135,13 @@ export function Header({ variant }: { variant?: 'landing' }) {
               <Icon name="chevron-down" size={13} />
             </Link>
           ) : null}
-          <button className={styles.mobileMenuButton} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle mobile menu">
+          <button
+            type="button"
+            className={styles.mobileMenuButton}
+            onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+            aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
+          >
             <span className={styles.menuIcon}></span>
             <span className={styles.menuIcon}></span>
             <span className={styles.menuIcon}></span>

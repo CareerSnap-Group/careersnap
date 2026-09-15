@@ -45,15 +45,17 @@
 /* Variants */
 .variant-primary {
   background-color: var(--color-primary-600);
-  color: white;
+  color: var(--color-text-primary);
 }
 
 .variant-primary:hover:not(:disabled) {
   background-color: var(--color-primary-700);
+  color: var(--color-text-inverse);
 }
 
 .variant-primary:active:not(:disabled) {
   background-color: var(--color-primary-800);
+  color: var(--color-text-inverse);
 }
 
 .variant-secondary {

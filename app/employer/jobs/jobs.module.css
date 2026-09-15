@@ -1,5 +1,5 @@
 .toolbar { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
-.primaryAction { display: inline-flex; align-items: center; background: var(--color-primary-600); color: white; padding: 0.7rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--font-weight-semibold); }
+.primaryAction { display: inline-flex; align-items: center; background: var(--color-primary-600); color: var(--color-text-primary); padding: 0.7rem 1rem; border-radius: var(--radius-md); text-decoration: none; font-weight: var(--font-weight-semibold); }
 .statusBadge { display: inline-block; padding: 0.3rem 0.55rem; border-radius: var(--radius-md); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); text-transform: capitalize; }
 .draft { background: #fef3c7; color: #92400e; }
 .published { background: #dcfce7; color: #166534; }

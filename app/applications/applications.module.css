@@ -82,6 +82,7 @@
 
 .emptyButton:hover {
   background-color: var(--color-primary-700);
+  color: var(--color-text-inverse);
 }
 
 /* Stats Grid */

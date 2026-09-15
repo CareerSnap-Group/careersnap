@@ -7,7 +7,7 @@
 
 .homeBody {
   flex: 1;
-  background: #fff;
+  background: var(--color-background-primary);
 }
 
 .container {
@@ -19,7 +19,7 @@
 
 /* Hero Section */
 .hero {
-  background: #fff;
+  background: var(--color-background-primary);
   padding: 2.5rem var(--spacing-md) 0;
   text-align: center;
 }
@@ -35,7 +35,7 @@
   margin: 2.5rem auto 0.9rem;
   font-size: 18px;
   font-weight: var(--font-weight-semibold);
-  color: #202124;
+  color: var(--color-text-primary);
   letter-spacing: -0.02em;
   line-height: 1.15;
 }
@@ -44,7 +44,7 @@
   max-width: 570px;
   margin: 0 auto 2rem;
   font-size: 14px;
-  color: #5f6368;
+  color: var(--color-text-secondary);
   line-height: 1.55;
 }
 
@@ -58,8 +58,8 @@
   grid-template-columns: 1.15fr 1fr 150px;
   gap: 0;
   padding: 0.4rem;
-  background: #fff;
-  border: 1px solid #d3d8df;
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border);
   border-radius: 0.875rem;
   box-shadow: 0 3px 10px rgba(32, 33, 36, 0.1);
   overflow: hidden;
@@ -74,12 +74,12 @@
 }
 
 .searchField + .searchField {
-  border-left: 1px solid #d6d9dc;
+  border-left: 1px solid var(--color-divider);
 }
 
 .searchIcon,
 .locationIcon {
-  color: #667085;
+  color: var(--color-text-tertiary);
   margin-right: 0.65rem !important;
 }
 
@@ -89,7 +89,7 @@
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  color: #202124;
+  color: var(--color-text-primary);
 }
 
 .searchField :global(input:focus) {
@@ -102,20 +102,22 @@
   padding: 0 1.35rem;
   white-space: nowrap;
   border-radius: 0.625rem;
-  background: #2557a7;
-  color: #fff;
+  background: var(--color-primary-600);
+  color: var(--color-text-primary);
   font-size: 1rem;
   font-weight: var(--font-weight-semibold);
   transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .searchButton:hover:not(:disabled) {
-  background: #1e478c;
-  box-shadow: 0 2px 5px rgba(37, 87, 167, 0.22);
+  background: var(--color-primary-700);
+  color: var(--color-text-inverse);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 
 .searchButton:active:not(:disabled) {
-  background: #183b74;
+  background: var(--color-primary-800);
+  color: var(--color-text-inverse);
   box-shadow: none;
 }
 
@@ -125,8 +127,8 @@
   justify-content: center;
   min-height: 42px;
   padding: 0.7rem 1.6rem;
-  color: #fff;
-  background: #2557a7;
+  color: var(--color-text-primary);
+  background: var(--color-primary-600);
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: var(--font-weight-semibold);
@@ -135,13 +137,14 @@
 }
 
 .primaryCta:hover {
-  color: #fff;
-  background: #1e478c;
-  box-shadow: 0 2px 5px rgba(37, 87, 167, 0.2);
+  color: var(--color-text-inverse);
+  background: var(--color-primary-700);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 
 .primaryCta:active {
-  background: #183b74;
+  background: var(--color-primary-800);
+  color: var(--color-text-inverse);
   box-shadow: none;
 }
 
@@ -154,8 +157,8 @@
   max-width: 760px;
   margin: 0 auto 2.75rem;
   padding: 1.35rem 3.5rem 1.35rem 1.75rem;
-  background: #fff;
-  border: 1px solid #e4e7ec;
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   box-shadow: 0 2px 8px rgba(32, 33, 36, 0.06);
   text-align: left;
@@ -163,22 +166,22 @@
 
 .employerPromotionTitle {
   margin: 0 0 0.25rem;
-  color: #202124;
+  color: var(--color-text-primary);
   font-size: 1rem;
   font-weight: var(--font-weight-semibold);
 }
 
 .employerPromotionText {
   margin: 0;
-  color: #5f6368;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
 }
 
 .employerPromotionCta {
   flex: 0 0 auto;
   padding: 0.65rem 1.1rem;
-  color: #2557a7;
-  border: 1px solid #2557a7;
+  color: var(--color-primary-600);
+  border: 1px solid var(--color-primary-600);
   border-radius: 0.5rem;
   font-size: 0.875rem;
   font-weight: var(--font-weight-semibold);
@@ -188,8 +191,8 @@
 }
 
 .employerPromotionCta:hover {
-  color: #1e478c;
-  background: #f5f8fd;
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
 }
 
 .dismissPromotion {
@@ -201,15 +204,15 @@
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  color: #5f6368;
+  color: var(--color-text-secondary);
   border-radius: 50%;
   font-size: 1.5rem;
   line-height: 1;
 }
 
 .dismissPromotion:hover {
-  background: #f3f5f7;
-  color: #202124;
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
 }
 
 .dismissPromotion:focus-visible {
@@ -228,7 +231,7 @@
 
   .searchField + .searchField {
     border-left: 0;
-    border-top: 1px solid #d6d9dc;
+    border-top: 1px solid var(--color-divider);
   }
 
   .searchButton {
@@ -261,7 +264,7 @@
   align-items: center;
   gap: 0.25rem;
   margin-bottom: 0.75rem;
-  color: #5f6368;
+  color: var(--color-text-secondary);
   font-size: 0.875rem;
 }
 
@@ -277,7 +280,7 @@
 }
 
 .searchTag {
-  color: #2557a7;
+  color: var(--color-primary-600);
   text-decoration: none;
   padding: 0.2rem 0.5rem;
   border: 0;
@@ -289,7 +292,7 @@
 
 .searchTag:hover {
   background-color: transparent;
-  color: #1e478c;
+  color: var(--color-primary-700);
   text-decoration: underline;
 }
 

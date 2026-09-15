@@ -4,18 +4,18 @@
  */
 
 export const colors = {
-  // Primary - Professional blue for trust and action
+  // Primary - Cyan for focused, technology-forward actions
   primary: {
-    50: '#f0f4ff',
-    100: '#e6edff',
-    200: '#c7d5ff',
-    300: '#a3b8ff',
-    400: '#7a96ff',
-    500: '#5a7cfd',
-    600: '#4a64e8',
-    700: '#3a50cc',
-    800: '#2d3fa8',
-    900: '#1e2a7a',
+    50: '#ecfeff',
+    100: '#cffafe',
+    200: '#a5f3fc',
+    300: '#67e8f9',
+    400: '#22d3ee',
+    500: '#05ECFC',
+    600: '#05ECFC',
+    700: '#000000',
+    800: '#000000',
+    900: '#000000',
   },
   // Neutral - Professional grays
   neutral: {
@@ -66,18 +66,19 @@ export const colors = {
   },
   // Semantic colors
   text: {
-    primary: '#1a202c',
-    secondary: '#4a5568',
-    tertiary: '#8fa0b5',
+    primary: '#000000',
+    secondary: '#374151',
+    tertiary: '#6b7280',
     inverse: '#ffffff',
   },
   background: {
     primary: '#ffffff',
-    secondary: '#f3f5f7',
-    tertiary: '#e5eaef',
+    secondary: '#f3f4f6',
+    tertiary: '#e5e7eb',
   },
-  border: '#d4dce5',
-  divider: '#e5eaef',
+  footer: '#fdf9f4',
+  border: '#d1d5db',
+  divider: '#e5e7eb',
 };
 
 export const typography = {

@@ -1,5 +1,5 @@
 .footer {
-  background-color: #ffffff;
+  background-color: var(--color-footer);
   color: var(--color-text-primary);
   border-top: 1px solid var(--color-border);
   padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-lg);
@@ -104,11 +104,11 @@
   .footer { padding-top: var(--spacing-xl); }
   .brand { margin-bottom: var(--spacing-lg); }
   .navigation { display: flex; flex-direction: column; gap: 0; }
-  .section { border-top: 1px solid var(--color-border); }
-  .section:last-child { border-bottom: 1px solid var(--color-border); }
-  .sectionTrigger { min-height: 56px; cursor: pointer; }
-  .chevron { display: block; }
-  .links { max-height: 0; overflow: hidden; margin: 0; opacity: 0; transition: max-height var(--transition-base), opacity var(--transition-fast), margin var(--transition-base); }
+  .section { border-top: 1px solid #e5e7eb; }
+  .section:last-child { border-bottom: 1px solid #e5e7eb; }
+  .sectionTrigger { min-height: 56px; cursor: pointer; background-color: transparent; color: #000000; padding: 0 var(--spacing-md); }
+  .chevron { display: block; color: #000000; }
+  .links { max-height: 0; overflow: hidden; margin: 0; opacity: 0; background-color: var(--color-background-primary); transition: max-height var(--transition-base), opacity var(--transition-fast), margin var(--transition-base); }
   .linksOpen { max-height: 180px; margin: 0 0 var(--spacing-md); opacity: 1; }
   .bottom { flex-direction: column; align-items: flex-start; gap: var(--spacing-sm); }
   .legal { gap: var(--spacing-md); }
