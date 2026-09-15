@@ -1,0 +1,27 @@
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Icon } from '@/components/icons';
+import styles from '../cvs.module.css';
+
+type Candidate = { candidate_id: string; display_name: string | null; headline: string | null; location: string | null; bio: string | null; skills: string[]; experience: Array<{ job_title?: string; company_name?: string; location?: string; start_date?: string; end_date?: string | null; is_current?: boolean }>; education: Array<{ institution?: string; degree?: string | null; field_of_study?: string | null; start_date?: string | null; end_date?: string | null }>; availability: string; has_cv: boolean };
+
+function availabilityLabel(value: string) { return value.replace(/_/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()); }
+function dateLabel(value?: string | null) { return value ? new Date(value).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : 'Present'; }
+
+export function CandidateDetail({ candidateId }: { candidateId: string }) {
+  const [candidate, setCandidate] = useState<Candidate | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [resumeLoading, setResumeLoading] = useState(false);
+  const [resumeError, setResumeError] = useState('');
+
+  useEffect(() => { fetch(`/api/employer/candidates/${candidateId}`).then(async (response) => { const result = await response.json() as { candidate?: Candidate; error?: string }; if (!response.ok) throw new Error(result.error || 'Candidate not found.'); setCandidate(result.candidate || null); }).catch((reason: unknown) => setError(reason instanceof Error ? reason.message : 'We could not load this candidate.')).finally(() => setLoading(false)); }, [candidateId]);
+
+  const openResume = async () => { setResumeLoading(true); setResumeError(''); const response = await fetch(`/api/employer/candidates/${candidateId}/resume`); const result = await response.json() as { url?: string; error?: string }; setResumeLoading(false); if (!response.ok || !result.url) { setResumeError(result.error || 'We could not open this CV.'); return; } window.open(result.url, '_blank', 'noopener,noreferrer'); };
+
+  return <main className={styles.detailPage}><div className={styles.detailContainer}><Link href="/employer/cvs" className={styles.backLink}>Back to Find CVs</Link>{loading ? <Card className={styles.stateCard}><p className={styles.muted}>Loading candidate profile...</p></Card> : error ? <Card className={styles.stateCard}><p className={styles.error}>{error}</p></Card> : candidate ? <><header className={styles.detailHeader}><div><p className={styles.eyebrow}>Discoverable candidate</p><h1>{candidate.display_name || 'CareerSnap Candidate'}</h1><p className={styles.headline}>{candidate.headline || 'Professional profile'}</p>{candidate.location && <p className={styles.meta}><Icon name="map-pin" />{candidate.location}</p>}</div><div className={styles.resumeAction}>{candidate.has_cv ? <Button type="button" onClick={openResume} disabled={resumeLoading}>{resumeLoading ? 'Opening...' : 'View CV'}</Button> : <span className={styles.muted}>No CV available</span>}{resumeError && <p className={styles.error}>{resumeError}</p>}</div></header><div className={styles.detailGrid}><div className={styles.detailMain}>{candidate.bio && <Card className={styles.detailCard}><h2>About</h2><p className={styles.bodyText}>{candidate.bio}</p></Card>}<Card className={styles.detailCard}><h2>Skills</h2>{candidate.skills.length ? <div className={styles.skillList}>{candidate.skills.map((skill) => <span key={skill}>{skill}</span>)}</div> : <p className={styles.muted}>No skills listed.</p>}</Card><Card className={styles.detailCard}><h2>Experience</h2>{candidate.experience.length ? <div className={styles.timeline}>{candidate.experience.map((item, index) => <div className={styles.timelineItem} key={`${item.job_title}-${index}`}><h3>{item.job_title || 'Experience'}</h3><p className={styles.headline}>{item.company_name || 'Company not specified'}</p><p className={styles.muted}>{dateLabel(item.start_date)} - {item.is_current ? 'Present' : dateLabel(item.end_date)}</p></div>)}</div> : <p className={styles.muted}>No experience listed.</p>}</Card><Card className={styles.detailCard}><h2>Education</h2>{candidate.education.length ? <div className={styles.timeline}>{candidate.education.map((item, index) => <div className={styles.timelineItem} key={`${item.institution}-${index}`}><h3>{item.institution || 'Education'}</h3><p className={styles.headline}>{[item.degree, item.field_of_study].filter(Boolean).join(' in ') || 'Qualification not specified'}</p><p className={styles.muted}>{dateLabel(item.start_date)} - {dateLabel(item.end_date)}</p></div>)}</div> : <p className={styles.muted}>No education listed.</p>}</Card></div><aside><Card className={styles.detailCard}><h2>Availability</h2><p className={styles.availability}>{availabilityLabel(candidate.availability)}</p><p className={styles.muted}>This candidate has chosen to be discoverable by employers.</p></Card></aside></div></> : null}</div></main>;
+}
