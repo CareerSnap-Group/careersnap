@@ -129,10 +129,8 @@ export function Header({ variant }: { variant?: 'landing' }) {
               )}
             </Link>
           ) : signedIn === false ? (
-            <Link href="/login" className={styles.mobileSignInControl} aria-label="Sign In">
-              <span>Sign In</span>
-              <Icon name="user" size={17} />
-              <Icon name="chevron-down" size={13} />
+            <Link href="/login" className={styles.mobileSignInControl} aria-label="Sign in">
+              <Icon name="user" size={20} />
             </Link>
           ) : null}
           <button
