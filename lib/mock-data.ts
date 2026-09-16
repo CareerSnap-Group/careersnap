@@ -3,7 +3,7 @@
  * Realistic sample data for development and demonstration
  */
 
-import { Job, Company, JobCategory, UserProfile, Application } from '@/lib/types';
+import { Job, Company, UserProfile, Application } from '@/lib/types';
 
 const companies: Record<string, Company> = {
   acme: {
@@ -417,19 +417,6 @@ export const mockJobs: Job[] = [
     postedDate: new Date('2024-11-06'),
     tags: ['QA', 'Testing', 'Entry-level'],
   },
-];
-
-export const mockCategories: JobCategory[] = [
-  { id: 'tech', name: 'Technology', jobCount: 342 },
-  { id: 'healthcare', name: 'Healthcare', jobCount: 156 },
-  { id: 'finance', name: 'Finance', jobCount: 289 },
-  { id: 'engineering', name: 'Engineering', jobCount: 198 },
-  { id: 'marketing', name: 'Marketing', jobCount: 124 },
-  { id: 'education', name: 'Education', jobCount: 87 },
-  { id: 'retail', name: 'Retail & Sales', jobCount: 456 },
-  { id: 'admin', name: 'Administration', jobCount: 203 },
-  { id: 'hospitality', name: 'Hospitality', jobCount: 112 },
-  { id: 'hr', name: 'Human Resources', jobCount: 95 },
 ];
 
 export const mockUserProfile: UserProfile = {

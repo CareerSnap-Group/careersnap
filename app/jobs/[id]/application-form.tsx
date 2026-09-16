@@ -18,7 +18,14 @@ export function ApplicationForm({ jobId, onSubmitted }: { jobId: string; onSubmi
   const [error, setError] = useState('');
 
   useEffect(() => {
-    createClient().from('resumes').select('id, file_name, is_primary').order('is_primary', { ascending: false }).order('created_at', { ascending: false }).then(({ data }) => {
+    const client = createClient();
+    client.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) {
+        setError('Please sign in to load your resumes.');
+        setLoadingResumes(false);
+        return;
+      }
+      const { data } = await client.from('resumes').select('id, file_name, is_primary').eq('user_id', user.id).order('is_primary', { ascending: false }).order('created_at', { ascending: false });
       const available = (data || []) as ResumeOption[];
       setResumes(available);
       setResumeId(available[0]?.id || '');

@@ -274,18 +274,6 @@ export default function JobDetailsPage() {
               </div>
             )}
 
-            {/* Job Stats */}
-            <Card className={styles.statsCard}>
-              <h3 className={styles.statsTitle}>Job Stats</h3>
-              <div className={styles.statItem}>
-                <span className={styles.statLabel}>Applications</span>
-                <span className={styles.statValue}>{Math.floor(Math.random() * 100) + 10}</span>
-              </div>
-              <div className={styles.statItem}>
-                <span className={styles.statLabel}>Saves</span>
-                <span className={styles.statValue}>{Math.floor(Math.random() * 50) + 5}</span>
-              </div>
-            </Card>
           </aside>
         </div>
       </div>

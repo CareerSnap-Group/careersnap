@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/icons';
-import { mockCategories } from '@/lib/mock-data';
+import { staticCategories } from '@/lib/static-data';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import styles from './page.module.css';
@@ -114,11 +114,10 @@ export default function HomePage() {
           <div className={styles.container}>
             <h2 className={styles.sectionTitle}>Browse by Category</h2>
             <div className={styles.categoriesGrid}>
-              {mockCategories.map((category) => (
+              {staticCategories.map((category) => (
                 <Link key={category.id} href={`/jobs?category=${category.id}`}>
                   <Card hoverable className={styles.categoryCard}>
                     <h3 className={styles.categoryName}>{category.name}</h3>
-                    <p className={styles.categoryCount}>{category.jobCount} open positions</p>
                   </Card>
                 </Link>
               ))}
