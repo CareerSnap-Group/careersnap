@@ -9,11 +9,31 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { mockJobs, searchJobs, filterJobs } from '@/lib/mock-data';
 import { Job, JobType, ExperienceLevel, WorkLocation } from '@/lib/types';
 import { Icon } from '@/components/icons';
 import styles from './jobs.module.css';
 import { fetchPublishedJobs } from '@/lib/supabase/data';
+
+function searchJobs(query: string, jobs: Job[]): Job[] {
+  if (!query.trim()) return jobs;
+  const lowerQuery = query.toLowerCase();
+  return jobs.filter((job) =>
+    job.title.toLowerCase().includes(lowerQuery) ||
+    job.company.name.toLowerCase().includes(lowerQuery) ||
+    job.description.toLowerCase().includes(lowerQuery) ||
+    job.tags?.some((tag) => tag.toLowerCase().includes(lowerQuery))
+  );
+}
+
+function filterJobs(jobs: Job[], filters: { jobType?: string; experienceLevel?: string; workLocation?: string; location?: string }): Job[] {
+  return jobs.filter((job) => {
+    if (filters.jobType && job.jobType !== filters.jobType) return false;
+    if (filters.experienceLevel && job.experienceLevel !== filters.experienceLevel) return false;
+    if (filters.workLocation && job.workLocation !== filters.workLocation) return false;
+    if (filters.location && !job.location.toLowerCase().includes(filters.location.toLowerCase())) return false;
+    return true;
+  });
+}
 
 function JobsContent() {
   const searchParams = useSearchParams();
@@ -26,11 +46,13 @@ function JobsContent() {
   const [selectedExperience, setSelectedExperience] = useState<ExperienceLevel | ''>('');
   const [selectedWorkLocation, setSelectedWorkLocation] = useState<WorkLocation | ''>('');
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-  const [availableJobs, setAvailableJobs] = useState(mockJobs);
+  const [availableJobs, setAvailableJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPublishedJobs().then((jobs) => {
-      if (jobs?.length) setAvailableJobs(jobs);
+      setAvailableJobs(jobs || []);
+      setLoading(false);
     });
   }, []);
 
@@ -162,10 +184,14 @@ function JobsContent() {
               <h2 className={styles.resultsCount}>{filteredJobs.length} jobs found</h2>
             </div>
 
-            {filteredJobs.length === 0 ? (
+            {loading ? (
               <div className={styles.emptyState}>
-                <p className={styles.emptyStateTitle}>No jobs found</p>
-                <p className={styles.emptyStateDescription}>Try adjusting your search or filters to find more results.</p>
+                <p className={styles.emptyStateTitle}>Loading jobs...</p>
+              </div>
+            ) : filteredJobs.length === 0 ? (
+              <div className={styles.emptyState}>
+                <p className={styles.emptyStateTitle}>{availableJobs.length === 0 ? 'No jobs are available yet' : 'No jobs found'}</p>
+                <p className={styles.emptyStateDescription}>{availableJobs.length === 0 ? 'Published opportunities will appear here when employers post them.' : 'Try adjusting your search or filters to find more results.'}</p>
               </div>
             ) : (
               <div className={styles.resultsLayout}>

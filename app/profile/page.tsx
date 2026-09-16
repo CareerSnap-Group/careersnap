@@ -7,23 +7,27 @@ import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { mockUserProfile } from '@/lib/mock-data';
 import styles from './profile.module.css';
 import { createClient } from '@/lib/supabase/browser';
 import { fetchProfile } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Icon } from '@/components/icons';
 import { ResumeManager } from './resume-manager';
+import type { UserProfile } from '@/lib/types';
 
 export default function ProfilePage() {
-  const [profile, setProfile] = useState(mockUserProfile);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!isSupabaseConfigured()) return;
+    if (!isSupabaseConfigured()) { setError('Your profile is unavailable until your CareerSnap account is connected.'); setLoading(false); return; }
     createClient().auth.getUser().then(async ({ data }) => {
-      if (!data.user) return;
+      if (!data.user) { setError('Please sign in to view your profile.'); setLoading(false); return; }
       const remoteProfile = await fetchProfile(data.user.id);
       if (remoteProfile) setProfile(remoteProfile);
+      else setError('We could not load your profile. Please try again.');
+      setLoading(false);
     });
   }, []);
 
@@ -32,6 +36,8 @@ export default function ProfilePage() {
       <Header />
 
       <div className={styles.container}>
+        {loading ? <div className={styles.mainContent}><p className={styles.resumeHint}>Loading your profile...</p></div> : error ? <div className={styles.mainContent}><p className={styles.resumeError}>{error}</p></div> : profile ? (
+        <>
         {/* Profile Header */}
         <div className={styles.profileHeader}>
           <div className={styles.profileInfo}>
@@ -205,6 +211,8 @@ export default function ProfilePage() {
             </Card>
           </aside>
         </div>
+        </>
+        ) : null}
       </div>
 
       <Footer />

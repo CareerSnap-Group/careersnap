@@ -8,10 +8,9 @@ import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { getJobById, mockJobs } from '@/lib/mock-data';
 import styles from './job-details.module.css';
 import { createClient } from '@/lib/supabase/browser';
-import { saveJob, unsaveJob, fetchSavedJobIds } from '@/lib/supabase/data';
+import { fetchPublishedJobById, fetchPublishedJobs, saveJob, unsaveJob, fetchSavedJobIds } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Icon } from '@/components/icons';
 import { ApplicationForm } from './application-form';
@@ -19,11 +18,24 @@ import { ApplicationForm } from './application-form';
 export default function JobDetailsPage() {
   const params = useParams();
   const jobId = params.id as string;
-  const job = getJobById(jobId);
+  const [job, setJob] = useState<Awaited<ReturnType<typeof fetchPublishedJobById>>>(null);
+  const [loading, setLoading] = useState(true);
+  const [similarJobs, setSimilarJobs] = useState<NonNullable<Awaited<ReturnType<typeof fetchPublishedJobs>>>>([]);
   const [isSaved, setIsSaved] = useState(false);
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    let active = true;
+    Promise.all([fetchPublishedJobById(jobId), fetchPublishedJobs()]).then(([publishedJob, publishedJobs]) => {
+      if (!active) return;
+      setJob(publishedJob);
+      setSimilarJobs(publishedJob ? (publishedJobs || []).filter((candidate) => candidate.id !== publishedJob.id && (candidate.company.id === publishedJob.company.id || candidate.jobType === publishedJob.jobType)).slice(0, 4) : []);
+      setLoading(false);
+    });
+    return () => { active = false; };
+  }, [jobId]);
 
   useEffect(() => {
     if (!isSupabaseConfigured() || !job) return;
@@ -34,6 +46,18 @@ export default function JobDetailsPage() {
       if (new URLSearchParams(window.location.search).get('apply') === '1') setShowApplicationForm(true);
     });
   }, [job]);
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <Header />
+        <div className={styles.notFound}>
+          <div className={styles.notFoundContent}><p>Loading job...</p></div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   const toggleSaved = async () => {
     if (!job || !isSupabaseConfigured()) {
@@ -81,11 +105,6 @@ export default function JobDetailsPage() {
       </div>
     );
   }
-
-  // Get similar jobs (same company or similar title)
-  const similarJobs = mockJobs
-    .filter((j) => j.id !== job.id && (j.company.id === job.company.id || j.jobType === job.jobType))
-    .slice(0, 4);
 
   return (
     <div className={styles.page}>

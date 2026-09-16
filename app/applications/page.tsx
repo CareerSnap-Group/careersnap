@@ -6,7 +6,6 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { mockApplications, getJobById } from '@/lib/mock-data';
 import { createClient } from '@/lib/supabase/browser';
 import { fetchApplications, type SupabaseApplication } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
@@ -27,19 +26,24 @@ const statusColors = {
 export default function ApplicationsPage() {
   const [remoteApplications, setRemoteApplications] = useState<SupabaseApplication[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!isSupabaseConfigured()) { setLoading(false); return; }
+    if (!isSupabaseConfigured()) { setError('Applications are unavailable until your CareerSnap account is connected.'); setLoading(false); return; }
     createClient().auth.getUser().then(async ({ data }) => {
-      if (data.user) setRemoteApplications(await fetchApplications(data.user.id));
-      else setRemoteApplications([]);
+      if (!data.user) {
+        setError('Please sign in to view your applications.');
+        setRemoteApplications([]);
+      } else {
+        const applications = await fetchApplications(data.user.id);
+        if (applications === null) setError('We could not load your applications. Please try again.');
+        setRemoteApplications(applications || []);
+      }
       setLoading(false);
     });
   }, []);
 
-  const applications = isSupabaseConfigured()
-    ? (remoteApplications || [])
-    : mockApplications.map((app) => ({ ...app, job: getJobById(app.jobId) }));
+  const applications = remoteApplications || [];
 
   const getStatusLabel = (status: string) => {
     return status.charAt(0).toUpperCase() + status.slice(1);
@@ -55,7 +59,9 @@ export default function ApplicationsPage() {
           <p className={styles.subtitle}>Keep track of your job applications and next steps</p>
         </div>
 
-        {loading ? <div className={styles.emptyState}><div className={styles.emptyContent}><p className={styles.emptyDescription}>Loading your applications...</p></div></div> : applications.length === 0 ? (
+        {loading ? <div className={styles.emptyState}><div className={styles.emptyContent}><p className={styles.emptyDescription}>Loading your applications...</p></div></div> : error ? (
+          <div className={styles.emptyState}><div className={styles.emptyContent}><h2 className={styles.emptyTitle}>Applications unavailable</h2><p className={styles.emptyDescription}>{error}</p></div></div>
+        ) : applications.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyContent}>
               <h2 className={styles.emptyTitle}>No applications yet</h2>

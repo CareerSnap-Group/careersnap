@@ -7,11 +7,10 @@ import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { mockJobs } from '@/lib/mock-data';
 import type { Job } from '@/lib/types';
 import styles from './saved-jobs.module.css';
 import { createClient } from '@/lib/supabase/browser';
-import { fetchSavedJobIds, fetchSavedJobs, unsaveJob } from '@/lib/supabase/data';
+import { fetchSavedJobs, unsaveJob } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { Icon } from '@/components/icons';
 
@@ -19,38 +18,28 @@ export default function SavedJobsPage() {
   const [savedJobs, setSavedJobs] = useState<Job[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (isSupabaseConfigured()) {
-      createClient().auth.getUser().then(async ({ data }) => {
-        if (!data.user) return;
-        setUserId(data.user.id);
-        setSavedJobs((await fetchSavedJobs(data.user.id)) || []);
+    if (!isSupabaseConfigured()) { setError('Saved jobs are unavailable until your CareerSnap account is connected.'); setLoading(false); return; }
+    createClient().auth.getUser().then(async ({ data }) => {
+      if (!data.user) {
+        setError('Please sign in to view your saved jobs.');
         setLoading(false);
-      });
-      return;
-    }
-
-    // Load saved jobs from localStorage
-    const saved = localStorage.getItem('savedJobs');
-    if (saved) {
-      const savedIds = JSON.parse(saved);
-      const jobs = mockJobs.filter((job) => savedIds.includes(job.id));
-      setSavedJobs(jobs);
-    }
-    setLoading(false);
+        return;
+      }
+      setUserId(data.user.id);
+      const jobs = await fetchSavedJobs(data.user.id);
+      if (jobs === null) setError('We could not load your saved jobs. Please try again.');
+      setSavedJobs(jobs || []);
+      setLoading(false);
+    });
   }, []);
 
   const handleRemove = (jobId: string) => {
     setSavedJobs(savedJobs.filter((job) => job.id !== jobId));
     if (userId) {
       unsaveJob(userId, jobId);
-      return;
-    }
-    const saved = localStorage.getItem('savedJobs');
-    if (saved) {
-      const savedIds = JSON.parse(saved).filter((id: string) => id !== jobId);
-      localStorage.setItem('savedJobs', JSON.stringify(savedIds));
     }
   };
 
@@ -69,7 +58,9 @@ export default function SavedJobsPage() {
           </Link>
         </div>
 
-        {loading ? <div className={styles.emptyState}><div className={styles.emptyContent}><p className={styles.emptyDescription}>Loading your saved jobs...</p></div></div> : savedJobs.length === 0 ? (
+        {loading ? <div className={styles.emptyState}><div className={styles.emptyContent}><p className={styles.emptyDescription}>Loading your saved jobs...</p></div></div> : error ? (
+          <div className={styles.emptyState}><div className={styles.emptyContent}><h2 className={styles.emptyTitle}>Saved jobs unavailable</h2><p className={styles.emptyDescription}>{error}</p></div></div>
+        ) : savedJobs.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyContent}>
               <h2 className={styles.emptyTitle}>No saved jobs yet</h2>

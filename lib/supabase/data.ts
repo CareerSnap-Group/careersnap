@@ -66,6 +66,19 @@ export async function fetchPublishedJobs(): Promise<Job[] | null> {
   return (data as unknown as DatabaseJob[]).map(toJob);
 }
 
+export async function fetchPublishedJobById(jobId: string): Promise<Job | null> {
+  if (!isSupabaseConfigured()) return null;
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(jobId)) return null;
+  const { data, error } = await supabase()
+    .from('jobs')
+    .select('*, companies (id, name, description, industry, location)')
+    .eq('id', jobId)
+    .eq('status', 'published')
+    .maybeSingle();
+  if (error || !data) return null;
+  return toJob(data as unknown as DatabaseJob);
+}
+
 export async function fetchSavedJobIds(userId: string): Promise<string[] | null> {
   if (!isSupabaseConfigured()) return null;
   const { data, error } = await supabase().from('saved_jobs').select('job_id').eq('user_id', userId);
