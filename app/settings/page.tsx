@@ -3,6 +3,7 @@ import { Header } from '@/components/layout/header';
 import { requireRole } from '@/lib/auth/server';
 import { SettingsForm } from './settings-form';
 import styles from './settings.module.css';
+import { DeleteAccount } from '@/components/account/delete-account';
 
 export const metadata = {
   title: 'Profile Settings | CareerSnap',
@@ -25,6 +26,7 @@ export default async function SettingsPage() {
         </header>
         <section className={styles.card} aria-label="Profile settings form">
           <SettingsForm profile={{ email: values.email || user.email || '', full_name: values.full_name || '', headline: values.headline || '', bio: values.bio || '', location: values.location || '', allow_employer_discovery: values.allow_employer_discovery, availability: values.availability || 'not_specified' }} />
+          <DeleteAccount />
         </section>
       </main>
       <Footer />
