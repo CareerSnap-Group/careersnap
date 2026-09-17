@@ -22,7 +22,11 @@ export type Database = {
       billing_entitlement_usage: { Row: BillingEntitlementUsage; Insert: BillingEntitlementUsageInsert; Update: BillingEntitlementUsageUpdate; Relationships: [] };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      create_billing_order: { Args: { p_company_id: string; p_plan_id: string }; Returns: string };
+      activate_billing_entitlement: { Args: { p_order_id: string }; Returns: string };
+      can_create_job: { Args: { target_user_id?: string }; Returns: boolean };
+    };
     Enums: {
       user_type: 'job_seeker' | 'employer';
       application_status: 'applied' | 'viewed' | 'submitted' | 'reviewing' | 'shortlisted' | 'interview' | 'offer' | 'hired' | 'rejected';
