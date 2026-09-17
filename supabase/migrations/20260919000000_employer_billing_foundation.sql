@@ -65,6 +65,9 @@ create table public.billing_transactions (
   constraint billing_transactions_currency_valid check (currency = upper(currency) and length(currency) = 3)
 );
 
+-- The authoritative transaction-processing function must ensure that
+-- billing_transactions.company_id matches billing_orders.company_id for order_id.
+
 create table public.billing_events (
   id uuid primary key default gen_random_uuid(),
   provider text not null,
@@ -102,6 +105,9 @@ create table public.billing_entitlements (
   constraint billing_entitlements_status_valid check (status in ('pending', 'active', 'exhausted', 'expired', 'revoked'))
 );
 
+-- The authoritative entitlement-activation function must ensure that
+-- billing_entitlements.company_id matches billing_orders.company_id for order_id.
+
 create table public.billing_entitlement_usage (
   id uuid primary key default gen_random_uuid(),
   entitlement_id uuid not null references public.billing_entitlements(id) on delete restrict,
@@ -113,9 +119,20 @@ create table public.billing_entitlement_usage (
   constraint billing_entitlement_usage_quantity_valid check (quantity > 0)
 );
 
+-- The authoritative consumption function must ensure that:
+-- * billing_entitlement_usage.company_id matches its entitlement company.
+-- * billing_entitlement_usage.job_id belongs to billing_entitlement_usage.company_id.
+-- * a job is not charged against multiple entitlements.
+-- * entitlement consumption and usage recording are atomic and concurrency-safe.
+
 create unique index billing_transactions_provider_transaction_idx
   on public.billing_transactions(provider, provider_transaction_id)
   where provider_transaction_id is not null;
+create unique index billing_entitlements_order_id_idx
+  on public.billing_entitlements(order_id);
+create index billing_entitlements_active_company_idx
+  on public.billing_entitlements(company_id, expires_at)
+  where status = 'active';
 create index billing_orders_company_id_idx on public.billing_orders(company_id);
 create index billing_orders_status_idx on public.billing_orders(status);
 create index billing_orders_created_at_idx on public.billing_orders(created_at desc);
@@ -135,6 +152,11 @@ create index billing_entitlement_usage_company_id_idx on public.billing_entitlem
 create unique index billing_entitlement_usage_active_job_idx
   on public.billing_entitlement_usage(entitlement_id, job_id)
   where released_at is null;
+
+-- This permits a released usage record to be recreated for the same
+-- entitlement/job while preserving one active usage record per pair. The
+-- authoritative consumption function must also prevent a job from being
+-- charged against multiple entitlements.
 
 create trigger employer_plans_updated_at
 before update on public.employer_plans
