@@ -18,21 +18,3 @@ alter table public.jobs
 alter table public.jobs
   add constraint jobs_created_by_fkey
   foreign key (created_by) references public.profiles(id) on delete set null;
-
-alter table public.subscriptions
-  alter column user_id drop not null;
-
-alter table public.subscriptions
-  drop constraint if exists subscriptions_user_id_fkey;
-alter table public.subscriptions
-  add constraint subscriptions_user_id_fkey
-  foreign key (user_id) references public.profiles(id) on delete set null;
-
-alter table public.payments
-  alter column user_id drop not null;
-
-alter table public.payments
-  drop constraint if exists payments_user_id_fkey;
-alter table public.payments
-  add constraint payments_user_id_fkey
-  foreign key (user_id) references public.profiles(id) on delete set null;
