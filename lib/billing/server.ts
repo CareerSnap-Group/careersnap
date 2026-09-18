@@ -1,8 +1,10 @@
+import 'server-only';
+
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth/server';
 
 export async function listActiveEmployerPlans() {
-  const supabase = createClient();
+  const { supabase } = await requireRole('employer');
   const { data, error } = await supabase
     .from('employer_plans')
     .select('id, code, name, description, price, currency, billing_model, job_posting_allowance, active_job_limit, duration_days')
