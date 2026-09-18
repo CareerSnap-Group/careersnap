@@ -2,6 +2,13 @@
 -- Provider cryptographic verification remains in trusted server code. These
 -- functions enforce the database-side prerequisites for trusted activation.
 
+alter table public.billing_transactions
+  add constraint billing_transactions_success_terms_valid
+  check (
+    status <> 'succeeded'
+    or (provider_transaction_id is not null and paid_at is not null)
+  );
+
 create or replace function public.record_billing_event(
   p_provider text,
   p_provider_event_id text,
@@ -24,6 +31,21 @@ declare
 begin
   if coalesce(auth.role(), '') <> 'service_role' then
     raise exception 'Trusted billing processing is required';
+  end if;
+
+  if p_order_id is not null and not exists (
+    select 1 from public.billing_orders where id = p_order_id
+  ) then
+    raise exception 'Billing order not found';
+  end if;
+
+  if p_transaction_id is not null and not exists (
+    select 1
+    from public.billing_transactions
+    where id = p_transaction_id
+      and (p_order_id is null or order_id = p_order_id)
+  ) then
+    raise exception 'Billing transaction is not linked to the billing order';
   end if;
 
   select *
@@ -113,6 +135,8 @@ set search_path = public
 as $$
 declare
   billing_order public.billing_orders%rowtype;
+  existing_transaction public.billing_transactions%rowtype;
+  normalized_provider_transaction_id text := nullif(btrim(p_provider_transaction_id), '');
   transaction_id uuid;
 begin
   if coalesce(auth.role(), '') <> 'service_role' then
@@ -166,7 +190,7 @@ begin
     billing_order.id,
     billing_order.company_id,
     p_provider,
-    nullif(btrim(p_provider_transaction_id), ''),
+    normalized_provider_transaction_id,
     p_provider_reference,
     p_provider_status,
     p_status,
@@ -181,12 +205,36 @@ begin
   do nothing
   returning id into transaction_id;
 
-  if transaction_id is null and p_provider_transaction_id is not null then
-    select id
-    into transaction_id
+  if transaction_id is null and normalized_provider_transaction_id is not null then
+    select *
+    into existing_transaction
     from public.billing_transactions
     where provider = p_provider
-      and provider_transaction_id = nullif(btrim(p_provider_transaction_id), '');
+      and provider_transaction_id = normalized_provider_transaction_id
+    for update;
+
+    if existing_transaction.order_id <> billing_order.id
+       or existing_transaction.amount is distinct from billing_order.amount
+       or existing_transaction.currency is distinct from billing_order.currency then
+      raise exception 'Provider transaction identity is already linked to another billing order';
+    end if;
+
+    if existing_transaction.status = 'succeeded' then
+      return existing_transaction.id;
+    end if;
+
+    if p_status = 'succeeded' and existing_transaction.status in ('pending', 'failed') then
+      update public.billing_transactions
+      set provider_reference = p_provider_reference,
+          provider_status = p_provider_status,
+          status = 'succeeded',
+          failure_code = null,
+          failure_message = null,
+          paid_at = p_paid_at
+      where id = existing_transaction.id;
+    end if;
+
+    transaction_id := existing_transaction.id;
   end if;
 
   return transaction_id;
