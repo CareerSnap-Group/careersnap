@@ -9,6 +9,7 @@ export type Database = {
       skills: { Row: Skill; Insert: SkillInsert; Update: SkillUpdate; Relationships: [] };
       resumes: { Row: Resume; Insert: ResumeInsert; Update: ResumeUpdate; Relationships: [] };
       companies: { Row: Company; Insert: CompanyInsert; Update: CompanyUpdate; Relationships: [] };
+      company_ratings: { Row: CompanyRating; Insert: CompanyRatingInsert; Update: CompanyRatingUpdate; Relationships: [] };
       employer_users: { Row: EmployerUser; Insert: EmployerUserInsert; Update: EmployerUserUpdate; Relationships: [] };
       jobs: { Row: Job; Insert: JobInsert; Update: JobUpdate; Relationships: [] };
       job_skills: { Row: JobSkill; Insert: JobSkillInsert; Update: JobSkillUpdate; Relationships: [] };
@@ -21,11 +22,14 @@ export type Database = {
       billing_entitlements: { Row: BillingEntitlement; Insert: BillingEntitlementInsert; Update: BillingEntitlementUpdate; Relationships: [] };
       billing_entitlement_usage: { Row: BillingEntitlementUsage; Insert: BillingEntitlementUsageInsert; Update: BillingEntitlementUsageUpdate; Relationships: [] };
     };
-    Views: Record<string, never>;
+    Views: {
+      company_rating_summaries: { Row: CompanyRatingSummary; Relationships: [] };
+    } & Record<string, never>;
     Functions: {
       create_billing_order: { Args: { p_company_id: string; p_plan_id: string }; Returns: string };
       activate_billing_entitlement: { Args: { p_order_id: string }; Returns: string };
       can_create_job: { Args: { target_user_id?: string }; Returns: boolean };
+      claim_company_owner: { Args: { target_company_id: string }; Returns: undefined };
     };
     Enums: {
       user_type: 'job_seeker' | 'employer';
@@ -51,9 +55,13 @@ type SkillUpdate = Partial<Omit<Skill, 'id' | 'user_id' | 'created_at' | 'update
 type Resume = Timestamps & { id: string; user_id: string; file_name: string; storage_path: string; file_path: string; file_url: string | null; is_primary: boolean; is_default: boolean };
 type ResumeInsert = Omit<Resume, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Resume, 'id'>>;
 type ResumeUpdate = Partial<Omit<Resume, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
-type Company = Timestamps & { id: string; name: string; slug: string; description: string | null; website_url: string | null; logo_url: string | null; created_by: string | null };
+type Company = Timestamps & { id: string; name: string; slug: string; description: string | null; website_url: string | null; website: string | null; industry: string | null; location: string | null; logo_url: string | null; created_by: string | null };
 type CompanyInsert = Omit<Company, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Company, 'id'>>;
 type CompanyUpdate = Partial<Omit<Company, 'id' | 'created_at' | 'updated_at'>>;
+type CompanyRating = { id: string; company_id: string; user_id: string; rating: number; created_at: string; updated_at: string };
+type CompanyRatingInsert = Omit<CompanyRating, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<CompanyRating, 'id'>>;
+type CompanyRatingUpdate = Partial<Pick<CompanyRating, 'rating'>>;
+type CompanyRatingSummary = { company_id: string; average_rating: number; rating_count: number };
 type EmployerUser = Timestamps & { company_id: string; user_id: string; role: string };
 type EmployerUserInsert = Omit<EmployerUser, 'created_at' | 'updated_at'>;
 type EmployerUserUpdate = Partial<Pick<EmployerUser, 'role'>>;

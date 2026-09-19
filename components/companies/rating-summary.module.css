@@ -1,0 +1,6 @@
+.summary { align-items: center; display: inline-flex; gap: .4rem; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.stars { display: inline-flex; gap: 2px; color: var(--color-neutral-400); }
+.stars :global(svg) { margin: 0; }
+.stars .filled { color: var(--color-button-primary); fill: currentColor; }
+.value { color: var(--color-text-primary); font-weight: var(--font-weight-semibold); }
+.count { color: var(--color-text-tertiary); }

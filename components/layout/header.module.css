@@ -1,6 +1,6 @@
 .header {
   background-color: var(--color-background-primary);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-divider);
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
@@ -70,6 +70,10 @@
   height: auto;
 }
 
+.mobileLogoImage {
+  display: none;
+}
+
 .logo:hover {
   opacity: 0.8;
 }
@@ -91,7 +95,7 @@
 
 .navLink {
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+  color: var(--color-primary-700);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   transition: color var(--transition-fast);
@@ -100,6 +104,10 @@
 
 .navLink:hover {
   color: var(--color-primary-600);
+}
+
+.navLink:focus-visible {
+  color: var(--color-primary-700);
 }
 
 .navLink::after {
@@ -131,15 +139,20 @@
 }
 
 .signInLink {
+  background-color: transparent;
+  border: 1px solid var(--color-primary-700);
+  border-radius: var(--radius-md);
+  color: var(--color-primary-700);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
+  padding: 0.375rem 0.75rem;
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .signInLink:hover {
-  color: var(--color-primary-600);
+  background-color: var(--color-primary-700);
+  color: var(--color-text-inverse);
 }
 
 .employersLink {
@@ -154,6 +167,22 @@
   color: var(--color-primary-600);
 }
 
+.desktopSearchLink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-primary-700);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.desktopSearchLink:hover {
+  color: var(--color-primary-600);
+}
+
+.desktopSearchLink :global(svg) {
+  margin: 0;
+}
+
 /* Mobile Menu */
 .mobileMenuButton {
   display: flex;
@@ -163,23 +192,24 @@
   border: none;
   cursor: pointer;
   padding: 0;
-  margin-left: auto;
+  margin: 0;
 }
 
 .mobileHeaderActions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-left: auto;
 }
 
 .mobileSignInControl,
-.mobileProfileLink {
+.mobileProfileLink,
+.mobileSearchLink {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 40px;
-  color: var(--color-text-secondary);
+  color: var(--color-text-inverse);
   text-decoration: none;
   border-radius: var(--radius-md);
   transition: color var(--transition-fast), background-color var(--transition-fast);
@@ -197,9 +227,10 @@
 }
 
 .mobileSignInControl:hover,
-.mobileProfileLink:hover {
-  color: var(--color-primary-600);
-  background-color: var(--color-primary-50);
+.mobileProfileLink:hover,
+.mobileSearchLink:hover {
+  color: var(--color-primary-300);
+  background-color: transparent;
 }
 
 .mobileSignInControl:focus-visible,
@@ -251,7 +282,7 @@
 .menuIcon {
   width: 24px;
   height: 2px;
-  background-color: var(--color-text-primary);
+  background-color: var(--color-text-inverse);
   transition: all var(--transition-fast);
 }
 
@@ -264,7 +295,67 @@
   background-color: var(--color-background-secondary);
 }
 
+.mobileSearchLink :global(svg),
+.mobileSignInControl :global(svg) {
+  margin: 0;
+}
+
 @media (max-width: 1023px) {
+  .header {
+    background-color: var(--color-primary-700);
+    border-bottom-color: var(--color-primary-700);
+    box-shadow: none;
+  }
+
+  .container {
+    position: relative;
+    justify-content: center;
+  }
+
+  .logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .logoImage {
+    display: none;
+  }
+
+  .mobileLogoImage {
+    display: block;
+    width: min(181px, 45vw);
+    height: auto;
+  }
+
+  .mobileHeaderActions {
+    display: contents;
+  }
+
+  .mobileMenuButton {
+    position: absolute;
+    left: var(--spacing-md);
+  }
+
+  .mobileSearchLink {
+    position: absolute;
+    right: 52px;
+  }
+
+  .mobileProfileLink,
+  .mobileSignInControl {
+    position: absolute;
+    right: var(--spacing-md);
+  }
+
+  .mobileProfileLink {
+    color: var(--color-text-inverse);
+  }
+
+  .mobileAvatarInitials {
+    background-color: var(--color-primary-600);
+  }
+
   .mobileNav {
     display: flex;
   }
@@ -292,7 +383,7 @@
 
 .mobileSignIn {
   font-size: var(--font-size-base);
-  color: var(--color-primary-600);
+  color: var(--color-primary-700);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   padding: var(--spacing-md) 0;

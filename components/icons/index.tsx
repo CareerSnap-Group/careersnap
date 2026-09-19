@@ -16,6 +16,7 @@ type IconName =
   | 'lock'
   | 'map-pin'
   | 'search'
+  | 'star'
   | 'facebook'
   | 'instagram'
   | 'tiktok'
@@ -45,6 +46,7 @@ const paths: Record<IconName, JSX.Element> = {
   lock: <><rect width="16" height="12" x="4" y="10" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></>,
   'map-pin': <><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="3" /></>,
   search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>,
+  star: <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />,
   facebook: <path fill="currentColor" stroke="none" d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.6 1.7-1.6h1.8V3.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.5v3h2.8v8h3.2Z" />,
   instagram: <><rect x="3.5" y="3.5" width="17" height="17" rx="4.5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" /></>,
   tiktok: <path fill="currentColor" stroke="none" d="M14.4 3h3.1c.2 1.7 1.1 3.1 2.5 4v3.2c-1.5-.1-2.9-.6-4-1.5v6.1c0 3.7-2.4 6.1-5.8 6.1-3 0-5.2-2.1-5.2-5 0-3.1 2.5-5.3 5.8-5.3.3 0 .7 0 1 .1v3.2c-.3-.1-.6-.2-1-.2-1.5 0-2.5.8-2.5 2.1 0 1.2.9 2 2.1 2 1.4 0 2.2-1 2.2-2.9V3Z" />,

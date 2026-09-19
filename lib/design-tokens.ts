@@ -4,18 +4,18 @@
  */
 
 export const colors = {
-  // Primary - Cyan for focused, technology-forward actions
+  // Primary - CareerSnap navy and dark cyan brand palette
   primary: {
-    50: '#ecfeff',
-    100: '#cffafe',
-    200: '#a5f3fc',
-    300: '#67e8f9',
-    400: '#22d3ee',
-    500: '#05ECFC',
-    600: '#05ECFC',
-    700: '#000000',
-    800: '#000000',
-    900: '#000000',
+    50: '#E8F9FA',
+    100: '#E8F9FA',
+    200: '#E8F9FA',
+    300: '#008B9A',
+    400: '#008B9A',
+    500: '#008B9A',
+    600: '#008B9A',
+    700: '#10203E',
+    800: '#10203E',
+    900: '#10203E',
   },
   // Neutral - Professional grays
   neutral: {
@@ -66,8 +66,8 @@ export const colors = {
   },
   // Semantic colors
   text: {
-    primary: '#000000',
-    secondary: '#374151',
+    primary: '#10203E',
+    secondary: '#10203E',
     tertiary: '#6b7280',
     inverse: '#ffffff',
   },

@@ -1,0 +1,7 @@
+.control { border-top: 1px solid var(--color-border); margin-top: var(--spacing-lg); padding-top: var(--spacing-lg); }
+.label { color: var(--color-text-primary); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); margin: 0 0 var(--spacing-sm); }
+.stars { display: flex; gap: .25rem; }
+.star { color: var(--color-neutral-400); cursor: pointer; padding: .25rem; }
+.star :global(svg) { margin: 0; }
+.star:hover, .selected { color: var(--color-button-primary); }
+.message { color: var(--color-text-tertiary); font-size: var(--font-size-xs); margin: var(--spacing-sm) 0 0; }

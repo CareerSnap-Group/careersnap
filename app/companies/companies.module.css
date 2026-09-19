@@ -1,0 +1,22 @@
+.page { background: var(--color-background-secondary); min-height: 100vh; }
+.container { margin: 0 auto; max-width: 1200px; padding: var(--spacing-3xl) var(--spacing-md); }
+.intro { margin-bottom: var(--spacing-xl); }
+.eyebrow { color: var(--color-primary-600); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); margin: 0 0 var(--spacing-sm); }
+.title { color: var(--color-text-primary); font-size: clamp(2rem, 4vw, 3rem); margin: 0 0 var(--spacing-sm); }
+.description { color: var(--color-text-secondary); margin: 0; max-width: 620px; }
+.grid { display: grid; gap: var(--spacing-lg); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.card { background: var(--color-background-primary); display: flex; flex-direction: column; gap: var(--spacing-md); min-height: 240px; padding: var(--spacing-lg); }
+.cardTop { align-items: center; display: flex; gap: var(--spacing-md); }
+.logo, .logoFallback { align-items: center; background: var(--color-primary-50); border-radius: var(--radius-md); display: flex; flex: 0 0 56px; height: 56px; justify-content: center; overflow: hidden; width: 56px; }
+.logo { background-position: center; background-size: cover; }
+.logoFallback { color: var(--color-primary-700); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); }
+.companyName { color: var(--color-text-primary); font-size: var(--font-size-lg); margin: 0; }
+.industry, .meta { color: var(--color-text-tertiary); font-size: var(--font-size-sm); margin: .2rem 0 0; }
+.summary { margin-top: auto; }
+.cardDescription { color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+.cardFooter { align-items: center; display: flex; justify-content: space-between; gap: var(--spacing-sm); margin-top: auto; }
+.jobs { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.link { color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
+.empty { background: var(--color-background-primary); color: var(--color-text-secondary); padding: var(--spacing-2xl); text-align: center; }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .container { padding: var(--spacing-2xl) var(--spacing-md); } .grid { grid-template-columns: 1fr; } }

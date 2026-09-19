@@ -44,8 +44,8 @@
 
 /* Variants */
 .variant-primary {
-  background-color: var(--color-primary-600);
-  color: var(--color-text-primary);
+  background-color: var(--color-button-primary);
+  color: var(--color-primary-700);
 }
 
 .variant-primary:hover:not(:disabled) {
@@ -54,7 +54,7 @@
 }
 
 .variant-primary:active:not(:disabled) {
-  background-color: var(--color-primary-800);
+  background-color: var(--color-primary-700);
   color: var(--color-text-inverse);
 }
 

@@ -18,8 +18,10 @@ export async function POST(request: Request) {
 
   let { data: membership } = await supabase.from('employer_users').select('company_id').eq('user_id', user.id).limit(1).maybeSingle();
   if (!membership) {
-    const { data: company, error: companyError } = await supabase.from('companies').insert({ name: body.company, slug: `${slugify(body.company)}-${user.id.slice(0, 8)}`, created_by: user.id, description: null, website_url: null, logo_url: null }).select('id').single();
+    const { data: company, error: companyError } = await supabase.from('companies').insert({ name: body.company, slug: `${slugify(body.company)}-${user.id.slice(0, 8)}`, created_by: user.id, description: null, website_url: null, website: null, industry: null, location: null, logo_url: null }).select('id').single();
     if (companyError || !company) return NextResponse.json({ error: 'We could not set up your company yet.' }, { status: 400 });
+    const { error: ownerError } = await supabase.rpc('claim_company_owner', { target_company_id: company.id });
+    if (ownerError) return NextResponse.json({ error: 'We could not link your company to your employer account.' }, { status: 400 });
     membership = { company_id: company.id };
   }
 

@@ -1,0 +1,22 @@
+.page { background: var(--color-background-secondary); min-height: 100vh; }
+.container { margin: 0 auto; max-width: 1000px; padding: var(--spacing-3xl) var(--spacing-md); }
+.back { color: var(--color-primary-700); display: inline-block; font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); margin-bottom: var(--spacing-lg); }
+.profile { background: var(--color-background-primary); padding: var(--spacing-xl); }
+.profileHeader { align-items: flex-start; display: flex; gap: var(--spacing-lg); }
+.logo, .logoFallback { align-items: center; background: var(--color-primary-50); border-radius: var(--radius-md); display: flex; flex: 0 0 88px; height: 88px; justify-content: center; overflow: hidden; width: 88px; }
+.logo { background-position: center; background-size: cover; }
+.logoFallback { color: var(--color-primary-700); font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); }
+.name { color: var(--color-text-primary); font-size: clamp(1.75rem, 4vw, 2.5rem); margin: 0 0 var(--spacing-sm); }
+.meta { color: var(--color-text-tertiary); margin: 0 0 var(--spacing-md); }
+.description { color: var(--color-text-secondary); line-height: 1.7; margin: var(--spacing-lg) 0 0; max-width: 720px; }
+.website { color: var(--color-primary-700); display: inline-block; font-size: var(--font-size-sm); margin-top: var(--spacing-md); }
+.rating { margin-top: var(--spacing-md); }
+.section { margin-top: var(--spacing-xl); }
+.sectionTitle { color: var(--color-text-primary); font-size: var(--font-size-xl); margin: 0 0 var(--spacing-md); }
+.jobList { display: grid; gap: var(--spacing-md); }
+.job { background: var(--color-background-primary); padding: var(--spacing-lg); }
+.jobTitle { color: var(--color-text-primary); font-size: var(--font-size-lg); margin: 0 0 var(--spacing-sm); }
+.jobMeta { color: var(--color-text-tertiary); font-size: var(--font-size-sm); margin: 0; }
+.jobLink { display: inline-block; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); margin-top: var(--spacing-md); }
+.empty { background: var(--color-background-primary); color: var(--color-text-secondary); padding: var(--spacing-xl); }
+@media (max-width: 600px) { .container { padding: var(--spacing-2xl) var(--spacing-md); } .profile { padding: var(--spacing-lg); } .profileHeader { flex-direction: column; } }

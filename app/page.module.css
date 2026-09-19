@@ -102,7 +102,7 @@
   padding: 0 1.35rem;
   white-space: nowrap;
   border-radius: 0.625rem;
-  background: var(--color-primary-600);
+  background: var(--color-button-primary);
   color: var(--color-text-primary);
   font-size: 1rem;
   font-weight: var(--font-weight-semibold);
@@ -128,7 +128,7 @@
   min-height: 42px;
   padding: 0.7rem 1.6rem;
   color: var(--color-text-primary);
-  background: var(--color-primary-600);
+  background: var(--color-button-primary);
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: var(--font-weight-semibold);
@@ -143,7 +143,7 @@
 }
 
 .primaryCta:active {
-  background: var(--color-primary-800);
+  background: var(--color-primary-700);
   color: var(--color-text-inverse);
   box-shadow: none;
 }

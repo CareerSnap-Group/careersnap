@@ -73,6 +73,14 @@ export function Header({ variant }: { variant?: 'landing' }) {
             className={styles.logoImage}
             priority
           />
+          <Image
+            src="/CareerSnap-Mobile-Logo.png"
+            alt="CareerSnap"
+            width={217}
+            height={48}
+            className={styles.mobileLogoImage}
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -80,6 +88,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
           {(signedIn === false || (signedIn === true && role === 'job_seeker')) && <>
             <Link href="/jobs" className={styles.navLink}>Find Jobs</Link>
             <Link href="/resources" className={styles.navLink}>Career Resources</Link>
+            <Link href="/companies" className={styles.navLink}>Companies</Link>
           </>}
           {signedIn && role === 'job_seeker' && (
             <>
@@ -103,6 +112,9 @@ export function Header({ variant }: { variant?: 'landing' }) {
 
         {/* Auth Actions */}
         <div className={styles.actions}>
+          <Link href="/jobs" className={styles.desktopSearchLink} aria-label="Search jobs">
+            <Icon name="search" size={20} />
+          </Link>
           {signedIn === true ? (
             <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>
           ) : (
@@ -115,6 +127,20 @@ export function Header({ variant }: { variant?: 'landing' }) {
         </div>
 
         <div className={styles.mobileHeaderActions}>
+          <button
+            type="button"
+            className={styles.mobileMenuButton}
+            onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
+            aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span className={styles.menuIcon}></span>
+            <span className={styles.menuIcon}></span>
+            <span className={styles.menuIcon}></span>
+          </button>
+          <Link href="/jobs" className={styles.mobileSearchLink} aria-label="Search jobs">
+            <Icon name="search" size={20} />
+          </Link>
           {signedIn === true ? (
             <Link
               href="/profile"
@@ -133,17 +159,6 @@ export function Header({ variant }: { variant?: 'landing' }) {
               <Icon name="user" size={20} />
             </Link>
           ) : null}
-          <button
-            type="button"
-            className={styles.mobileMenuButton}
-            onClick={() => setMobileMenuOpen((isOpen) => !isOpen)}
-            aria-label="Toggle mobile menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            <span className={styles.menuIcon}></span>
-            <span className={styles.menuIcon}></span>
-            <span className={styles.menuIcon}></span>
-          </button>
         </div>
       </div>
 
@@ -153,6 +168,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
           {(signedIn === false || (signedIn === true && role === 'job_seeker')) && <>
             <Link href="/jobs" className={styles.mobileNavLink}>Find Jobs</Link>
             <Link href="/resources" className={styles.mobileNavLink}>Career Resources</Link>
+            <Link href="/companies" className={styles.mobileNavLink}>Companies</Link>
           </>}
           {signedIn && role === 'job_seeker' && (
             <>
