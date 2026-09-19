@@ -222,7 +222,10 @@ export default function JobDetailsPage() {
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>About {job.company.name}</h2>
               <Card>
-                <h3 className={styles.companyName}>{job.company.name}</h3>
+                <div className={styles.companyIntro}>
+                  {job.company.logo ? <div className={styles.companyLogoLarge} style={{ backgroundImage: `url(${job.company.logo})` }} role="img" aria-label={`${job.company.name} logo`} /> : <div className={styles.companyLogoLargeFallback} aria-hidden="true">{job.company.name.slice(0, 1).toUpperCase()}</div>}
+                  <h3 className={styles.companyName}>{job.company.name}</h3>
+                </div>
                 <p className={styles.companyDescription}>{job.company.description}</p>
                 <div className={styles.companyDetails}>
                   <div>

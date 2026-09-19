@@ -19,10 +19,16 @@ export type CompanyDirectoryItem = Pick<Company, 'id' | 'name' | 'slug' | 'descr
 export type CompanyProfileData = CompanyDirectoryItem & {
   website: string | null;
   websiteUrl: string | null;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  linkedin_url: string | null;
+  x_url: string | null;
+  tiktok_url: string | null;
+  youtube_url: string | null;
   jobs: Array<{ id: string; title: string; location: string; jobType: string; workLocation: string }>;
 };
 
-const companyFields = 'id, name, slug, description, logo_url, industry, location, website, website_url';
+const companyFields = 'id, name, slug, description, logo_url, industry, location, website, website_url, facebook_url, instagram_url, linkedin_url, x_url, tiktok_url, youtube_url';
 
 function summarizeRatings(ratings: RatingRow[], companyId: string, userId: string | null): CompanyRatingSummary {
   const companyRatings = ratings.filter((rating) => rating.company_id === companyId);
@@ -74,6 +80,12 @@ export async function getCompanyProfile(id: string): Promise<CompanyProfileData 
     rating: { average: summary?.average_rating || 0, count: summary?.rating_count || 0, userRating: ownRating?.rating || null },
     website: company.website,
     websiteUrl: company.website_url,
+    facebook_url: company.facebook_url,
+    instagram_url: company.instagram_url,
+    linkedin_url: company.linkedin_url,
+    x_url: company.x_url,
+    tiktok_url: company.tiktok_url,
+    youtube_url: company.youtube_url,
     jobs: (jobs || []).map((job) => ({ id: job.id, title: job.title, location: job.location, jobType: job.job_type, workLocation: job.work_location })),
   };
 }

@@ -25,7 +25,7 @@ type DatabaseJob = {
   created_at: string;
   published_at: string | null;
   expires_at: string | null;
-  companies?: { id: string; name: string; description: string | null; industry: string | null; location: string | null } | null;
+  companies?: { id: string; name: string; description: string | null; industry: string | null; location: string | null; logo_url: string | null; website: string | null; website_url: string | null } | null;
 };
 
 function toJob(row: DatabaseJob): Job {
@@ -37,6 +37,8 @@ function toJob(row: DatabaseJob): Job {
     industry: companyRow?.industry || 'Various industries',
     size: 'medium',
     location: companyRow?.location || row.location,
+    logo: companyRow?.logo_url || undefined,
+    website: companyRow?.website || companyRow?.website_url || undefined,
   };
 
   return {
@@ -61,7 +63,7 @@ function toJob(row: DatabaseJob): Job {
 
 export async function fetchPublishedJobs(): Promise<Job[] | null> {
   if (!isSupabaseConfigured()) return null;
-  const { data, error } = await supabase().from('jobs').select('*, companies (id, name, description, industry, location)').eq('status', 'published').order('created_at', { ascending: false });
+  const { data, error } = await supabase().from('jobs').select('*, companies (id, name, description, industry, location, logo_url, website, website_url)').eq('status', 'published').order('created_at', { ascending: false });
   if (error || !data) return null;
   return (data as unknown as DatabaseJob[]).map(toJob);
 }
@@ -71,7 +73,7 @@ export async function fetchPublishedJobById(jobId: string): Promise<Job | null> 
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(jobId)) return null;
   const { data, error } = await supabase()
     .from('jobs')
-    .select('*, companies (id, name, description, industry, location)')
+    .select('*, companies (id, name, description, industry, location, logo_url, website, website_url)')
     .eq('id', jobId)
     .eq('status', 'published')
     .maybeSingle();
@@ -126,7 +128,7 @@ export async function fetchApplications(userId: string): Promise<SupabaseApplica
   const { data, error } = await client.from('applications').select('id, job_id, status, created_at').eq('user_id', userId).order('created_at', { ascending: false });
   if (error || !data) return null;
   const jobIds = data.map((row) => row.job_id);
-  const { data: jobRows } = jobIds.length ? await client.from('jobs').select('*, companies (id, name, description, industry, location)').in('id', jobIds) : { data: [] };
+  const { data: jobRows } = jobIds.length ? await client.from('jobs').select('*, companies (id, name, description, industry, location, logo_url, website, website_url)').in('id', jobIds) : { data: [] };
   const jobsById = new Map((jobRows as unknown as DatabaseJob[] || []).map((row) => [row.id, toJob(row)]));
   return data.map((row) => ({
     id: row.id,
@@ -144,7 +146,7 @@ export async function fetchSavedJobs(userId: string): Promise<Job[] | null> {
   if (savedError || !savedRows) return null;
   const jobIds = savedRows.map((row) => row.job_id);
   if (jobIds.length === 0) return [];
-  const { data: jobRows, error: jobsError } = await client.from('jobs').select('*, companies (id, name, description, industry, location)').in('id', jobIds).eq('status', 'published');
+  const { data: jobRows, error: jobsError } = await client.from('jobs').select('*, companies (id, name, description, industry, location, logo_url, website, website_url)').in('id', jobIds).eq('status', 'published');
   if (jobsError || !jobRows) return [];
   const now = Date.now();
   return (jobRows as unknown as DatabaseJob[])

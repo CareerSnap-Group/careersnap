@@ -218,6 +218,33 @@
   transform: none;
 }
 
+.companyRow {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.companyLogo, .companyLogoFallback {
+  background: var(--color-primary-50);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  height: 42px;
+  width: 42px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-bold);
+}
+
+.companyInfo {
+  min-width: 0;
+}
+
 .jobCardTitle {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);

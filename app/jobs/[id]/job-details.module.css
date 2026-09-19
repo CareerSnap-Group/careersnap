@@ -64,11 +64,49 @@
   margin: 0 0 var(--spacing-sm) 0;
 }
 
+.companyHeaderBlock {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-md);
+}
+
 .company {
   font-size: var(--font-size-lg);
   color: var(--color-primary-600);
   font-weight: var(--font-weight-medium);
   margin: 0;
+}
+
+.companyLogo, .companyLogoFallback, .companyLogoLarge, .companyLogoLargeFallback {
+  background: var(--color-primary-50);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-bold);
+}
+
+.companyLogo, .companyLogoFallback {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+}
+
+.companyLogoLarge, .companyLogoLargeFallback {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+}
+
+.companyIntro {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
 }
 
 .headerActions {

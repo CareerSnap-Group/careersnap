@@ -205,8 +205,13 @@ function JobsContent() {
                     >
                       <Link href={`/jobs/${job.id}`}>
                         <Card className={styles.jobCardSmall}>
-                          <h3 className={styles.jobCardTitle}>{job.title}</h3>
-                          <p className={styles.jobCardCompany}>{job.company.name}</p>
+                          <div className={styles.companyRow}>
+                            {job.company.logo ? <div className={styles.companyLogo} style={{ backgroundImage: `url(${job.company.logo})` }} role="img" aria-label={`${job.company.name} logo`} /> : <div className={styles.companyLogoFallback} aria-hidden="true">{job.company.name.slice(0, 1).toUpperCase()}</div>}
+                            <div className={styles.companyInfo}>
+                              <h3 className={styles.jobCardTitle}>{job.title}</h3>
+                              <p className={styles.jobCardCompany}>{job.company.name}</p>
+                            </div>
+                          </div>
                           <div className={styles.jobCardInfo}>
                             <p><Icon name="map-pin" />{job.location}</p>
                             {job.salary && (
