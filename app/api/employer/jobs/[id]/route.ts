@@ -36,10 +36,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   if (existingJobError || !existingJob) return NextResponse.json({ error: 'We could not find that job.' }, { status: 404 });
   if (!body.status && (!body.jobTitle || !body.location || !body.description || !body.requirements)) return NextResponse.json({ error: 'Please complete the required job details.' }, { status: 400 });
   const nextStatus = body.status || existingJob.status;
-  if (nextStatus === 'published' && existingJob.status !== 'published') {
-    const { data: canPublish, error: limitError } = await supabase.rpc('can_create_job');
-    if (limitError || !canPublish) return NextResponse.json({ error: 'Your current plan has reached its active job limit.' }, { status: 400 });
-  }
 
   const { error } = await supabase.from('jobs').update({
     title: body.jobTitle || existingJob.title,
@@ -57,7 +53,12 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     status: nextStatus,
     published_at: nextStatus === 'published' ? new Date().toISOString() : null,
   }).eq('id', params.id);
-  if (error) return NextResponse.json({ error: 'We could not update this job.' }, { status: 400 });
+  if (error) {
+    if (error.message.includes('No free job postings or active paid job package remains')) {
+      return NextResponse.json({ error: 'Your 4 free job postings have been used. Choose a package to continue posting jobs.' }, { status: 402 });
+    }
+    return NextResponse.json({ error: 'We could not update this job.' }, { status: 400 });
+  }
   return NextResponse.json({ ok: true });
 }
 

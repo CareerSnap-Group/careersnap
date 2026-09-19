@@ -28,6 +28,12 @@ export default async function EmployerDashboard() {
   const { supabase, user } = await requireRole('employer');
   const { data: rawMembership } = await supabase.from('employer_users').select('company_id, companies(name)').eq('user_id', user.id).limit(1).maybeSingle();
   const membership = rawMembership as unknown as { company_id: string; companies: { name: string }[] | null } | null;
+  const [{ data: freePlan }, { data: freeEntitlements }] = membership ? await Promise.all([
+    supabase.from('employer_plans').select('id').eq('code', 'introductory-free').maybeSingle(),
+    supabase.from('billing_entitlements').select('plan_id, granted_quantity, consumed_quantity, status').eq('company_id', membership.company_id),
+  ]) : [{ data: null }, { data: [] }];
+  const freeEntitlement = freePlan ? (freeEntitlements || []).find((entitlement) => entitlement.plan_id === freePlan.id) : null;
+  const freeRemaining = freeEntitlement ? Math.max(freeEntitlement.granted_quantity - freeEntitlement.consumed_quantity, 0) : 0;
   const { data: rawSubscription } = await supabase.from('subscriptions').select('status, plan_id, current_period_end, subscription_plans(name, price, currency, billing_interval)').eq('user_id', user.id).in('status', ['trialing', 'active', 'past_due']).maybeSingle();
   const subscription = rawSubscription as SubscriptionRow | null;
   const plan = subscription?.subscription_plans?.[0];
@@ -56,6 +62,7 @@ export default async function EmployerDashboard() {
       <Card className={styles.statCard}><p className={styles.statLabel}>Applications</p><p className={styles.statValue}>{applications ?? 0}</p></Card>
       <Card className={styles.statCard}><p className={styles.statLabel}>Candidates</p><p className={styles.statValue}>{candidates}</p></Card>
       <Card className={styles.statCard}><p className={styles.statLabel}>Job Views</p><p className={styles.statValue}>{views ?? 0}</p></Card>
+      <Card className={styles.statCard}><p className={styles.statLabel}>Free Job Postings</p><p className={styles.statValue}>{freeRemaining} of 4</p></Card>
       <Card className={styles.statCard}><p className={styles.statLabel}>Current Package</p><p className={styles.statValue}>{plan?.name || 'Free'}</p></Card>
       <Card className={styles.statCard}><p className={styles.statLabel}>Jobs Remaining</p><p className={styles.statValue}>{remainingJobs}</p></Card>
     </div>
@@ -82,6 +89,11 @@ export default async function EmployerDashboard() {
       <h2 className={styles.legendTitle}>Quick actions</h2>
       <p><Link href="/employers/post-job" className={styles.actionLink}>Post a job</Link>{' | '}<Link href="/employer/jobs" className={styles.actionLink}>Manage jobs</Link>{' | '}<Link href="/employer/subscription" className={styles.actionLink}>View subscription</Link></p>
     </div>
+
+    {membership && <div className={styles.legendCard} style={{ marginTop: '1.5rem' }}>
+      <h2 className={styles.legendTitle}>Introductory allowance</h2>
+      <p>{freeRemaining > 0 ? `${freeRemaining} of 4 free job postings remain. Use them to try CareerSnap before choosing a paid package.` : 'Your 4 free job postings have been used. Choose a package to continue posting jobs.'}</p>
+    </div>}
 
     {jobs && jobs > 0 ? (
       <div className={styles.legendCard} style={{ marginTop: '1.5rem' }}>

@@ -20,8 +20,6 @@ export async function POST(request: Request) {
   if (!membership) {
     const { data: company, error: companyError } = await supabase.from('companies').insert({ name: body.company, slug: `${slugify(body.company)}-${user.id.slice(0, 8)}`, created_by: user.id, description: null, website_url: null, website: null, industry: null, location: null, logo_url: null }).select('id').single();
     if (companyError || !company) return NextResponse.json({ error: 'We could not set up your company yet.' }, { status: 400 });
-    const { error: ownerError } = await supabase.rpc('claim_company_owner', { target_company_id: company.id });
-    if (ownerError) return NextResponse.json({ error: 'We could not link your company to your employer account.' }, { status: 400 });
     membership = { company_id: company.id };
   }
 
@@ -32,6 +30,11 @@ export async function POST(request: Request) {
     location: body.location, work_location: body.workLocation || 'hybrid', job_type: body.jobType || 'full-time', experience_level: body.experienceLevel || 'mid',
     salary_min: body.salaryMin ? Number(body.salaryMin) : null, salary_max: body.salaryMax ? Number(body.salaryMax) : null, salary_currency: body.currency || 'ZAR', status, published_at: status === 'published' ? new Date().toISOString() : null, expires_at: null,
   });
-  if (error) return NextResponse.json({ error: error.message.includes('can_create_job') ? 'Your current plan has reached its active job limit.' : 'We could not post this job.' }, { status: 400 });
+  if (error) {
+    if (error.message.includes('No free job postings or active paid job package remains')) {
+      return NextResponse.json({ error: 'Your 4 free job postings have been used. Choose a package to continue posting jobs.' }, { status: 402 });
+    }
+    return NextResponse.json({ error: error.message.includes('can_create_job') ? 'Your current plan has reached its active job limit.' : 'We could not post this job.' }, { status: 400 });
+  }
   return NextResponse.json({ ok: true });
 }

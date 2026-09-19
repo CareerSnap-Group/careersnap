@@ -32,6 +32,7 @@ export type Database = {
       can_create_job: { Args: { target_user_id?: string }; Returns: boolean };
       claim_company_owner: { Args: { target_company_id: string }; Returns: undefined };
       record_job_view: { Args: { target_job_id: string; target_viewer_key: string }; Returns: undefined };
+      consume_job_posting_entitlement: { Args: Record<string, never>; Returns: undefined };
     };
     Enums: {
       user_type: 'job_seeker' | 'employer';
