@@ -102,6 +102,7 @@
   padding: 0 1.35rem;
   white-space: nowrap;
   border-radius: 0.625rem;
+  border: 1px solid var(--color-text-secondary);
   background: var(--color-button-primary);
   color: var(--color-text-primary);
   font-size: 1rem;
@@ -110,14 +111,14 @@
 }
 
 .searchButton:hover:not(:disabled) {
-  background: var(--color-primary-700);
-  color: var(--color-text-inverse);
+  background: var(--color-button-primary-hover);
+  color: var(--color-text-primary);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 
 .searchButton:active:not(:disabled) {
-  background: var(--color-primary-800);
-  color: var(--color-text-inverse);
+  background: var(--color-button-primary-hover);
+  color: var(--color-text-primary);
   box-shadow: none;
 }
 
@@ -129,6 +130,7 @@
   padding: 0.7rem 1.6rem;
   color: var(--color-text-primary);
   background: var(--color-button-primary);
+  border: 1px solid var(--color-text-secondary);
   border-radius: 0.5rem;
   font-size: 1rem;
   font-weight: var(--font-weight-semibold);
@@ -137,14 +139,14 @@
 }
 
 .primaryCta:hover {
-  color: var(--color-text-inverse);
-  background: var(--color-primary-700);
+  color: var(--color-text-primary);
+  background: var(--color-button-primary-hover);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 
 .primaryCta:active {
-  background: var(--color-primary-700);
-  color: var(--color-text-inverse);
+  background: var(--color-button-primary-hover);
+  color: var(--color-text-primary);
   box-shadow: none;
 }
 

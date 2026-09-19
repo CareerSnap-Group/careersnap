@@ -20,7 +20,7 @@ export function EmployerHeader() {
   const signOut = async () => { await createClient().auth.signOut(); router.push('/login'); router.refresh(); };
   const navigation = links.map(([href, label]) => <Link key={href} href={href} className={styles.navLink} onClick={() => setOpen(false)}>{label}</Link>);
   return <header className={styles.header}><div className={styles.container}>
-    <Link href="/employer/dashboard" className={styles.logo} aria-label="CareerSnap employer dashboard"><Image src="/careersnap-logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
+    <Link href="/employer/dashboard" className={styles.logo} aria-label="CareerSnap employer dashboard"><Image src="/CareerSnap-Mobile-Logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
     <nav className={styles.nav}>{navigation}<Button size="sm" className={styles.signOut} onClick={signOut}>Sign Out</Button></nav>
     <button type="button" className={styles.menuButton} onClick={() => setOpen(!open)} aria-label="Toggle employer menu" aria-expanded={open}>
       <span className={styles.menuIcon} aria-hidden="true" />

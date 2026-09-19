@@ -376,7 +376,7 @@
 
 .resumeHint { color: var(--color-text-secondary); }
 .resumeError { color: #b42318; }
-.resumeSuccess { color: #166534; }
+.resumeSuccess { color: var(--color-success-800); }
 
 .resumeList {
   display: flex;

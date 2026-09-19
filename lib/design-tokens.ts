@@ -4,18 +4,22 @@
  */
 
 export const colors = {
-  // Primary - CareerSnap navy and dark cyan brand palette
+  // Primary - CareerSnap black, white, and royal blue brand palette
   primary: {
-    50: '#E8F9FA',
-    100: '#E8F9FA',
-    200: '#E8F9FA',
-    300: '#008B9A',
-    400: '#008B9A',
-    500: '#008B9A',
-    600: '#008B9A',
-    700: '#10203E',
-    800: '#10203E',
-    900: '#10203E',
+    50: '#F8FAFC',
+    100: '#F8FAFC',
+    200: '#E5E7EB',
+    300: '#374151',
+    400: '#374151',
+    500: '#374151',
+    600: '#0A0A0A',
+    700: '#0A0A0A',
+    800: '#0A0A0A',
+    900: '#0A0A0A',
+  },
+  button: {
+    primary: '#FFFFFF',
+    primaryHover: '#F8FAFC',
   },
   // Neutral - Professional grays
   neutral: {
@@ -33,14 +37,14 @@ export const colors = {
   // Accent - Green for positive actions
   success: {
     50: '#f0fdf4',
-    100: '#dcfce7',
+    100: '#ECFDF5',
     200: '#bbf7d0',
     300: '#86efac',
     400: '#4ade80',
-    500: '#22c55e',
+    500: '#10B981',
     600: '#16a34a',
     700: '#15803d',
-    800: '#166534',
+    800: '#047857',
   },
   // Warning
   warning: {
@@ -66,19 +70,19 @@ export const colors = {
   },
   // Semantic colors
   text: {
-    primary: '#10203E',
-    secondary: '#10203E',
-    tertiary: '#6b7280',
+    primary: '#0A0A0A',
+    secondary: '#374151',
+    tertiary: '#6B7280',
     inverse: '#ffffff',
   },
   background: {
     primary: '#ffffff',
-    secondary: '#f3f4f6',
-    tertiary: '#e5e7eb',
+    secondary: '#FFFFFF',
+    tertiary: '#F3F4F6',
   },
-  footer: '#fdf9f4',
-  border: '#d1d5db',
-  divider: '#e5e7eb',
+  footer: '#0A0A0A',
+  border: '#E5E7EB',
+  divider: '#E5E7EB',
 };
 
 export const typography = {

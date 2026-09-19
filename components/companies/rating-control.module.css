@@ -3,5 +3,5 @@
 .stars { display: flex; gap: .25rem; }
 .star { color: var(--color-neutral-400); cursor: pointer; padding: .25rem; }
 .star :global(svg) { margin: 0; }
-.star:hover, .selected { color: var(--color-button-primary); }
+.star:hover, .selected { color: var(--color-primary-600); }
 .message { color: var(--color-text-tertiary); font-size: var(--font-size-xs); margin: var(--spacing-sm) 0 0; }

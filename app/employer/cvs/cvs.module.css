@@ -22,7 +22,7 @@
 .headline { color: var(--color-primary-600); font-size: var(--font-size-sm); margin: 0; }
 .meta { align-items: center; color: var(--color-text-secondary); display: flex; font-size: var(--font-size-sm); gap: var(--spacing-xs); margin: var(--spacing-md) 0; }
 .availability, .cvBadge, .mutedBadge { border-radius: var(--radius-md); display: inline-block; font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); padding: .3rem .5rem; }
-.availability, .cvBadge { background: #dcfce7; color: #166534; }
+.availability, .cvBadge { background: var(--color-success-50); color: var(--color-success-800); }
 .mutedBadge { background: var(--color-background-secondary); color: var(--color-text-secondary); }
 .skillList { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); margin: var(--spacing-md) 0; }
 .skillList span { background: var(--color-primary-50); border-radius: var(--radius-md); color: var(--color-primary-700); font-size: var(--font-size-xs); padding: .3rem .5rem; }

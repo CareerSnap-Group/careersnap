@@ -1,20 +1,21 @@
 :root {
   /* Colors */
-  --color-primary-50: #e8f9fa;
-  --color-primary-100: #e8f9fa;
-  --color-primary-200: #e8f9fa;
-  --color-primary-300: #008b9a;
-  --color-primary-400: #008b9a;
-  --color-primary-500: #008b9a;
-  --color-primary-600: #008b9a;
-  --color-primary-700: #10203e;
-  --color-primary-800: #10203e;
-  --color-primary-900: #10203e;
-  --color-button-primary: #00f5fa;
-
+  --color-primary-50: #f8fafc;
+  --color-primary-100: #f8fafc;
+  --color-primary-200: #e5e7eb;
+  --color-primary-300: #374151;
+  --color-primary-400: #374151;
+  --color-primary-500: #374151;
+  --color-primary-600: #0a0a0a;
+  --color-primary-700: #0a0a0a;
+  --color-primary-800: #0a0a0a;
+  --color-primary-900: #0a0a0a;
+  --color-header: #0a0a0a;
+  --color-button-primary: #ffffff;
+  --color-button-primary-hover: #f8fafc;
   --color-neutral-50: #fafbfc;
   --color-neutral-100: #f3f5f7;
-  --color-neutral-200: #e5eaef;
+  --color-neutral-200: #e5e7eb;
   --color-neutral-300: #d4dce5;
   --color-neutral-400: #b5c1d0;
   --color-neutral-500: #8fa0b5;
@@ -23,19 +24,21 @@
   --color-neutral-800: #2d3748;
   --color-neutral-900: #1a202c;
 
-  --color-success-500: #22c55e;
+  --color-success-500: #10b981;
+  --color-success-50: #ecfdf5;
+  --color-success-800: #047857;
   --color-warning-500: #f59e0b;
   --color-danger-500: #ef4444;
 
-  --color-text-primary: #10203e;
-  --color-text-secondary: #10203e;
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #374151;
   --color-text-tertiary: #6b7280;
   --color-text-inverse: #ffffff;
   --color-background-primary: #ffffff;
-  --color-background-secondary: #f3f4f6;
-  --color-background-tertiary: #e5e7eb;
-  --color-footer: #fdf9f4;
-  --color-border: #d1d5db;
+  --color-background-secondary: #ffffff;
+  --color-background-tertiary: #f3f4f6;
+  --color-footer: #0a0a0a;
+  --color-border: #e5e7eb;
   --color-divider: #e5e7eb;
 
   /* Typography */
@@ -117,17 +120,17 @@ body {
 }
 
 a {
-  color: var(--color-primary-600);
+  color: var(--color-text-primary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-primary-700);
+  color: var(--color-text-secondary);
 }
 
 a:focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid var(--color-text-secondary);
   outline-offset: 2px;
 }
 
@@ -195,7 +198,7 @@ code {
 
 /* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid var(--color-text-secondary);
   outline-offset: 2px;
 }
 

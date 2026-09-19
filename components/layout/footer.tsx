@@ -29,7 +29,7 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <Link href="/" className={styles.brand} aria-label="CareerSnap home">
-          <Image src="/careersnap-logo.png" alt="CareerSnap" width={217} height={48} className={styles.brandImage} />
+          <Image src="/CareerSnap-Mobile-Logo.png" alt="CareerSnap" width={217} height={48} className={styles.brandImage} />
         </Link>
         <nav className={styles.navigation} aria-label="Footer navigation">
           {sections.map((section) => {

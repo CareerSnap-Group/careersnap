@@ -23,7 +23,7 @@
 
 .input:focus {
   outline: none;
-  border-color: var(--color-primary-500);
+  border-color: var(--color-text-secondary);
   box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 

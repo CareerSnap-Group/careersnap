@@ -66,7 +66,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="CareerSnap home">
           <Image
-            src="/careersnap-logo.png"
+            src="/CareerSnap-Mobile-Logo.png"
             alt="CareerSnap"
             width={217}
             height={48}

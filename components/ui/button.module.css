@@ -45,38 +45,42 @@
 /* Variants */
 .variant-primary {
   background-color: var(--color-button-primary);
-  color: var(--color-primary-700);
-}
-
-.variant-primary:hover:not(:disabled) {
-  background-color: var(--color-primary-700);
-  color: var(--color-text-inverse);
-}
-
-.variant-primary:active:not(:disabled) {
-  background-color: var(--color-primary-700);
-  color: var(--color-text-inverse);
-}
-
-.variant-secondary {
-  background-color: var(--color-neutral-200);
+  border: 1px solid var(--color-text-secondary);
   color: var(--color-text-primary);
 }
 
+.variant-primary:hover:not(:disabled) {
+  background-color: var(--color-button-primary-hover);
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+
+.variant-primary:active:not(:disabled) {
+  background-color: var(--color-button-primary-hover);
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+
+.variant-secondary {
+  background-color: var(--color-primary-700);
+  color: var(--color-text-inverse);
+}
+
 .variant-secondary:hover:not(:disabled) {
-  background-color: var(--color-neutral-300);
+  background-color: var(--color-text-secondary);
+  color: var(--color-text-inverse);
 }
 
 .variant-outline {
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-text-secondary);
   color: var(--color-text-primary);
   background-color: transparent;
 }
 
 .variant-outline:hover:not(:disabled) {
-  border-color: var(--color-primary-600);
-  color: var(--color-primary-600);
-  background-color: var(--color-primary-50);
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+  background-color: var(--color-background-secondary);
 }
 
 .variant-ghost {
