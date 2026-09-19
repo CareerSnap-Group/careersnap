@@ -31,16 +31,22 @@ export default async function EmployerDashboard() {
   const { data: rawSubscription } = await supabase.from('subscriptions').select('status, plan_id, current_period_end, subscription_plans(name, price, currency, billing_interval)').eq('user_id', user.id).in('status', ['trialing', 'active', 'past_due']).maybeSingle();
   const subscription = rawSubscription as SubscriptionRow | null;
   const plan = subscription?.subscription_plans?.[0];
-  const [{ count: jobs }, { count: applications }, { data: planLimitsRaw }] = await Promise.all([
-    membership ? supabase.from('jobs').select('*', { count: 'exact', head: true }).eq('company_id', membership.company_id).in('status', ['draft', 'published']) : Promise.resolve({ count: 0 }),
-    membership ? supabase.from('applications').select('*, jobs!inner(company_id)', { count: 'exact', head: true }).eq('jobs.company_id', membership.company_id) : Promise.resolve({ count: 0 }),
+  const [{ data: companyJobs }, { data: applicationRows }, { data: planLimitsRaw }] = await Promise.all([
+    membership ? supabase.from('jobs').select('id, status').eq('company_id', membership.company_id) : Promise.resolve({ data: [] as Array<{ id: string; status: string }> }),
+    membership ? supabase.from('applications').select('applicant_id, jobs!inner(company_id)').eq('jobs.company_id', membership.company_id) : Promise.resolve({ data: [] as Array<{ applicant_id: string }> }),
     subscription?.plan_id ? supabase.from('plan_entitlements').select('feature, limit_value').eq('plan_id', subscription.plan_id) : Promise.resolve({ data: [] as PlanLimit[] }),
   ]);
+  const jobIds = (companyJobs || []).map((job) => job.id);
+  const { count: views } = jobIds.length ? await supabase.from('job_views').select('*', { count: 'exact', head: true }).in('job_id', jobIds) : { count: 0 };
+  const jobs = (companyJobs || []).filter((job) => job.status === 'published').length;
+  const managedJobs = (companyJobs || []).filter((job) => ['draft', 'published'].includes(job.status)).length;
+  const applications = applicationRows?.length || 0;
+  const candidates = new Set((applicationRows || []).map((application) => application.applicant_id)).size;
   const planLimits = (planLimitsRaw as PlanLimit[] | null) ?? [];
   const activeJobsLimit = Number(planLimits.find((entry) => entry.feature === 'active_jobs_limit')?.limit_value ?? 0);
   const jobPostingLimit = Number(planLimits.find((entry) => entry.feature === 'job_posting_limit')?.limit_value ?? 0);
-  const remainingJobs = Math.max(activeJobsLimit - (jobs ?? 0), 0);
-  const remainingPostings = Math.max(jobPostingLimit - (jobs ?? 0), 0);
+  const remainingJobs = Math.max(activeJobsLimit - managedJobs, 0);
+  const remainingPostings = Math.max(jobPostingLimit - managedJobs, 0);
 
   return <><Header /><main className={styles.page}><div className={styles.container}>
     <header className={styles.header}><h1 className={styles.title}>Employer Dashboard</h1><p className={styles.subtitle}>{membership?.companies?.[0]?.name || 'Set up your company to start hiring.'}</p></header>
@@ -48,6 +54,8 @@ export default async function EmployerDashboard() {
     <div className={styles.statsGrid}>
       <Card className={styles.statCard}><p className={styles.statLabel}>Active Jobs</p><p className={styles.statValue}>{jobs ?? 0}</p></Card>
       <Card className={styles.statCard}><p className={styles.statLabel}>Applications</p><p className={styles.statValue}>{applications ?? 0}</p></Card>
+      <Card className={styles.statCard}><p className={styles.statLabel}>Candidates</p><p className={styles.statValue}>{candidates}</p></Card>
+      <Card className={styles.statCard}><p className={styles.statLabel}>Job Views</p><p className={styles.statValue}>{views ?? 0}</p></Card>
       <Card className={styles.statCard}><p className={styles.statLabel}>Current Package</p><p className={styles.statValue}>{plan?.name || 'Free'}</p></Card>
       <Card className={styles.statCard}><p className={styles.statLabel}>Jobs Remaining</p><p className={styles.statValue}>{remainingJobs}</p></Card>
     </div>

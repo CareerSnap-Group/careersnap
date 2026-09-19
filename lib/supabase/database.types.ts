@@ -15,6 +15,7 @@ export type Database = {
       job_skills: { Row: JobSkill; Insert: JobSkillInsert; Update: JobSkillUpdate; Relationships: [] };
       applications: { Row: Application; Insert: ApplicationInsert; Update: ApplicationUpdate; Relationships: [] };
       saved_jobs: { Row: SavedJob; Insert: SavedJobInsert; Update: SavedJobUpdate; Relationships: [] };
+      job_views: { Row: JobView; Insert: JobViewInsert; Update: JobViewUpdate; Relationships: [] };
       employer_plans: { Row: EmployerPlan; Insert: EmployerPlanInsert; Update: EmployerPlanUpdate; Relationships: [] };
       billing_orders: { Row: BillingOrder; Insert: BillingOrderInsert; Update: BillingOrderUpdate; Relationships: [] };
       billing_transactions: { Row: BillingTransaction; Insert: BillingTransactionInsert; Update: BillingTransactionUpdate; Relationships: [] };
@@ -30,6 +31,7 @@ export type Database = {
       activate_billing_entitlement: { Args: { p_order_id: string }; Returns: string };
       can_create_job: { Args: { target_user_id?: string }; Returns: boolean };
       claim_company_owner: { Args: { target_company_id: string }; Returns: undefined };
+      record_job_view: { Args: { target_job_id: string; target_viewer_key: string }; Returns: undefined };
     };
     Enums: {
       user_type: 'job_seeker' | 'employer';
@@ -77,6 +79,9 @@ type ApplicationUpdate = Partial<Pick<Application, 'resume_id' | 'cover_letter' 
 type SavedJob = { user_id: string; job_id: string; created_at: string };
 type SavedJobInsert = Omit<SavedJob, 'created_at'>;
 type SavedJobUpdate = never;
+type JobView = { job_id: string; viewer_key: string; viewed_at: string };
+type JobViewInsert = JobView;
+type JobViewUpdate = Partial<Pick<JobView, 'viewed_at'>>;
 type BillingModel = 'one_time' | 'recurring';
 type BillingOrderStatus = 'created' | 'pending' | 'paid' | 'failed' | 'cancelled' | 'expired' | 'refunded' | 'partially_refunded';
 type BillingTransactionStatus = 'pending' | 'succeeded' | 'failed' | 'cancelled' | 'refunded' | 'partially_refunded';

@@ -47,6 +47,16 @@ export default function JobDetailsPage() {
     });
   }, [job]);
 
+  useEffect(() => {
+    if (!job || typeof window === 'undefined') return;
+    const viewedKey = `careersnap-job-viewed-${job.id}`;
+    if (sessionStorage.getItem(viewedKey)) return;
+    const viewerKey = localStorage.getItem('careersnap-viewer-key') || crypto.randomUUID();
+    localStorage.setItem('careersnap-viewer-key', viewerKey);
+    sessionStorage.setItem(viewedKey, 'true');
+    fetch(`/api/jobs/${job.id}/view`, { method: 'POST', headers: { 'x-careersnap-viewer': viewerKey } }).catch(() => undefined);
+  }, [job]);
+
   if (loading) {
     return (
       <div className={styles.page}>

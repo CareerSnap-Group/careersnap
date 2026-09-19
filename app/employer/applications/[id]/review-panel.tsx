@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import styles from './application-detail.module.css';
 
-const statuses = ['submitted', 'reviewing', 'shortlisted', 'interview', 'offer', 'hired', 'rejected'] as const;
+const statuses = ['applied', 'submitted', 'viewed', 'reviewing', 'shortlisted', 'interview', 'offer', 'hired', 'rejected'] as const;
 
 export function ApplicationReviewPanel({ applicationId, status: initialStatus, notes: initialNotes, hasResume }: { applicationId: string; status: string; notes: string; hasResume: boolean }) {
   const [status, setStatus] = useState(initialStatus);

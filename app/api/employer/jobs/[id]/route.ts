@@ -67,7 +67,7 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
   if (!user) return NextResponse.json({ error: 'Please sign in to manage jobs.' }, { status: 401 });
   const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
   if (profile?.user_type !== 'employer') return NextResponse.json({ error: "You don't have access to employer tools." }, { status: 403 });
-  const { error } = await supabase.from('jobs').delete().eq('id', params.id);
+  const { error } = await supabase.from('jobs').update({ status: 'closed' }).eq('id', params.id);
   if (error) return NextResponse.json({ error: 'We could not delete this job.' }, { status: 400 });
   return NextResponse.json({ ok: true });
 }
