@@ -8,7 +8,7 @@
 
 .container, .bottom { max-width: 1280px; margin: 0 auto; }
 .brand { display: inline-flex; margin-bottom: var(--spacing-xl); }
-.brandImage { display: block; width: min(181px, 45vw); height: auto; filter: hue-rotate(180deg) saturate(1.2); }
+.brandImage { display: block; width: min(181px, 45vw); height: auto; filter: brightness(0) invert(1); }
 .navigation { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--spacing-2xl); }
 
 .section { min-width: 0; }
@@ -103,6 +103,7 @@
 @media (max-width: 768px) {
   .footer { padding-top: var(--spacing-xl); }
   .brand { margin-bottom: var(--spacing-lg); }
+  .brandImage { width: min(90px, 22.5vw); }
   .navigation { display: flex; flex-direction: column; gap: 0; }
   .section { border-top: 1px solid rgba(255, 255, 255, 0.18); }
   .section:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.18); }

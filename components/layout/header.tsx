@@ -3,12 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useEffect } from 'react';
 import styles from './header.module.css';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 import { createClient } from '@/lib/supabase/browser';
-import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { useAccountRole } from './use-account-role';
 
 function getInitials(name: string) {
   const initials = name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase());
@@ -17,47 +16,10 @@ function getInitials(name: string) {
 
 export function Header({ variant }: { variant?: 'landing' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [signedIn, setSignedIn] = useState<boolean | null>(null);
-  const [role, setRole] = useState<'job_seeker' | 'employer' | null>(null);
-  const [displayName, setDisplayName] = useState('');
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!isSupabaseConfigured()) {
-      setSignedIn(false);
-      return;
-    }
-
-    const supabase = createClient();
-    supabase.auth.getUser().then(async ({ data }) => {
-      setSignedIn(Boolean(data.user));
-      if (data.user) {
-        const { data: profile } = await supabase.from('profiles').select('user_type, full_name, profile_photo_url').eq('id', data.user.id).maybeSingle();
-        setRole(profile?.user_type || null);
-        setDisplayName(profile?.full_name || data.user.user_metadata?.full_name || data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'CareerSnap Member');
-        setProfilePhotoUrl(profile?.profile_photo_url || null);
-      }
-    });
-    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSignedIn(Boolean(session?.user));
-      if (!session?.user) {
-        setRole(null);
-        setDisplayName('');
-        setProfilePhotoUrl(null);
-        return;
-      }
-      const { data: profile } = await supabase.from('profiles').select('user_type, full_name, profile_photo_url').eq('id', session.user.id).maybeSingle();
-      setRole(profile?.user_type || null);
-      setDisplayName(profile?.full_name || session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'CareerSnap Member');
-      setProfilePhotoUrl(profile?.profile_photo_url || null);
-    });
-    return () => listener.subscription.unsubscribe();
-  }, []);
+  const { signedIn, role, displayName, profilePhotoUrl } = useAccountRole();
 
   const handleSignOut = async () => {
     await createClient().auth.signOut();
-    setSignedIn(false);
-    setRole(null);
   };
 
   return (

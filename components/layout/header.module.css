@@ -68,12 +68,12 @@
   display: block;
   width: min(181px, 45vw);
   height: auto;
-  filter: hue-rotate(180deg) saturate(1.2);
+  filter: brightness(0) invert(1);
 }
 
 .mobileLogoImage {
   display: none;
-  filter: hue-rotate(180deg) saturate(1.2);
+  filter: brightness(0) invert(1);
 }
 
 .logo:hover {
@@ -327,7 +327,7 @@
 
   .mobileLogoImage {
     display: block;
-    width: min(181px, 45vw);
+    width: min(90px, 22.5vw);
     height: auto;
   }
 

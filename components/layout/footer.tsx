@@ -2,16 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Icon } from '@/components/icons';
 import styles from './footer.module.css';
-
-const sections = [
-  { title: 'Sign in', links: [['/login', 'Sign in']] },
-  { title: 'Job Seekers', links: [['/resources', 'Help'], ['/employers', 'Browse companies'], ['/jobs', 'Browse jobs']] },
-  { title: 'Employers', links: [['/employers', 'Help Centre'], ['/employers/post-job', 'Post a job'], ['/employers', 'Employer Events']] },
-  { title: 'About', links: [['/about', 'About']] },
-] as const;
+import { useAccountRole } from './use-account-role';
 
 const socialLinks = [
   { name: 'Facebook', href: 'https://www.facebook.com/careersnaphq', icon: 'facebook' },
@@ -23,7 +17,39 @@ const socialLinks = [
 
 export function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
+  const { authState, isLoading } = useAccountRole();
   const year = new Date().getFullYear();
+
+  const sections = useMemo(() => {
+    if (authState === 'job_seeker') {
+      return [
+        { title: 'Job Seekers', links: [['/job-seeker/dashboard', 'Dashboard'], ['/applications', 'Applications'], ['/saved-jobs', 'Saved Jobs'], ['/profile', 'Profile'], ['/jobs', 'Browse Jobs'], ['/companies', 'Browse Companies'], ['/resources', 'Job Seeker Help']] },
+        { title: 'About', links: [['/about', 'About'], ['/terms', 'Terms'], ['/privacy', 'Privacy'], ['/cookies', 'Cookies']] },
+      ] as const;
+    }
+
+    if (authState === 'employer') {
+      return [
+        { title: 'Employers', links: [['/employer/dashboard', 'Dashboard'], ['/employers/post-job', 'Post a Job'], ['/employer/cvs', 'Find CVs'], ['/employer/jobs', 'Jobs'], ['/employer/applications', 'Applications'], ['/employer/company', 'Company'], ['/employer/packages', 'Packages'], ['/employer/billing', 'Billing']] },
+        { title: 'About', links: [['/about', 'About'], ['/terms', 'Terms'], ['/privacy', 'Privacy'], ['/cookies', 'Cookies']] },
+      ] as const;
+    }
+
+    if (isLoading) {
+      return [
+        { title: 'Job Seekers', links: [['/jobs', 'Browse Jobs'], ['/companies', 'Browse Companies'], ['/resources', 'Help']] },
+        { title: 'Employers', links: [['/employers', 'Employer Services'], ['/employers/post-job', 'Post a Job']] },
+        { title: 'About', links: [['/about', 'About'], ['/terms', 'Terms'], ['/privacy', 'Privacy'], ['/cookies', 'Cookies']] },
+      ] as const;
+    }
+
+    return [
+      { title: 'Sign in', links: [['/login', 'Sign in']] },
+      { title: 'Job Seekers', links: [['/resources', 'Help'], ['/companies', 'Browse Companies'], ['/jobs', 'Browse Jobs']] },
+      { title: 'Employers', links: [['/employers', 'Employer Services'], ['/employers/post-job', 'Post a Job']] },
+      { title: 'About', links: [['/about', 'About'], ['/terms', 'Terms'], ['/privacy', 'Privacy'], ['/cookies', 'Cookies']] },
+    ] as const;
+  }, [authState, isLoading]);
 
   return (
     <footer className={styles.footer}>
