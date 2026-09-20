@@ -19,6 +19,7 @@ export function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
   const { authState, isLoading } = useAccountRole();
   const year = new Date().getFullYear();
+  const mobileLogoSrc = '/CareerSnap-Mobile-Logo.png';
 
   const sections = useMemo(() => {
     if (authState === 'job_seeker') {
@@ -55,7 +56,7 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <Link href="/" className={styles.brand} aria-label="CareerSnap home">
-          <Image src="/CareerSnap-Mobile-Logo.png" alt="CareerSnap" width={217} height={48} className={styles.brandImage} />
+          <Image src={mobileLogoSrc} alt="CareerSnap" width={217} height={48} className={styles.brandImage} />
         </Link>
         <nav className={styles.navigation} aria-label="Footer navigation">
           {sections.map((section) => {
