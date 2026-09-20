@@ -17,7 +17,7 @@ export function EmployerPublicHeader() {
     <Link href={findCvsPath} className={styles.navLink}>Find CVs</Link>
   </>;
   return <header className={styles.header}><div className={styles.container}>
-    <Link href="/employers" className={styles.logo} aria-label="CareerSnap employer services"><Image src="/CareerSnap-Mobile-Logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
+    <Link href="/employers" className={styles.logo} aria-label="CareerSnap employer services"><Image src="/careersnap-pro-logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
     <nav className={styles.nav}>{links}</nav>
     <div className={styles.actions}><Link href="/login" className={styles.signIn}>Sign In</Link><Link href={registerPath}><Button size="sm">Create Account</Button></Link></div>
     <button type="button" className={styles.menuButton} onClick={() => setOpen(!open)} aria-label="Toggle employer menu" aria-expanded={open}>

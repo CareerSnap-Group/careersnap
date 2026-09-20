@@ -17,7 +17,7 @@ function getInitials(name: string) {
 export function Header({ variant }: { variant?: 'landing' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { signedIn, role, displayName, profilePhotoUrl } = useAccountRole();
-  const mobileLogoSrc = '/CareerSnap-Mobile-Logo.png';
+  const mobileLogoSrc = '/careersnap-pro-logo.png';
 
   const handleSignOut = async () => {
     await createClient().auth.signOut();

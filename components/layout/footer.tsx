@@ -19,7 +19,7 @@ export function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
   const { authState, isLoading } = useAccountRole();
   const year = new Date().getFullYear();
-  const mobileLogoSrc = '/CareerSnap-Mobile-Logo.png';
+  const mobileLogoSrc = '/careersnap-pro-logo.png';
 
   const sections = useMemo(() => {
     if (authState === 'job_seeker') {

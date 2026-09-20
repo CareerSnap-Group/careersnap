@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <link rel="icon" href="/careersnap-logo.png" />
+        <link rel="icon" href="/careersnap-pro-logo.png" />
       </head>
       <body>
         {children}
