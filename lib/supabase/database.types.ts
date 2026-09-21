@@ -36,6 +36,7 @@ export type Database = {
       claim_company_owner: { Args: { target_company_id: string }; Returns: undefined };
       record_job_view: { Args: { target_job_id: string; target_viewer_key: string }; Returns: undefined };
       consume_job_posting_entitlement: { Args: Record<string, never>; Returns: undefined };
+      save_job_seeker_profile: { Args: { p_profile: Json; p_experience?: Json; p_education?: Json; p_skills?: Json; p_certifications?: Json; p_languages?: Json; p_links?: Json }; Returns: boolean };
     };
     Enums: {
       user_type: 'job_seeker' | 'employer';
