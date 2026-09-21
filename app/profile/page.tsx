@@ -1,6 +1,3 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -8,213 +5,136 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import styles from './profile.module.css';
-import { createClient } from '@/lib/supabase/browser';
-import { fetchProfile } from '@/lib/supabase/data';
-import { isSupabaseConfigured } from '@/lib/supabase/config';
-import { Icon } from '@/components/icons';
 import { ResumeManager } from './resume-manager';
-import type { UserProfile } from '@/lib/types';
+import { requireRole } from '@/lib/auth/server';
+import { getJobSeekerProfileData } from '@/lib/profile-data';
 
-export default function ProfilePage() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!isSupabaseConfigured()) { setError('Your profile is unavailable until your CareerSnap account is connected.'); setLoading(false); return; }
-    createClient().auth.getUser().then(async ({ data }) => {
-      if (!data.user) { setError('Please sign in to view your profile.'); setLoading(false); return; }
-      const remoteProfile = await fetchProfile(data.user.id);
-      if (remoteProfile) setProfile(remoteProfile);
-      else setError('We could not load your profile. Please try again.');
-      setLoading(false);
-    });
-  }, []);
+export default async function ProfilePage() {
+  const { user } = await requireRole('job_seeker');
+  const data = await getJobSeekerProfileData(user.id);
+  const profile = data.profile;
 
   return (
     <div className={styles.page}>
       <Header />
-
       <div className={styles.container}>
-        {loading ? <div className={styles.mainContent}><p className={styles.resumeHint}>Loading your profile...</p></div> : error ? <div className={styles.mainContent}><p className={styles.resumeError}>{error}</p></div> : profile ? (
-        <>
-        {/* Profile Header */}
         <div className={styles.profileHeader}>
           <div className={styles.profileInfo}>
-            <div className={styles.avatar}>{profile.firstName[0]}</div>
+            <div className={styles.avatar}>{(profile.full_name || profile.first_name || 'C')[0]?.toUpperCase() || 'C'}</div>
             <div>
-              <h1 className={styles.name}>
-                {profile.firstName} {profile.lastName}
-              </h1>
-              <p className={styles.headline}>{profile.headline}</p>
-              <p className={styles.location}><Icon name="map-pin" />{profile.location}</p>
+              <h1 className={styles.name}>{profile.full_name || [profile.first_name, profile.last_name].filter(Boolean).join(' ') || 'CareerSnap Candidate'}</h1>
+              <p className={styles.headline}>{profile.professional_headline || profile.headline || 'Professional profile'}</p>
+              <p className={styles.location}>{profile.location || 'Location not specified'}</p>
             </div>
           </div>
-          <Link href="/settings">
-            <Button variant="outline">Edit Profile</Button>
-          </Link>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <Link href="/settings"><Button variant="outline">Edit profile</Button></Link>
+            <Link href="/settings#privacy"><Button variant="secondary">Preview privacy</Button></Link>
+          </div>
         </div>
 
-        {/* Profile Completion */}
         <div className={styles.completionCard}>
           <div className={styles.completionHeader}>
-            <h3 className={styles.completionTitle}>Profile Completeness</h3>
-            <span className={styles.completionPercent}>{profile.profileCompletion}%</span>
+            <h3 className={styles.completionTitle}>Profile completion</h3>
+            <span className={styles.completionPercent}>{data.completion}%</span>
           </div>
           <div className={styles.progressBar}>
-            <div className={styles.progress} style={{ width: `${profile.profileCompletion}%` }}></div>
+            <div className={styles.progress} style={{ width: `${data.completion}%` }}></div>
           </div>
-          <p className={styles.completionHint}>Complete your profile to improve job recommendations and visibility.</p>
+          {data.missingSections.length > 0 ? (
+            <p className={styles.completionHint}>Missing: {data.missingSections.join(', ')}. <Link href="/settings">Complete your profile</Link>.</p>
+          ) : (
+            <p className={styles.completionHint}>Your profile is complete and ready for employers to review.</p>
+          )}
         </div>
 
         <div className={styles.contentLayout}>
-          {/* Main Content */}
           <div className={styles.mainContent}>
-            {/* Professional Summary */}
             <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Professional Summary</h2>
+              <h2 className={styles.sectionTitle}>Professional summary</h2>
               <Card>
-                <p className={styles.summary}>{profile.summary}</p>
+                <p className={styles.summary}>{profile.bio || 'Add a short professional summary to help employers understand your background and strengths.'}</p>
               </Card>
             </section>
 
-            {/* Skills */}
             <section className={styles.section}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>Skills</h2>
-                <Link href="/settings">
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
-                </Link>
+                <Link href="/settings"><Button variant="ghost" size="sm">Edit</Button></Link>
               </div>
               <Card>
                 <div className={styles.skillsGrid}>
-                  {profile.skills.map((skill) => (
-                    <Badge key={skill} variant="primary">
-                      {skill}
-                    </Badge>
-                  ))}
+                  {data.skills.length > 0 ? data.skills.map((skill) => <Badge key={skill.id || skill.name} variant="primary">{skill.name}</Badge>) : <p className={styles.summary}>No skills added yet.</p>}
                 </div>
               </Card>
             </section>
 
-            {/* Experience */}
             <section className={styles.section}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>Experience</h2>
-                <Link href="/settings">
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
-                </Link>
+                <Link href="/settings"><Button variant="ghost" size="sm">Edit</Button></Link>
               </div>
               <div className={styles.experiences}>
-                {profile.experience.map((exp) => (
-                  <Card key={exp.id} className={styles.experienceCard}>
+                {data.experience.length > 0 ? data.experience.map((exp) => (
+                  <Card key={exp.id || `${exp.job_title}-${exp.company_name}`} className={styles.experienceCard}>
                     <div className={styles.expHeader}>
-                      <h3 className={styles.expTitle}>{exp.jobTitle}</h3>
-                      {exp.isCurrent && <Badge variant="success">Current</Badge>}
+                      <h3 className={styles.expTitle}>{exp.job_title}</h3>
+                      {exp.is_current && <Badge variant="success">Current</Badge>}
                     </div>
-                    <p className={styles.expCompany}>{exp.company}</p>
-                    <p className={styles.expDates}>
-                      {exp.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                      {' — '}
-                      {exp.isCurrent
-                        ? 'Present'
-                        : exp.endDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                    </p>
+                    <p className={styles.expCompany}>{exp.company_name}</p>
+                    <p className={styles.expDates}>{exp.start_date ? new Date(exp.start_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'} {exp.is_current ? '— Present' : exp.end_date ? `— ${new Date(exp.end_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}` : ''}</p>
                     {exp.description && <p className={styles.expDescription}>{exp.description}</p>}
                   </Card>
-                ))}
+                )) : <Card className={styles.experienceCard}><p className={styles.summary}>Add your work history to show employers your experience.</p></Card>}
               </div>
             </section>
 
-            {/* Education */}
             <section className={styles.section}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>Education</h2>
-                <Link href="/settings">
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
-                </Link>
+                <Link href="/settings"><Button variant="ghost" size="sm">Edit</Button></Link>
               </div>
               <div className={styles.educations}>
-                {profile.education.map((edu) => (
-                  <Card key={edu.id} className={styles.educationCard}>
+                {data.education.length > 0 ? data.education.map((edu) => (
+                  <Card key={edu.id || `${edu.institution}-${edu.degree}`} className={styles.educationCard}>
                     <h3 className={styles.eduInstitution}>{edu.institution}</h3>
-                    <p className={styles.eduQualification}>
-                      {edu.qualification}
-                      {edu.field && ` in ${edu.field}`}
-                    </p>
-                    <p className={styles.eduDates}>
-                      {edu.startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                      {' — '}
-                      {edu.isCurrent ? 'Present' : edu.endDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
-                    </p>
+                    <p className={styles.eduQualification}>{[edu.degree, edu.field_of_study].filter(Boolean).join(' · ') || 'Qualification not specified'}</p>
+                    <p className={styles.eduDates}>{edu.start_date ? new Date(edu.start_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Unknown'} {edu.end_date ? `— ${new Date(edu.end_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}` : ''}</p>
                   </Card>
-                ))}
+                )) : <Card className={styles.educationCard}><p className={styles.summary}>Add your education details to strengthen your profile.</p></Card>}
               </div>
             </section>
           </div>
 
-          {/* Sidebar */}
           <aside className={styles.sidebar}>
-            {/* Contact Information */}
             <Card className={styles.sidebarCard}>
-              <h3 className={styles.cardTitle}>Contact Information</h3>
+              <h3 className={styles.cardTitle}>Contact and visibility</h3>
               <div className={styles.contactInfo}>
-                <div>
-                  <p className={styles.contactLabel}>Email</p>
-                  <p className={styles.contactValue}>{profile.email}</p>
-                </div>
-                {profile.phone && (
-                  <div>
-                    <p className={styles.contactLabel}>Phone</p>
-                    <p className={styles.contactValue}>{profile.phone}</p>
-                  </div>
-                )}
-                {profile.location && (
-                  <div>
-                    <p className={styles.contactLabel}>Location</p>
-                    <p className={styles.contactValue}>{profile.location}</p>
-                  </div>
-                )}
+                <div><p className={styles.contactLabel}>Email</p><p className={styles.contactValue}>{profile.email || 'Not shared publicly'}</p></div>
+                {profile.phone && <div><p className={styles.contactLabel}>Phone</p><p className={styles.contactValue}>{profile.phone}</p></div>}
+                {profile.location && <div><p className={styles.contactLabel}>Location</p><p className={styles.contactValue}>{profile.location}</p></div>}
+                <div><p className={styles.contactLabel}>Employer visibility</p><p className={styles.contactValue}>{profile.allow_employer_discovery ? 'Visible to eligible employers' : 'Private'}</p></div>
               </div>
             </Card>
 
-            {/* CV/Resume */}
+            <Card className={styles.sidebarCard}>
+              <h3 className={styles.cardTitle}>Professional preview</h3>
+              <p className={styles.cvDescription}>Visible to employers: name, headline, summary, skills, experience, education, location, availability, and CV if enabled.</p>
+              <div className={styles.nextSteps}>
+                <div className={styles.step}><span className={styles.stepNumber}>1</span><span className={styles.stepText}>{data.publicSummary.displayName}</span></div>
+                <div className={styles.step}><span className={styles.stepNumber}>2</span><span className={styles.stepText}>{data.publicSummary.headline}</span></div>
+                <div className={styles.step}><span className={styles.stepNumber}>3</span><span className={styles.stepText}>{data.publicSummary.availability}</span></div>
+              </div>
+            </Card>
+
             <Card className={styles.sidebarCard}>
               <h3 className={styles.cardTitle}>CV/Resume</h3>
-              <p className={styles.cvDescription}>Upload your CV to include it in job applications.</p>
+              <p className={styles.cvDescription}>Applicants can upload a CV and use it when applying for jobs.</p>
               <ResumeManager />
-            </Card>
-
-            {/* Next Steps */}
-            <Card className={styles.sidebarCard}>
-              <h3 className={styles.cardTitle}>Next Steps</h3>
-              <div className={styles.nextSteps}>
-                <div className={styles.step}>
-                  <span className={styles.stepNumber}><Icon name="check" /></span>
-                  <span className={styles.stepText}>Profile created</span>
-                </div>
-                <div className={styles.step}>
-                  <span className={styles.stepNumber}>2</span>
-                  <span className={styles.stepText}>Upload CV</span>
-                </div>
-                <div className={styles.step}>
-                  <span className={styles.stepNumber}>3</span>
-                  <span className={styles.stepText}>Start applying</span>
-                </div>
-              </div>
             </Card>
           </aside>
         </div>
-        </>
-        ) : null}
       </div>
-
       <Footer />
     </div>
   );

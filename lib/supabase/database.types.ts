@@ -7,6 +7,9 @@ export type Database = {
       experiences: { Row: Experience; Insert: ExperienceInsert; Update: ExperienceUpdate; Relationships: [] };
       education: { Row: Education; Insert: EducationInsert; Update: EducationUpdate; Relationships: [] };
       skills: { Row: Skill; Insert: SkillInsert; Update: SkillUpdate; Relationships: [] };
+      profile_certifications: { Row: ProfileCertification; Insert: ProfileCertificationInsert; Update: ProfileCertificationUpdate; Relationships: [] };
+      profile_languages: { Row: ProfileLanguage; Insert: ProfileLanguageInsert; Update: ProfileLanguageUpdate; Relationships: [] };
+      profile_links: { Row: ProfileLink; Insert: ProfileLinkInsert; Update: ProfileLinkUpdate; Relationships: [] };
       resumes: { Row: Resume; Insert: ResumeInsert; Update: ResumeUpdate; Relationships: [] };
       companies: { Row: Company; Insert: CompanyInsert; Update: CompanyUpdate; Relationships: [] };
       company_ratings: { Row: CompanyRating; Insert: CompanyRatingInsert; Update: CompanyRatingUpdate; Relationships: [] };
@@ -43,7 +46,7 @@ export type Database = {
 };
 
 type Timestamps = { created_at: string; updated_at: string };
-type Profile = Timestamps & { id: string; full_name: string | null; email: string | null; phone: string | null; location: string | null; headline: string | null; bio: string | null; profile_photo_url: string | null; user_type: Database['public']['Enums']['user_type'] | null; role_initialized: boolean; allow_employer_discovery: boolean; availability: string };
+type Profile = Timestamps & { id: string; full_name: string | null; first_name: string | null; last_name: string | null; email: string | null; phone: string | null; location: string | null; city: string | null; province: string | null; country: string | null; headline: string | null; professional_headline: string | null; bio: string | null; profile_photo_url: string | null; current_job_title: string | null; current_employer: string | null; years_experience: number | null; employment_status: string | null; desired_job_title: string | null; desired_employment_type: string | null; desired_work_arrangement: string | null; preferred_locations: string[] | null; expected_salary: number | null; availability: string; availability_start_date: string | null; user_type: Database['public']['Enums']['user_type'] | null; role_initialized: boolean; allow_employer_discovery: boolean };
 type ProfileInsert = Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>> & Pick<Profile, 'id'>;
 type ProfileUpdate = Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>>;
 type Experience = Timestamps & { id: string; user_id: string; job_title: string; company_name: string; location: string | null; start_date: string; end_date: string | null; is_current: boolean; description: string | null };
@@ -55,6 +58,15 @@ type EducationUpdate = Partial<Omit<Education, 'id' | 'user_id' | 'created_at' |
 type Skill = Timestamps & { id: string; user_id: string; name: string; proficiency: string | null };
 type SkillInsert = Omit<Skill, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Skill, 'id'>>;
 type SkillUpdate = Partial<Omit<Skill, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
+type ProfileCertification = Timestamps & { id: string; user_id: string; name: string; issuing_organization: string | null; issue_date: string | null; expiry_date: string | null; credential_id: string | null; credential_url: string | null };
+type ProfileCertificationInsert = Omit<ProfileCertification, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<ProfileCertification, 'id'>>;
+type ProfileCertificationUpdate = Partial<Omit<ProfileCertification, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
+type ProfileLanguage = Timestamps & { id: string; user_id: string; name: string; proficiency: string };
+type ProfileLanguageInsert = Omit<ProfileLanguage, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<ProfileLanguage, 'id'>>;
+type ProfileLanguageUpdate = Partial<Omit<ProfileLanguage, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
+type ProfileLink = Timestamps & { id: string; user_id: string; label: string; url: string };
+type ProfileLinkInsert = Omit<ProfileLink, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<ProfileLink, 'id'>>;
+type ProfileLinkUpdate = Partial<Omit<ProfileLink, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
 type Resume = Timestamps & { id: string; user_id: string; file_name: string; storage_path: string; file_path: string; file_url: string | null; is_primary: boolean; is_default: boolean };
 type ResumeInsert = Omit<Resume, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Resume, 'id'>>;
 type ResumeUpdate = Partial<Omit<Resume, 'id' | 'user_id' | 'created_at' | 'updated_at'>>;
