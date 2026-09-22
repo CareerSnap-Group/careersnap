@@ -34,7 +34,7 @@ security definer
 set search_path = public
 as $$
 begin
-  if target_viewer_key is null or length(target_viewer_key) < 16 then
+  if target_viewer_key is null or target_viewer_key !~ '^[0-9a-f-]{16,64}$' then
     return;
   end if;
 

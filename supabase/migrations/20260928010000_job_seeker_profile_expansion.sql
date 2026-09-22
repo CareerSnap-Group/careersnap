@@ -20,7 +20,7 @@ alter table public.profiles
   add column if not exists availability_start_date date;
 
 update public.profiles
-set first_name = coalesce(first_name, split_part(coalesce(full_name, ''), ' ', 1)),
+set first_name = coalesce(first_name, nullif(split_part(trim(coalesce(full_name, '')), ' ', 1), '')),
     last_name = coalesce(last_name, nullif(trim(substr(coalesce(full_name, ''), length(split_part(coalesce(full_name, ''), ' ', 1)) + 2)), '')),
     professional_headline = coalesce(professional_headline, headline)
 where first_name is null
