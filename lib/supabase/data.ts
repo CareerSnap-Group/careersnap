@@ -63,7 +63,8 @@ function toJob(row: DatabaseJob): Job {
 
 export async function fetchPublishedJobs(): Promise<Job[] | null> {
   if (!isSupabaseConfigured()) return null;
-  const { data, error } = await supabase().from('jobs').select('*, companies (id, name, description, industry, location, logo_url, website, website_url)').eq('status', 'published').order('created_at', { ascending: false });
+  const expiry = new Date().toISOString();
+  const { data, error } = await supabase().from('jobs').select('*, companies (id, name, description, industry, location, logo_url, website, website_url)').eq('status', 'published').or(`expires_at.is.null,expires_at.gt.${expiry}`).order('created_at', { ascending: false });
   if (error || !data) return null;
   return (data as unknown as DatabaseJob[]).map(toJob);
 }
@@ -71,11 +72,13 @@ export async function fetchPublishedJobs(): Promise<Job[] | null> {
 export async function fetchPublishedJobById(jobId: string): Promise<Job | null> {
   if (!isSupabaseConfigured()) return null;
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(jobId)) return null;
+  const expiry = new Date().toISOString();
   const { data, error } = await supabase()
     .from('jobs')
     .select('*, companies (id, name, description, industry, location, logo_url, website, website_url)')
     .eq('id', jobId)
     .eq('status', 'published')
+    .or(`expires_at.is.null,expires_at.gt.${expiry}`)
     .maybeSingle();
   if (error || !data) return null;
   return toJob(data as unknown as DatabaseJob);
