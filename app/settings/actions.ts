@@ -101,6 +101,15 @@ export async function updateSettings(_previousState: SettingsState, formData: Fo
   } as never);
 
   if (rpcError) {
+    // Temporary development-only diagnostic; remove after the runtime error is identified.
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('[Temporary profile-save diagnostic]', {
+        code: rpcError.code,
+        message: rpcError.message,
+        details: rpcError.details,
+        hint: rpcError.hint,
+      });
+    }
     return { error: 'Your profile could not be saved. Please review the form and try again.', success: '' };
   }
 
