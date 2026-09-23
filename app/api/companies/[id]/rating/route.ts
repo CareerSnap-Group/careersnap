@@ -35,3 +35,26 @@ export async function POST(request: Request, { params }: RouteContext) {
   if (error) return NextResponse.json({ error: 'We could not save your rating.' }, { status: 400 });
   return NextResponse.json({ rating: data.rating });
 }
+
+export async function DELETE(request: Request, { params }: RouteContext) {
+  void request;
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Please sign in to rate a company.' }, { status: 401 });
+
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(params.id)) {
+    return NextResponse.json({ error: 'Company not found.' }, { status: 404 });
+  }
+
+  const { data: company, error: companyError } = await supabase.from('companies').select('id').eq('id', params.id).maybeSingle();
+  if (companyError || !company) return NextResponse.json({ error: 'Company not found.' }, { status: 404 });
+
+  const { error } = await supabase
+    .from('company_ratings')
+    .delete()
+    .eq('company_id', company.id)
+    .eq('user_id', user.id);
+
+  if (error) return NextResponse.json({ error: 'We could not remove your rating.' }, { status: 400 });
+  return NextResponse.json({ ok: true });
+}

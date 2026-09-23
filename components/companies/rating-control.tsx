@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/icons';
 import styles from './rating-control.module.css';
 
 export function RatingControl({ companyId, initialRating, signedIn }: { companyId: string; initialRating: number | null; signedIn: boolean }) {
+  const router = useRouter();
   const [rating, setRating] = useState(initialRating);
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
@@ -25,6 +27,22 @@ export function RatingControl({ companyId, initialRating, signedIn }: { companyI
     }
     setRating(result.rating);
     setMessage('Your rating was saved.');
+    router.refresh();
+  };
+
+  const removeRating = async () => {
+    setSaving(true);
+    setMessage('');
+    const response = await fetch(`/api/companies/${companyId}/rating`, { method: 'DELETE' });
+    const result = await response.json().catch(() => null) as { error?: string } | null;
+    setSaving(false);
+    if (!response.ok) {
+      setMessage(result?.error || 'We could not remove your rating.');
+      return;
+    }
+    setRating(null);
+    setMessage('Your rating was removed.');
+    router.refresh();
   };
 
   return <div className={styles.control}>
@@ -32,6 +50,7 @@ export function RatingControl({ companyId, initialRating, signedIn }: { companyI
     <div className={styles.stars} aria-label="Rate this company from 1 to 5 stars">
       {Array.from({ length: 5 }, (_, index) => { const value = index + 1; return <button key={value} type="button" className={`${styles.star} ${rating && value <= rating ? styles.selected : ''}`} onClick={() => submitRating(value)} disabled={saving} aria-label={`Rate ${value} out of 5`}><Icon name="star" size={24} /></button>; })}
     </div>
+    {signedIn && rating !== null && <button type="button" className={styles.removeButton} onClick={removeRating} disabled={saving}>Remove rating</button>}
     <p className={styles.message} role="status">{message || (signedIn ? 'Update your rating anytime.' : 'Sign in to leave an optional rating.')}</p>
   </div>;
 }

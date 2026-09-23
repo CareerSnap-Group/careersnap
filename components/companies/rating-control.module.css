@@ -4,4 +4,6 @@
 .star { color: var(--color-neutral-400); cursor: pointer; padding: .25rem; }
 .star :global(svg) { margin: 0; }
 .star:hover, .selected { color: var(--color-primary-600); }
+.removeButton { background: none; border: 0; color: var(--color-text-tertiary); cursor: pointer; font-size: var(--font-size-xs); margin-top: var(--spacing-sm); padding: 0; text-decoration: underline; }
+.removeButton:disabled { cursor: default; opacity: .6; }
 .message { color: var(--color-text-tertiary); font-size: var(--font-size-xs); margin: var(--spacing-sm) 0 0; }
