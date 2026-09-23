@@ -115,12 +115,13 @@ export function calculateProfileCompletion(data: Pick<JobSeekerProfileData, 'pro
 
 export async function getJobSeekerProfileData(userId: string): Promise<JobSeekerProfileData> {
   const supabase = createClient();
+  const relationshipClient = supabase as any;
 
   const [profileResult, experienceResult, educationResult, skillsResult, certResult, languageResult, linkResult, resumeResult] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
     supabase.from('experiences').select('*').eq('user_id', userId).order('start_date', { ascending: false }),
     supabase.from('education').select('*').eq('user_id', userId).order('start_date', { ascending: false }),
-    supabase.from('skills').select('*').eq('user_id', userId).order('name', { ascending: true }),
+    relationshipClient.from('user_skills').select('skill:skills(id, name)').eq('user_id', userId).order('skill_id', { ascending: true }),
     supabase.from('profile_certifications').select('*').eq('user_id', userId).order('issue_date', { ascending: false }),
     supabase.from('profile_languages').select('*').eq('user_id', userId).order('name', { ascending: true }),
     supabase.from('profile_links').select('*').eq('user_id', userId).order('label', { ascending: true }),
@@ -156,7 +157,7 @@ export async function getJobSeekerProfileData(userId: string): Promise<JobSeeker
     allow_employer_discovery: false,
   }) as JobSeekerProfile;
 
-  const skills = ((skillsResult.data || []) as Array<{ id: string; name: string }>).map((skill) => ({ id: skill.id, name: skill.name }));
+  const skills = ((skillsResult.data || []) as Array<{ skill: { id: string; name: string } | null }>).flatMap((row) => row.skill ? [{ id: row.skill.id, name: row.skill.name }] : []);
   const experience = ((experienceResult.data || []) as Array<Record<string, unknown>>).map((item) => ({
     id: String(item.id ?? ''),
     job_title: String(item.job_title ?? ''),
