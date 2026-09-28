@@ -83,8 +83,12 @@ export function CompanyForm({ initial, mode: initialMode, claimCompanyId }: Comp
 
     const method = mode === 'create' ? 'POST' : 'PATCH';
     const response = await fetch('/api/employer/company', { method, body: payload });
-    const result = await response.json().catch(() => null) as { error?: string; logo_url?: string | null; warning?: string } | null;
+    const result = await response.json().catch(() => null) as { error?: string; code?: string; logo_url?: string | null; warning?: string } | null;
     setSaving(false);
+    if (result?.code === 'company_already_configured' || result?.code === 'company_claim_required') {
+      window.location.href = '/employer/company';
+      return;
+    }
     if (!response.ok) { setError(result?.error || 'We could not update your company profile.'); return; }
     if (mode === 'create') setMode('edit');
     if (result?.logo_url) {

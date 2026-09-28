@@ -32,7 +32,7 @@ export type Database = {
     Functions: {
       create_billing_order: { Args: { p_company_id: string; p_plan_id: string }; Returns: string };
       activate_billing_entitlement: { Args: { p_order_id: string }; Returns: string };
-      create_employer_company: { Args: { p_name: string; p_description?: string | null; p_website?: string | null; p_industry?: string | null; p_location?: string | null; p_facebook_url?: string | null; p_instagram_url?: string | null; p_linkedin_url?: string | null; p_x_url?: string | null; p_tiktok_url?: string | null; p_youtube_url?: string | null }; Returns: Company };
+      create_employer_company: { Args: { p_name: string; p_description?: string | null; p_website?: string | null; p_industry?: string | null; p_location?: string | null; p_facebook_url?: string | null; p_instagram_url?: string | null; p_linkedin_url?: string | null; p_x_url?: string | null; p_tiktok_url?: string | null; p_youtube_url?: string | null }; Returns: Json };
       can_create_job: { Args: { target_user_id?: string }; Returns: boolean };
       claim_company_owner: { Args: { target_company_id: string }; Returns: Json };
       record_job_view: { Args: { target_job_id: string; target_viewer_key: string }; Returns: undefined };

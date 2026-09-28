@@ -258,7 +258,10 @@ export async function POST(request: Request) {
   }
 
   if (membership) {
-    return NextResponse.json({ error: 'Your employer account already has a company membership.' }, { status: 409 });
+    return NextResponse.json({
+      code: 'company_already_configured',
+      error: 'Your employer account already has a company membership.',
+    }, { status: 409 });
   }
 
   const name = getText(body, 'name').trim();
@@ -290,37 +293,54 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'We could not create your company.' }, { status: 400 });
   }
 
+  const companyResult = company as unknown as { status: 'created' | 'existing' | 'claim_required'; company: { id: string } };
+  if (companyResult.status === 'existing') {
+    return NextResponse.json({
+      code: 'company_already_configured',
+      error: 'Your employer account already has a company membership.',
+      company_id: companyResult.company.id,
+    }, { status: 409 });
+  }
+  if (companyResult.status === 'claim_required') {
+    return NextResponse.json({
+      code: 'company_claim_required',
+      error: 'Claim the company created by your account before creating another company.',
+      company_id: companyResult.company.id,
+    }, { status: 409 });
+  }
+  const createdCompany = companyResult.company;
+
   if (!logoFile || logoFile.size === 0) {
-    return NextResponse.json({ ok: true, company_id: company.id, logo_url: null }, { status: 201 });
+    return NextResponse.json({ ok: true, company_id: createdCompany.id, logo_url: null }, { status: 201 });
   }
 
-  const upload = await uploadCompanyLogo({ supabase, userId: user.id, companyId: company.id, file: logoFile });
+  const upload = await uploadCompanyLogo({ supabase, userId: user.id, companyId: createdCompany.id, file: logoFile });
   if (upload.error || !upload.logoUrl) {
     return NextResponse.json({
       ok: true,
-      company_id: company.id,
+      company_id: createdCompany.id,
       logo_url: null,
       warning: upload.error || 'The company was created, but its logo could not be saved.',
     }, { status: 201 });
   }
 
-  const { error: logoUpdateError } = await supabase.from('companies').update({ logo_url: upload.logoUrl }).eq('id', company.id);
+  const { error: logoUpdateError } = await supabase.from('companies').update({ logo_url: upload.logoUrl }).eq('id', createdCompany.id);
   if (logoUpdateError) {
     const cleanup = await cleanupCompanyLogoObject({
       supabase,
       userId: user.id,
-      companyId: company.id,
+      companyId: createdCompany.id,
       objectUrl: upload.logoUrl,
       currentCompanyLogoUrl: null,
     });
     if (!cleanup.deleted) console.warn('Company logo cleanup failed after company creation:', cleanup.reason);
     return NextResponse.json({
       ok: true,
-      company_id: company.id,
+      company_id: createdCompany.id,
       logo_url: null,
       warning: 'The company was created, but its logo could not be saved. You can upload it again from the company profile.',
     }, { status: 201 });
   }
 
-  return NextResponse.json({ ok: true, company_id: company.id, logo_url: upload.logoUrl }, { status: 201 });
+  return NextResponse.json({ ok: true, company_id: createdCompany.id, logo_url: upload.logoUrl }, { status: 201 });
 }
