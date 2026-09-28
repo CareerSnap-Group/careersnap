@@ -12,32 +12,25 @@ export async function POST(request: Request) {
   const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).maybeSingle();
   if (profile?.user_type !== 'employer') return NextResponse.json({ error: "You don't have access to employer tools." }, { status: 403 });
 
+  const { data: membership, error: membershipError } = await supabase
+    .from('employer_users')
+    .select('company_id')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (membershipError) return NextResponse.json({ error: 'We could not load your company membership.' }, { status: 500 });
+  if (!membership) {
+    return NextResponse.json({
+      code: 'company_setup_required',
+      error: 'Set up or claim your company before posting a job.',
+      redirect_to: '/employer/company',
+    }, { status: 409 });
+  }
+
   const body = await request.json() as { jobTitle?: string; company?: string; location?: string; workLocation?: string; jobType?: string; experienceLevel?: string; salaryMin?: string; salaryMax?: string; currency?: string; description?: string; responsibilities?: string; requirements?: string; benefits?: string; status?: string };
   if (!body.jobTitle || !body.company || !body.location || !body.description || !body.requirements) return NextResponse.json({ error: 'Please complete the required job details.' }, { status: 400 });
   if (body.status && !['draft', 'published'].includes(body.status)) return NextResponse.json({ error: 'That job status is not supported.' }, { status: 400 });
-
-  let { data: membership } = await supabase.from('employer_users').select('company_id').eq('user_id', user.id).limit(1).maybeSingle();
-  if (!membership) {
-    const { data: company, error: companyError } = await supabase.from('companies').insert({
-      name: body.company,
-      slug: `${slugify(body.company)}-${user.id.slice(0, 8)}`,
-      created_by: user.id,
-      description: null,
-      website_url: null,
-      website: null,
-      industry: null,
-      location: null,
-      logo_url: null,
-      facebook_url: null,
-      instagram_url: null,
-      linkedin_url: null,
-      x_url: null,
-      tiktok_url: null,
-      youtube_url: null,
-    }).select('id').single();
-    if (companyError || !company) return NextResponse.json({ error: 'We could not set up your company yet.' }, { status: 400 });
-    membership = { company_id: company.id };
-  }
 
   const status = body.status || 'published';
   const { error } = await supabase.from('jobs').insert({

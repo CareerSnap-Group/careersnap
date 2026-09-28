@@ -5,7 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import styles from './company-form.module.css';
 
-type CompanyFormProps = { initial: { name: string; description: string; website: string; location: string; industry: string; logo_url: string; facebook_url: string; instagram_url: string; linkedin_url: string; x_url: string; tiktok_url: string; youtube_url: string } };
+type CompanyFormProps = {
+  initial: { name: string; description: string; website: string; location: string; industry: string; logo_url: string; facebook_url: string; instagram_url: string; linkedin_url: string; x_url: string; tiktok_url: string; youtube_url: string };
+  mode: 'create' | 'claim' | 'edit';
+  claimCompanyId?: string;
+};
 
 const socialFields = [
   { key: 'facebook_url', label: 'Facebook URL', platform: 'facebook' },
@@ -16,8 +20,9 @@ const socialFields = [
   { key: 'youtube_url', label: 'YouTube URL', platform: 'youtube' },
 ] as const;
 
-export function CompanyForm({ initial }: CompanyFormProps) {
+export function CompanyForm({ initial, mode: initialMode, claimCompanyId }: CompanyFormProps) {
   const [form, setForm] = useState(initial);
+  const [mode, setMode] = useState(initialMode);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(initial.logo_url || null);
   const [message, setMessage] = useState('');
@@ -61,15 +66,32 @@ export function CompanyForm({ initial }: CompanyFormProps) {
     if (logoFile) payload.append('logo_file', logoFile);
     if (!logoFile && !form.logo_url) payload.append('remove_logo', 'true');
 
-    const response = await fetch('/api/employer/company', { method: 'PATCH', body: payload });
-    const result = await response.json().catch(() => null) as { error?: string; logo_url?: string | null } | null;
+    if (mode === 'claim') {
+      const claimResponse = await fetch('/api/employer/company', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'claim', company_id: claimCompanyId }),
+      });
+      const claimResult = await claimResponse.json().catch(() => null) as { error?: string } | null;
+      if (!claimResponse.ok) {
+        setSaving(false);
+        setError(claimResult?.error || 'We could not claim this company.');
+        return;
+      }
+      setMode('edit');
+    }
+
+    const method = mode === 'create' ? 'POST' : 'PATCH';
+    const response = await fetch('/api/employer/company', { method, body: payload });
+    const result = await response.json().catch(() => null) as { error?: string; logo_url?: string | null; warning?: string } | null;
     setSaving(false);
     if (!response.ok) { setError(result?.error || 'We could not update your company profile.'); return; }
+    if (mode === 'create') setMode('edit');
     if (result?.logo_url) {
       setForm((current) => ({ ...current, logo_url: result.logo_url ?? '' }));
       setLogoPreview(result.logo_url ?? '' );
     }
-    setMessage('Company profile updated.');
+    setMessage(result?.warning || (mode === 'create' ? 'Company profile created.' : 'Company profile updated.'));
   };
 
   return <form className={styles.form} onSubmit={save}>
@@ -93,7 +115,7 @@ export function CompanyForm({ initial }: CompanyFormProps) {
       <Input key={key} label={`${label}`} type="url" value={form[key]} placeholder={`https://${platform}.com/your-company`} onChange={(event) => update(key, event.target.value)} />
     ))} </div>
 
-    <Button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save Company Profile'}</Button>
+    <Button type="submit" disabled={saving}>{saving ? 'Saving...' : mode === 'create' ? 'Create Company' : mode === 'claim' ? 'Claim and Save Company Profile' : 'Save Company Profile'}</Button>
     {message && <p className={styles.success}>{message}</p>}{error && <p className={styles.error}>{error}</p>}
   </form>;
 }

@@ -50,7 +50,20 @@ export async function POST() {
     if (companyMembersError) return NextResponse.json({ error: 'We could not prepare your company memberships for deletion.' }, { status: 500 });
 
     const remainingMembers = (companyMembers || []).filter((member) => member.user_id !== user.id);
-    if (remainingMembers.length === 0) {
+    let remainingEmployerProfiles: Array<{ id: string }> = [];
+    if (remainingMembers.length > 0) {
+      const { data: employerProfiles, error: employerProfilesError } = await admin
+        .from('profiles')
+        .select('id')
+        .eq('user_type', 'employer')
+        .in('id', remainingMembers.map((member) => member.user_id));
+      if (employerProfilesError) return NextResponse.json({ error: 'We could not verify the remaining company owners.' }, { status: 500 });
+      remainingEmployerProfiles = employerProfiles || [];
+    }
+
+    const employerIds = new Set(remainingEmployerProfiles.map((profile) => profile.id));
+    const remainingEmployers = remainingMembers.filter((member) => employerIds.has(member.user_id));
+    if (remainingEmployers.length === 0) {
       const { error: orphanJobsError } = await admin.from('jobs').update({ created_by: null }).eq('company_id', companyId).eq('created_by', user.id);
       if (orphanJobsError) return NextResponse.json({ error: 'We could not preserve your company jobs. Your account was not deleted.' }, { status: 500 });
       const { error: orphanCompanyError } = await admin.from('companies').update({ created_by: null }).eq('id', companyId).eq('created_by', user.id);
@@ -58,8 +71,8 @@ export async function POST() {
       continue;
     }
 
-    const remainingOwner = remainingMembers.find((member) => member.role === 'owner');
-    const replacement = remainingOwner || remainingMembers.find((member) => member.role === 'admin') || remainingMembers[0];
+    const remainingOwner = remainingEmployers.find((member) => member.role === 'owner');
+    const replacement = remainingOwner || remainingEmployers.find((member) => member.role === 'admin') || remainingEmployers[0];
     if (!remainingOwner) {
       const { error: promoteError } = await admin.from('employer_users').update({ role: 'owner' }).eq('company_id', companyId).eq('user_id', replacement.user_id);
       if (promoteError) return NextResponse.json({ error: 'We could not preserve company ownership. Your account was not deleted.' }, { status: 500 });

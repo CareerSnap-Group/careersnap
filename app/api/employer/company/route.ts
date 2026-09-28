@@ -22,6 +22,53 @@ function isAllowedLogoFile(file: File) {
   return Boolean(extension && allowedImageExtensions.has(extension) && allowedImageTypes.has(file.type));
 }
 
+function getLogoValidationError(file: File) {
+  if (file.size > MAX_LOGO_FILE_SIZE) return 'Company logo must be 5MB or smaller.';
+  if (!isAllowedLogoFile(file)) return 'Upload a PNG, JPG, JPEG, GIF, or WEBP company logo.';
+  return null;
+}
+
+async function readBody(request: Request) {
+  const contentType = request.headers.get('content-type') || '';
+  if (contentType.includes('multipart/form-data')) {
+    return Object.fromEntries((await request.formData()).entries()) as Record<string, FormDataEntryValue | string | null>;
+  }
+  return await request.json().catch(() => null) as Record<string, FormDataEntryValue | string | null> | null;
+}
+
+function getText(body: Record<string, FormDataEntryValue | string | null>, key: string) {
+  const value = body[key];
+  return typeof value === 'string' ? value : '';
+}
+
+async function uploadCompanyLogo({
+  supabase,
+  userId,
+  companyId,
+  file,
+}: {
+  supabase: Awaited<ReturnType<typeof getEmployerContext>>['supabase'];
+  userId: string;
+  companyId: string;
+  file: File;
+}) {
+  const validationError = getLogoValidationError(file);
+  if (validationError) return { logoUrl: null, error: validationError };
+
+  const extension = (file.name.split('.').pop() || 'png').toLowerCase();
+  const storagePath = `${userId}/company-logos/${companyId}-${crypto.randomUUID()}.${extension}`;
+  const { error } = await supabase.storage.from('profile-photos').upload(storagePath, file, {
+    cacheControl: '3600',
+    upsert: false,
+    contentType: file.type || 'image/png',
+  });
+
+  if (error) return { logoUrl: null, error: 'We could not upload the company logo.' };
+
+  const { data } = supabase.storage.from('profile-photos').getPublicUrl(storagePath);
+  return { logoUrl: data.publicUrl, error: null };
+}
+
 function getStorageObjectPathFromPublicUrl(publicUrl?: string | null) {
   if (!publicUrl) return null;
 
@@ -83,28 +130,25 @@ async function cleanupCompanyLogoObject({
 
 export async function PATCH(request: Request) {
   const { supabase, membership, user } = await getEmployerContext();
-  const companyId = (membership as unknown as { company_id: string } | null)?.company_id;
+  const companyMembership = membership as unknown as { company_id: string; role: string } | null;
+  const companyId = companyMembership?.company_id;
   if (!companyId) return NextResponse.json({ error: 'Your employer account has no company.' }, { status: 404 });
-
-  let body: Record<string, FormDataEntryValue | string | null> | null = null;
-  const contentType = request.headers.get('content-type') || '';
-
-  if (contentType.includes('multipart/form-data')) {
-    const formData = await request.formData();
-    body = Object.fromEntries(formData.entries());
-  } else {
-    body = await request.json().catch(() => null) as Record<string, string> | null;
+  if (!['owner', 'admin'].includes(companyMembership.role)) {
+    return NextResponse.json({ error: 'Only company owners and admins can edit the company profile.' }, { status: 403 });
   }
+
+  const body = await readBody(request);
 
   if (!body) return NextResponse.json({ error: 'Company profile data was not provided.' }, { status: 400 });
 
-  const name = (typeof body.name === 'string' ? body.name : '').trim();
+  const contentType = request.headers.get('content-type') || '';
+  const name = getText(body, 'name').trim();
   if (!name) return NextResponse.json({ error: 'Company name is required.' }, { status: 400 });
 
-  const website = normalizeUrl(typeof body.website === 'string' ? body.website : undefined) || null;
-  const description = (typeof body.description === 'string' ? body.description : '').trim() || null;
-  const location = (typeof body.location === 'string' ? body.location : '').trim() || null;
-  const industry = (typeof body.industry === 'string' ? body.industry : '').trim() || null;
+  const website = normalizeUrl(getText(body, 'website')) || null;
+  const description = getText(body, 'description').trim() || null;
+  const location = getText(body, 'location').trim() || null;
+  const industry = getText(body, 'industry').trim() || null;
 
   const { data: currentCompany, error: companyLookupError } = await supabase
     .from('companies')
@@ -115,39 +159,26 @@ export async function PATCH(request: Request) {
   if (companyLookupError) return NextResponse.json({ error: 'We could not load the company profile.' }, { status: 400 });
 
   const previousLogoUrl = currentCompany?.logo_url || null;
-  const shouldRemoveLogo = body.remove_logo === 'true';
+  const shouldRemoveLogo = getText(body, 'remove_logo') === 'true';
   const logoFile = contentType.includes('multipart/form-data') ? (body.logo_file as File | undefined) : undefined;
 
-  let logoUrl = normalizeUrl(typeof body.logo_url === 'string' ? body.logo_url : undefined) || null;
+  let logoUrl = normalizeUrl(getText(body, 'logo_url')) || null;
 
   if (logoFile && logoFile.size > 0) {
-    if (logoFile.size > MAX_LOGO_FILE_SIZE) return NextResponse.json({ error: 'Company logo must be 5MB or smaller.' }, { status: 400 });
-    if (!isAllowedLogoFile(logoFile)) return NextResponse.json({ error: 'Upload a PNG, JPG, JPEG, GIF, or WEBP company logo.' }, { status: 400 });
-
-    const extension = (logoFile.name.split('.').pop() || 'png').toLowerCase();
-    const storagePath = `${user.id}/company-logos/${companyId}-${crypto.randomUUID()}.${extension}`;
-
-    const { error: uploadError } = await supabase.storage.from('profile-photos').upload(storagePath, logoFile, {
-      cacheControl: '3600',
-      upsert: false,
-      contentType: logoFile.type || 'image/png',
-    });
-
-    if (uploadError) return NextResponse.json({ error: 'We could not upload the company logo.' }, { status: 400 });
-
-    const { data: publicData } = supabase.storage.from('profile-photos').getPublicUrl(storagePath);
-    logoUrl = publicData?.publicUrl || null;
+    const upload = await uploadCompanyLogo({ supabase, userId: user.id, companyId, file: logoFile });
+    if (upload.error) return NextResponse.json({ error: upload.error }, { status: 400 });
+    logoUrl = upload.logoUrl;
   } else if (shouldRemoveLogo) {
     logoUrl = null;
   }
 
   const socialFields = {
-    facebook_url: normalizeUrl(typeof body.facebook_url === 'string' ? body.facebook_url : undefined) || null,
-    instagram_url: normalizeUrl(typeof body.instagram_url === 'string' ? body.instagram_url : undefined) || null,
-    linkedin_url: normalizeUrl(typeof body.linkedin_url === 'string' ? body.linkedin_url : undefined) || null,
-    x_url: normalizeUrl(typeof body.x_url === 'string' ? body.x_url : undefined) || null,
-    tiktok_url: normalizeUrl(typeof body.tiktok_url === 'string' ? body.tiktok_url : undefined) || null,
-    youtube_url: normalizeUrl(typeof body.youtube_url === 'string' ? body.youtube_url : undefined) || null,
+    facebook_url: normalizeUrl(getText(body, 'facebook_url')) || null,
+    instagram_url: normalizeUrl(getText(body, 'instagram_url')) || null,
+    linkedin_url: normalizeUrl(getText(body, 'linkedin_url')) || null,
+    x_url: normalizeUrl(getText(body, 'x_url')) || null,
+    tiktok_url: normalizeUrl(getText(body, 'tiktok_url')) || null,
+    youtube_url: normalizeUrl(getText(body, 'youtube_url')) || null,
   };
 
   const { error } = await supabase.from('companies').update({
@@ -204,4 +235,92 @@ export async function PATCH(request: Request) {
   }
 
   return NextResponse.json({ ok: true, logo_url: logoUrl });
+}
+
+export async function POST(request: Request) {
+  const { supabase, membership, user } = await getEmployerContext();
+  const body = await readBody(request);
+  if (!body) return NextResponse.json({ error: 'Company profile data was not provided.' }, { status: 400 });
+
+  if (getText(body, 'action') === 'claim') {
+    const companyId = getText(body, 'company_id');
+    if (!companyId) return NextResponse.json({ error: 'A company to claim was not provided.' }, { status: 400 });
+
+    const { data, error } = await supabase.rpc('claim_company_owner', { target_company_id: companyId });
+    if (error) return NextResponse.json({ error: 'We could not claim this company.' }, { status: 400 });
+
+    const claimResult = data as { success?: boolean; reason?: string } | null;
+    if (!claimResult?.success) {
+      return NextResponse.json({ error: claimResult?.reason || 'This company cannot be claimed by your account.' }, { status: 409 });
+    }
+
+    return NextResponse.json({ ok: true, claimed: true });
+  }
+
+  if (membership) {
+    return NextResponse.json({ error: 'Your employer account already has a company membership.' }, { status: 409 });
+  }
+
+  const name = getText(body, 'name').trim();
+  if (!name) return NextResponse.json({ error: 'Company name is required.' }, { status: 400 });
+
+  const contentType = request.headers.get('content-type') || '';
+  const logoFile = contentType.includes('multipart/form-data') ? (body.logo_file as File | undefined) : undefined;
+  if (logoFile && logoFile.size > 0) {
+    const validationError = getLogoValidationError(logoFile);
+    if (validationError) return NextResponse.json({ error: validationError }, { status: 400 });
+  }
+
+  const website = normalizeUrl(getText(body, 'website')) || null;
+  const { data: company, error: createError } = await supabase.rpc('create_employer_company', {
+    p_name: name,
+    p_description: getText(body, 'description').trim() || null,
+    p_website: website,
+    p_industry: getText(body, 'industry').trim() || null,
+    p_location: getText(body, 'location').trim() || null,
+    p_facebook_url: normalizeUrl(getText(body, 'facebook_url')),
+    p_instagram_url: normalizeUrl(getText(body, 'instagram_url')),
+    p_linkedin_url: normalizeUrl(getText(body, 'linkedin_url')),
+    p_x_url: normalizeUrl(getText(body, 'x_url')),
+    p_tiktok_url: normalizeUrl(getText(body, 'tiktok_url')),
+    p_youtube_url: normalizeUrl(getText(body, 'youtube_url')),
+  });
+
+  if (createError || !company) {
+    return NextResponse.json({ error: 'We could not create your company.' }, { status: 400 });
+  }
+
+  if (!logoFile || logoFile.size === 0) {
+    return NextResponse.json({ ok: true, company_id: company.id, logo_url: null }, { status: 201 });
+  }
+
+  const upload = await uploadCompanyLogo({ supabase, userId: user.id, companyId: company.id, file: logoFile });
+  if (upload.error || !upload.logoUrl) {
+    return NextResponse.json({
+      ok: true,
+      company_id: company.id,
+      logo_url: null,
+      warning: upload.error || 'The company was created, but its logo could not be saved.',
+    }, { status: 201 });
+  }
+
+  const { error: logoUpdateError } = await supabase.from('companies').update({ logo_url: upload.logoUrl }).eq('id', company.id);
+  if (logoUpdateError) {
+    const cleanup = await cleanupCompanyLogoObject({
+      supabase,
+      userId: user.id,
+      companyId: company.id,
+      objectUrl: upload.logoUrl,
+      currentCompanyLogoUrl: null,
+    });
+    if (!cleanup.deleted) console.warn('Company logo cleanup failed after company creation:', cleanup.reason);
+    return NextResponse.json({
+      ok: true,
+      company_id: company.id,
+      logo_url: null,
+      warning: 'The company was created, but its logo could not be saved. You can upload it again from the company profile.',
+    }, { status: 201 });
+  }
+
+  return NextResponse.json({ ok: true, company_id: company.id, logo_url: upload.logoUrl }, { status: 201 });
 }

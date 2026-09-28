@@ -53,9 +53,16 @@ export function JobForm({ mode, jobId, initialData, initialStatus = 'draft' }: J
     setSaving(true);
     const endpoint = mode === 'edit' ? `/api/employer/jobs/${jobId}` : '/api/employer/jobs';
     const response = await fetch(endpoint, { method: mode === 'edit' ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...formData, status }) });
-    const result = await response.json() as { error?: string };
+    const result = await response.json().catch(() => null) as { error?: string; code?: string } | null;
     setSaving(false);
-    if (!response.ok) { setError(result.error || 'We could not save this job.'); return; }
+    if (!response.ok) {
+      if (result?.code === 'company_setup_required') {
+        window.location.href = '/employer/company?setup=required';
+        return;
+      }
+      setError(result?.error || 'We could not save this job.');
+      return;
+    }
     if (mode === 'edit') { window.location.href = '/employer/jobs'; return; }
     setSubmitted(true);
   };
