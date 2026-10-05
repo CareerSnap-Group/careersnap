@@ -14,7 +14,7 @@
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+  background: var(--color-neutral-900);
   padding: var(--spacing-4xl) var(--spacing-md);
   color: white;
   text-align: center;
@@ -26,7 +26,7 @@
 }
 
 .heroTitle {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: 2.75rem;
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--spacing-lg);
   line-height: 1.2;
@@ -40,13 +40,13 @@
 }
 
 .ctaButton {
-  background-color: white;
-  color: var(--color-primary-600);
+  background-color: var(--color-button-primary);
+  color: var(--color-text-inverse);
   font-weight: var(--font-weight-semibold);
 }
 
 .ctaButton:hover {
-  background-color: var(--color-neutral-100);
+  background-color: var(--color-button-primary-hover);
 }
 
 /* Sections */
@@ -204,7 +204,7 @@
 
 /* CTA Section */
 .ctaSection {
-  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+  background: var(--color-neutral-900);
   padding: var(--spacing-3xl) var(--spacing-md);
   color: white;
 }
@@ -247,5 +247,9 @@
 
   .sectionTitle {
     font-size: var(--font-size-2xl);
+  }
+
+  .heroTitle {
+    font-size: 2rem;
   }
 }

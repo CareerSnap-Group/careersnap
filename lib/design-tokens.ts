@@ -4,35 +4,35 @@
  */
 
 export const colors = {
-  // Primary - CareerSnap black, white, and royal blue brand palette
+  // Primary - CareerSnap professional blue accent
   primary: {
-    50: '#F8FAFC',
-    100: '#F8FAFC',
-    200: '#E5E7EB',
-    300: '#374151',
-    400: '#374151',
-    500: '#374151',
-    600: '#0A0A0A',
-    700: '#0A0A0A',
-    800: '#0A0A0A',
-    900: '#0A0A0A',
+    50: '#EFF6FF',
+    100: '#DBEAFE',
+    200: '#BFDBFE',
+    300: '#93C5FD',
+    400: '#60A5FA',
+    500: '#2563EB',
+    600: '#1D4ED8',
+    700: '#1E40AF',
+    800: '#1E3A8A',
+    900: '#172554',
   },
   button: {
-    primary: '#FFFFFF',
-    primaryHover: '#F8FAFC',
+    primary: '#2563EB',
+    primaryHover: '#1D4ED8',
   },
   // Neutral - Professional grays
   neutral: {
-    50: '#fafbfc',
-    100: '#f3f5f7',
-    200: '#e5eaef',
-    300: '#d4dce5',
-    400: '#b5c1d0',
-    500: '#8fa0b5',
-    600: '#6b7e94',
-    700: '#4a5568',
-    800: '#2d3748',
-    900: '#1a202c',
+    50: '#f8f9fb',
+    100: '#f1f3f5',
+    200: '#e4e7eb',
+    300: '#cbd1d8',
+    400: '#a4acb8',
+    500: '#7a8491',
+    600: '#626c79',
+    700: '#4b5561',
+    800: '#343b45',
+    900: '#1f252d',
   },
   // Accent - Green for positive actions
   success: {
@@ -56,6 +56,7 @@ export const colors = {
     500: '#f59e0b',
     600: '#d97706',
     700: '#b45309',
+    800: '#92400e',
   },
   // Danger
   danger: {
@@ -67,27 +68,29 @@ export const colors = {
     500: '#ef4444',
     600: '#dc2626',
     700: '#b91c1c',
+    800: '#991b1b',
   },
   // Semantic colors
   text: {
-    primary: '#0A0A0A',
-    secondary: '#374151',
-    tertiary: '#6B7280',
+    primary: '#171b22',
+    secondary: '#46505d',
+    tertiary: '#687382',
     inverse: '#ffffff',
   },
   background: {
     primary: '#ffffff',
-    secondary: '#FFFFFF',
-    tertiary: '#F3F4F6',
+    secondary: '#f8f9fb',
+    tertiary: '#f1f3f5',
   },
-  footer: '#0A0A0A',
-  border: '#E5E7EB',
-  divider: '#E5E7EB',
+  footer: '#171b22',
+  header: '#171b22',
+  border: '#e2e6eb',
+  divider: '#e2e6eb',
 };
 
 export const typography = {
   fontFamily: {
-    sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+    sans: '"Aptos", "Segoe UI Variable", "Segoe UI", sans-serif',
     mono: '"Fira Code", "Courier New", monospace',
   },
   fontSize: {
@@ -127,10 +130,10 @@ export const spacing = {
 
 export const borderRadius = {
   none: '0',
-  sm: '0.375rem', // 6px
-  md: '0.5rem', // 8px
-  lg: '0.75rem', // 12px
-  xl: '1rem', // 16px
+  sm: '0.25rem', // 4px
+  md: '0.375rem', // 6px
+  lg: '0.5rem', // 8px
+  xl: '0.625rem', // 10px
   full: '9999px',
 };
 

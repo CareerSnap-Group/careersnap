@@ -49,6 +49,9 @@ export default function HomePage() {
       <main className={styles.homeBody}>
         <section className={styles.hero}>
           <div className={styles.heroContent}>
+            <p className={styles.heroEyebrow}>Find your next opportunity</p>
+            <h1 className={styles.heroTitle}>Find work that moves your career forward</h1>
+            <p className={styles.heroSubtitle}>Discover opportunities from leading companies, explore new roles, and take the next step in your career.</p>
             <form className={styles.searchForm} onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
@@ -59,11 +62,11 @@ export default function HomePage() {
               <div className={styles.searchInputs}>
                 <div className={styles.searchField}>
                   <Icon name="search" size={21} className={styles.searchIcon} />
-                  <Input type="text" name="keyword" placeholder="Job title, keyword, or company" />
+                  <Input type="text" name="keyword" placeholder="Job title, keyword, or company" aria-label="Job title, keyword, or company" />
                 </div>
                 <div className={styles.searchField}>
                   <Icon name="map-pin" size={21} className={styles.locationIcon} />
-                  <Input type="text" name="location" placeholder="City, province, or remote" />
+                  <Input type="text" name="location" placeholder="City, province, or remote" aria-label="City, province, or remote" />
                 </div>
                 <Button type="submit" size="lg" className={styles.searchButton}>
                   Find jobs
@@ -71,8 +74,6 @@ export default function HomePage() {
               </div>
             </form>
 
-            <h1 className={styles.heroTitle}>Find work that moves your career forward</h1>
-            <p className={styles.heroSubtitle}>Discover opportunities from leading companies, explore new roles, and take the next step in your career.</p>
             {isLoggedOut ? (
               <Link href="/register" className={styles.primaryCta}>Get Started</Link>
             ) : signedIn ? (

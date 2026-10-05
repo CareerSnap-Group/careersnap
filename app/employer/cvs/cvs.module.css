@@ -31,7 +31,7 @@
 .viewLink:hover, .backLink:hover { text-decoration: underline; }
 .stateCard { padding: var(--spacing-2xl); text-align: center; }
 .stateCard h2 { color: var(--color-text-primary); margin-top: 0; }
-.error { color: #b42318; font-size: var(--font-size-sm); }
+.error { color: var(--color-danger-700); font-size: var(--font-size-sm); }
 .pagination { align-items: center; display: flex; gap: var(--spacing-md); justify-content: center; margin-top: var(--spacing-xl); }
 .detailPage { background: var(--color-background-primary); min-height: 100vh; }
 .backLink { margin-bottom: var(--spacing-lg); }

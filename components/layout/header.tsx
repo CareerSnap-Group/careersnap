@@ -64,6 +64,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
             <>
               <Link href="/employer/dashboard" className={styles.navLink}>Employer Dashboard</Link>
               <Link href="/employers/post-job" className={styles.navLink}>Post a Job</Link>
+              <Link href="/employer/cvs" className={styles.navLink}>Find CVs</Link>
               <Link href="/employer/jobs" className={styles.navLink}>Jobs</Link>
               <Link href="/employer/applications" className={styles.navLink}>Applications</Link>
               <Link href="/employer/company" className={styles.navLink}>Company</Link>
@@ -144,6 +145,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
             <>
               <Link href="/employer/dashboard" className={styles.mobileNavLink}>Employer Dashboard</Link>
               <Link href="/employers/post-job" className={styles.mobileNavLink}>Post a Job</Link>
+              <Link href="/employer/cvs" className={styles.mobileNavLink}>Find CVs</Link>
               <Link href="/employer/jobs" className={styles.mobileNavLink}>Jobs</Link>
               <Link href="/employer/applications" className={styles.mobileNavLink}>Applications</Link>
               <Link href="/employer/company" className={styles.mobileNavLink}>Company</Link>

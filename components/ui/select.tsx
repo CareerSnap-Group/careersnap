@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './input.module.css';
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -23,23 +24,14 @@ export function Select({
   return (
     <div style={{ width: fullWidth ? '100%' : 'auto' }}>
       {label && (
-        <label htmlFor={id} style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.875rem' }}>
+        <label htmlFor={id} className={styles.label}>
           {label}
         </label>
       )}
       <select
         id={id}
-        style={{
-          width: fullWidth ? '100%' : 'auto',
-          padding: '0.5rem 0.75rem',
-          fontSize: '1rem',
-          border: `1px solid ${error ? '#ef4444' : '#d4dce5'}`,
-          borderRadius: '0.5rem',
-          backgroundColor: '#ffffff',
-          color: '#1a202c',
-          fontFamily: 'inherit',
-          cursor: 'pointer',
-        }}
+        className={`${styles.input} ${error ? styles.error : ''} ${fullWidth ? styles.fullWidth : styles.autoWidth} ${className}`}
+        aria-invalid={error ? true : undefined}
         {...props}
       >
         {options.map((option) => (
@@ -49,8 +41,8 @@ export function Select({
         ))}
         {children}
       </select>
-      {error && <p style={{ marginTop: '0.25rem', fontSize: '0.875rem', color: '#ef4444' }}>{error}</p>}
-      {helperText && !error && <p style={{ marginTop: '0.25rem', fontSize: '0.875rem', color: '#8fa0b5' }}>{helperText}</p>}
+      {error && <p className={styles.errorText}>{error}</p>}
+      {helperText && !error && <p className={styles.helperText}>{helperText}</p>}
     </div>
   );
 }

@@ -260,7 +260,7 @@
 
 .safetyNotice {
   background-color: var(--color-warning-500);
-  background-color: #fef3c7;
+  background-color: var(--color-warning-50);
   border-left: 4px solid var(--color-warning-500);
   padding: var(--spacing-lg);
   border-radius: var(--radius-md);
@@ -269,7 +269,7 @@
 
 .safetyText {
   font-size: var(--font-size-sm);
-  color: #92400e;
+  color: var(--color-warning-800);
   margin: 0;
   line-height: 1.6;
 }
@@ -391,7 +391,7 @@
 }
 
 .applicationError {
-  color: #b42318;
+  color: var(--color-danger-700);
 }
 
 .applicationSuccess {
@@ -499,4 +499,107 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-primary-600);
+}
+
+.container {
+  max-width: 1240px;
+  padding: 2.25rem 1.5rem 3rem;
+}
+
+.header {
+  padding: 0 0 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.title {
+  max-width: 820px;
+  font-size: 2.25rem;
+  line-height: 1.15;
+}
+
+.meta {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.contentLayout {
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 2rem;
+}
+
+.mainContent {
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.section {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
+}
+
+.sectionTitle {
+  font-size: var(--font-size-xl);
+}
+
+.safetyNotice {
+  background: var(--color-primary-50);
+  border-left-color: var(--color-primary-500);
+  border-radius: var(--radius-sm);
+}
+
+.safetyText {
+  color: var(--color-primary-800);
+}
+
+.ctaBox,
+.applicationCard,
+.similarJobs {
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.ctaBox {
+  gap: 0.75rem;
+}
+
+.similarJobs {
+  background: var(--color-background-primary);
+}
+
+.similarJobCard {
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+.applicationSelect,
+.applicationTextarea {
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 1024px) {
+  .contentLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.25rem 1rem 2.5rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

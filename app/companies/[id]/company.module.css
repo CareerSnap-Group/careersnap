@@ -6,7 +6,7 @@
 .logo, .logoFallback { align-items: center; background: var(--color-primary-50); border-radius: var(--radius-md); display: flex; flex: 0 0 88px; height: 88px; justify-content: center; overflow: hidden; width: 88px; }
 .logo { background-position: center; background-size: cover; }
 .logoFallback { color: var(--color-primary-700); font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); }
-.name { color: var(--color-text-primary); font-size: clamp(1.75rem, 4vw, 2.5rem); margin: 0 0 var(--spacing-sm); }
+.name { color: var(--color-text-primary); font-size: 2.25rem; margin: 0 0 var(--spacing-sm); }
 .meta { color: var(--color-text-tertiary); margin: 0 0 var(--spacing-md); }
 .description { color: var(--color-text-secondary); line-height: 1.7; margin: var(--spacing-lg) 0 0; max-width: 720px; }
 .website { color: var(--color-primary-700); display: inline-block; font-size: var(--font-size-sm); margin-top: var(--spacing-md); }
@@ -23,3 +23,17 @@
 .jobLink { display: inline-block; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); margin-top: var(--spacing-md); }
 .empty { background: var(--color-background-primary); color: var(--color-text-secondary); padding: var(--spacing-xl); }
 @media (max-width: 600px) { .container { padding: var(--spacing-2xl) var(--spacing-md); } .profile { padding: var(--spacing-lg); } .profileHeader { flex-direction: column; } }
+
+.container { max-width: 1120px; }
+.back { color: var(--color-primary-600); }
+.profile { border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.logo, .logoFallback { border-radius: var(--radius-sm); }
+.socialLink { border-radius: var(--radius-sm); }
+.job { padding: 1.25rem 0; border-bottom: 1px solid var(--color-border); }
+.job:first-child { border-top: 1px solid var(--color-border); }
+.jobLink { color: var(--color-primary-600); }
+.empty { border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+
+@media (max-width: 600px) {
+	.name { font-size: 1.75rem; }
+}

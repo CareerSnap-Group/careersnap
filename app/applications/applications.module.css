@@ -240,3 +240,69 @@
     font-size: 0.75rem;
   }
 }
+
+.container {
+  max-width: 1400px;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.header {
+  padding: 0 0 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.title {
+  font-size: 2rem;
+}
+
+.emptyState,
+.applicationsCard,
+.legendCard {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.statCard {
+  min-height: 120px;
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.statLabel {
+  letter-spacing: 0;
+}
+
+.statValue {
+  font-size: 2rem;
+}
+
+.emptyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-primary-500);
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-500);
+  color: var(--color-text-inverse);
+}
+
+.emptyButton:hover {
+  background: var(--color-primary-600);
+}
+
+.table thead {
+  border-bottom-width: 1px;
+}
+
+.table th {
+  letter-spacing: 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.25rem 1rem 2.5rem;
+  }
+}

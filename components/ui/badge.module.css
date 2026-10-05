@@ -24,11 +24,11 @@
 }
 
 .variant-warning {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--color-warning-50);
+  color: var(--color-warning-800);
 }
 
 .variant-danger {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--color-danger-50);
+  color: var(--color-danger-800);
 }

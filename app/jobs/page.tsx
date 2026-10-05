@@ -96,6 +96,7 @@ function JobsContent() {
             <Input
               type="text"
               placeholder="Job title, keyword, or company"
+              aria-label="Job title, keyword, or company"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className={styles.searchInput}
@@ -103,6 +104,7 @@ function JobsContent() {
             <Input
               type="text"
               placeholder="City, province, or remote"
+              aria-label="City, province, or remote"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               className={styles.searchInput}
@@ -224,6 +226,7 @@ function JobsContent() {
                             <Badge variant="secondary">{job.jobType}</Badge>
                             <Badge variant="secondary">{job.workLocation}</Badge>
                           </div>
+                          <p className={styles.jobPosted}>Posted {job.postedDate.toLocaleDateString('en-ZA', { month: 'short', day: 'numeric' })}</p>
                         </Card>
                       </Link>
                     </div>

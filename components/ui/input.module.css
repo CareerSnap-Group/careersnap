@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+.input.autoWidth {
+  width: auto;
+}
+
 .label {
   display: block;
   margin-bottom: var(--spacing-sm);
@@ -15,16 +19,16 @@
   padding: 0.5rem 0.75rem;
   font-size: var(--font-size-base);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background-color: var(--color-background-primary);
   color: var(--color-text-primary);
-  transition: all var(--transition-fast);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--color-text-secondary);
-  box-shadow: 0 0 0 3px var(--color-primary-50);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
 }
 
 .input::placeholder {

@@ -1,13 +1,13 @@
-.header { background: var(--color-header); border-bottom: 3px solid var(--color-primary-600); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 100; }
+.header { background: var(--color-header); border-bottom: 1px solid var(--color-header-border); box-shadow: 0 1px 3px rgb(0 0 0 / 8%); position: sticky; top: 0; z-index: 100; }
 .container { max-width: 1280px; min-height: 70px; margin: 0 auto; padding: 0 var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-xl); }
 .logo { display: flex; align-items: center; margin-right: auto; }
-.logoImage { display: block; width: min(181px, 45vw); height: auto; filter: hue-rotate(180deg) saturate(1.2); }
+.logoImage { display: block; width: min(181px, 45vw); height: auto; }
 .nav { display: none; align-items: center; gap: var(--spacing-lg); }
-.navLink { color: white; text-decoration: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
-.navLink:hover { color: var(--color-primary-200); }
+.navLink { color: var(--color-header-text); text-decoration: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+.navLink:hover { color: var(--color-primary-300); }
 .actions { display: none; align-items: center; gap: var(--spacing-md); }
-.signIn { color: white; text-decoration: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
-.menuButton { display: flex; flex-direction: column; gap: 4px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.45); padding: 10px; color: white; }
+.signIn { color: var(--color-header-text); text-decoration: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+.menuButton { display: flex; flex-direction: column; gap: 4px; background: transparent; border: 1px solid var(--color-header-control-border); padding: 10px; color: var(--color-text-inverse); }
 .menuIcon { display: block; width: 22px; height: 2px; background: white; }
-.mobileNav { display: flex; flex-direction: column; gap: var(--spacing-md); padding: var(--spacing-md); border-top: 1px solid rgba(255, 255, 255, 0.2); background: var(--color-header); }
+.mobileNav { display: flex; flex-direction: column; gap: var(--spacing-md); padding: var(--spacing-md); border-top: 1px solid var(--color-header-border); background: var(--color-header); }
 @media (min-width: 1024px) { .nav, .actions { display: flex; } .menuButton, .mobileNav { display: none; } }

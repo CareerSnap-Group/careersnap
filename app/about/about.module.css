@@ -1,11 +1,11 @@
 .page {
   min-height: 100vh;
-  background: #fff;
+  background: var(--color-background-primary);
 }
 
 .hero {
   border-bottom: 1px solid var(--color-border);
-  background: linear-gradient(180deg, #fff 0%, #f7f9fc 100%);
+  background: var(--color-background-secondary);
 }
 
 .heroInner,
@@ -38,8 +38,8 @@
   max-width: 760px;
   margin: 18px 0 24px;
   color: var(--color-text-primary);
-  font-size: clamp(2.75rem, 6vw, 5.25rem);
-  letter-spacing: -0.04em;
+  font-size: 3rem;
+  letter-spacing: 0;
   line-height: 1.02;
 }
 
@@ -47,7 +47,7 @@
   max-width: 720px;
   margin: 0;
   color: var(--color-text-primary);
-  font-size: clamp(1.2rem, 2.3vw, 1.55rem);
+  font-size: 1.25rem;
   line-height: 1.45;
 }
 
@@ -88,8 +88,8 @@
 .visionInner h2 {
   margin: 12px 0 0;
   color: var(--color-text-primary);
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  letter-spacing: -0.03em;
+  font-size: 2.25rem;
+  letter-spacing: 0;
   line-height: 1.1;
 }
 
@@ -104,7 +104,7 @@
   padding: 32px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
 }
 
@@ -138,7 +138,7 @@
 .audienceCard h3 {
   margin: 10px 0 12px;
   font-size: 1.55rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .cardDescription,
@@ -197,7 +197,7 @@
   padding: 48px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--color-background-primary);
   box-shadow: var(--shadow-sm);
 }
 
@@ -214,9 +214,9 @@
 .closingSection {
   padding: 88px 0 104px;
   color: var(--color-primary-800);
-  font-size: clamp(1.7rem, 3vw, 2.5rem);
+  font-size: 2rem;
   font-weight: var(--font-weight-semibold);
-  letter-spacing: -0.025em;
+  letter-spacing: 0;
   line-height: 1.2;
   text-align: center;
 }
@@ -232,7 +232,7 @@
   .closingSection { width: min(100% - 32px, 560px); }
 
   .heroInner { padding: 64px 0 60px; }
-  .heroTitle { font-size: clamp(2.45rem, 12vw, 3.7rem); }
+  .heroTitle { font-size: 2.125rem; }
   .audienceSection,
   .founderSection { padding: 68px 0; }
   .audienceGrid,
@@ -243,4 +243,9 @@
   .founderMarker { width: 52px; height: 52px; }
   .visionInner { padding: 64px 0; }
   .closingSection { padding: 68px 0 76px; }
+  .sectionIntro h2,
+  .statementGrid h2,
+  .founderContent h2,
+  .visionInner h2 { font-size: 1.75rem; }
+  .closingSection { font-size: 1.625rem; }
 }

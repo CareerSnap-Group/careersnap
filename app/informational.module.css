@@ -26,7 +26,7 @@
 .title {
   margin: 0 0 var(--spacing-md);
   color: var(--color-text-primary);
-  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-size: 2.25rem;
   line-height: 1.08;
 }
 
@@ -101,4 +101,5 @@
   .main { padding: var(--spacing-2xl) 0 var(--spacing-3xl); }
   .hero { margin-bottom: var(--spacing-2xl); }
   .grid { grid-template-columns: 1fr; }
+  .title { font-size: 1.875rem; }
 }
