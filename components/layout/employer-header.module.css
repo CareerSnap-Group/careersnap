@@ -1,5 +1,5 @@
 .header { background: var(--color-header); border-bottom: 1px solid var(--color-header-border); box-shadow: 0 1px 3px rgb(0 0 0 / 8%); position: sticky; top: 0; z-index: 100; }
-.container { max-width: 1280px; min-height: 70px; margin: 0 auto; padding: 0 var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-xl); }
+.container { max-width: 1280px; min-height: 70px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; gap: var(--spacing-xl); }
 .logo { display: flex; align-items: center; margin-right: auto; }
 .logoImage { display: block; width: min(181px, 45vw); height: auto; }
 .nav { display: none; align-items: center; gap: var(--spacing-lg); }
