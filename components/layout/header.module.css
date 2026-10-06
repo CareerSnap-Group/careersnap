@@ -34,7 +34,7 @@
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 var(--spacing-md);
   height: 70px;
   display: flex;
   align-items: center;
@@ -44,8 +44,8 @@
 @media (min-width: 1024px) {
   .container {
     max-width: none;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 32px;
+    padding-right: 32px;
   }
 
   .landingHeader .container {
