@@ -91,14 +91,24 @@ export async function fetchSavedJobIds(userId: string): Promise<string[] | null>
   return data.map((row) => row.job_id);
 }
 
-export async function saveJob(userId: string, jobId: string) {
-  if (!isSupabaseConfigured()) return;
-  await supabase().from('saved_jobs').upsert({ user_id: userId, job_id: jobId });
+export async function saveJob(userId: string, jobId: string): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  try {
+    const { error } = await supabase().from('saved_jobs').upsert({ user_id: userId, job_id: jobId });
+    return !error;
+  } catch {
+    return false;
+  }
 }
 
-export async function unsaveJob(userId: string, jobId: string) {
-  if (!isSupabaseConfigured()) return;
-  await supabase().from('saved_jobs').delete().eq('user_id', userId).eq('job_id', jobId);
+export async function unsaveJob(userId: string, jobId: string): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  try {
+    const { error } = await supabase().from('saved_jobs').delete().eq('user_id', userId).eq('job_id', jobId);
+    return !error;
+  } catch {
+    return false;
+  }
 }
 
 export async function fetchProfile(userId: string): Promise<UserProfile | null> {

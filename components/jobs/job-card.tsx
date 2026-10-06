@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Job } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Icon } from '@/components/icons';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
-import { fetchSavedJobIds, saveJob, unsaveJob } from '@/lib/supabase/data';
+import { saveJob, unsaveJob } from '@/lib/supabase/data';
 import styles from './job-card.module.css';
 
 function postedLabel(date: Date) {
@@ -21,37 +21,54 @@ function postedLabel(date: Date) {
 type JobCardProps = {
   job: Job;
   initiallySaved?: boolean;
+  savedStateReady?: boolean;
   onSavedChange?: (isSaved: boolean) => void;
 };
 
-export function JobCard({ job, initiallySaved = false, onSavedChange }: JobCardProps) {
+export function JobCard({ job, initiallySaved = false, savedStateReady = true, onSavedChange }: JobCardProps) {
   const [isSaved, setIsSaved] = useState(initiallySaved);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const router = useRouter();
 
+  useEffect(() => {
+    if (!savedStateReady) return;
+    setIsSaved(initiallySaved);
+    setSaveError('');
+  }, [initiallySaved, savedStateReady]);
+
   const toggleSaved = async () => {
-    if (saving) return;
+    if (saving || !savedStateReady) return;
     if (!isSupabaseConfigured()) {
       router.push(`/login?next=${encodeURIComponent(`/jobs/${job.id}`)}`);
       return;
     }
 
     setSaving(true);
-    const { data: { user } } = await createClient().auth.getUser();
-    if (!user) {
-      setSaving(false);
-      router.push(`/login?next=${encodeURIComponent(`/jobs/${job.id}`)}`);
-      return;
-    }
+    setSaveError('');
+    try {
+      const { data: { user } } = await createClient().auth.getUser();
+      if (!user) {
+        router.push(`/login?next=${encodeURIComponent(`/jobs/${job.id}`)}`);
+        return;
+      }
 
-    const savedIds = await fetchSavedJobIds(user.id);
-    const currentlySaved = isSaved || Boolean(savedIds?.includes(job.id));
-    const nextSaved = !currentlySaved;
-    setIsSaved(nextSaved);
-    if (nextSaved) await saveJob(user.id, job.id);
-    else await unsaveJob(user.id, job.id);
-    onSavedChange?.(nextSaved);
-    setSaving(false);
+      const nextSaved = !isSaved;
+      const succeeded = nextSaved
+        ? await saveJob(user.id, job.id)
+        : await unsaveJob(user.id, job.id);
+      if (!succeeded) {
+        setSaveError('We could not update this saved job. Please try again.');
+        return;
+      }
+
+      setIsSaved(nextSaved);
+      onSavedChange?.(nextSaved);
+    } catch {
+      setSaveError('We could not update this saved job. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -69,9 +86,9 @@ export function JobCard({ job, initiallySaved = false, onSavedChange }: JobCardP
           type="button"
           className={`${styles.saveButton} ${isSaved ? styles.saved : ''}`}
           onClick={toggleSaved}
-          disabled={saving}
-          aria-label={isSaved ? `Remove ${job.title} from saved jobs` : `Save ${job.title}`}
-          aria-pressed={isSaved === true}
+          disabled={saving || !savedStateReady}
+          aria-label={!savedStateReady ? `Checking saved status for ${job.title}` : isSaved ? `Remove ${job.title} from saved jobs` : `Save ${job.title}`}
+          aria-pressed={isSaved}
         >
           <Icon name={isSaved ? 'heart' : 'heart-off'} size={18} />
         </button>
@@ -83,6 +100,7 @@ export function JobCard({ job, initiallySaved = false, onSavedChange }: JobCardP
         <Badge variant="warning">{job.workLocation.replace('-', ' ')}</Badge>
       </div>
       <p className={styles.description}>{job.description}</p>
+      {saveError && <p className={styles.saveError} role="alert">{saveError}</p>}
 
       <div className={styles.cardBottom}>
         {job.salary ? (

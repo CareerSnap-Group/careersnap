@@ -779,6 +779,7 @@
 .jobsEmpty { padding: 2.25rem; border: 1px dashed var(--color-neutral-300); border-radius: 1rem; background: #fff; text-align: center; }
 .jobsEmpty p { margin: 0 0 0.35rem; color: var(--color-text-primary); font-weight: var(--font-weight-semibold); }
 .jobsEmpty span { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.savedStateNotice { margin: 0.85rem 0 0; color: var(--color-danger-700); font-size: var(--font-size-sm); }
 .viewAllJobs { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 1.25rem; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
 .viewAllJobs :global(svg) { margin: 0; }
 

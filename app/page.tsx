@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { JobCard, JobCardSkeleton } from '@/components/jobs/job-card';
+import { useSavedJobIds } from '@/components/jobs/use-saved-job-ids';
 import { Icon } from '@/components/icons';
 import { staticCategories } from '@/lib/static-data';
 import { createClient } from '@/lib/supabase/browser';
@@ -21,7 +22,9 @@ export default function HomePage() {
   const [employerPromotionDismissed, setEmployerPromotionDismissed] = useState(false);
   const [publishedJobs, setPublishedJobs] = useState<Job[]>([]);
   const [jobsLoading, setJobsLoading] = useState(true);
+  const [jobsError, setJobsError] = useState(false);
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+  const { savedJobIds, savedStateReady, savedStateError } = useSavedJobIds();
   const popularSearches = ['Software Developer', 'Registered Nurse', 'Data Analyst', 'Project Manager', 'Accountant', 'Marketing Manager'];
 
   const recommendedJobs = useMemo(() => [...publishedJobs]
@@ -51,7 +54,16 @@ export default function HomePage() {
     let active = true;
     fetchPublishedJobs().then((jobs) => {
       if (!active) return;
-      setPublishedJobs(jobs || []);
+      if (jobs === null) {
+        setPublishedJobs([]);
+        setJobsError(true);
+      } else {
+        setPublishedJobs(jobs);
+      }
+      setJobsLoading(false);
+    }).catch(() => {
+      if (!active) return;
+      setJobsError(true);
       setJobsLoading(false);
     });
     return () => { active = false; };
@@ -122,9 +134,14 @@ export default function HomePage() {
               <div className={styles.jobsGrid} aria-label="Loading recommended jobs">
                 {Array.from({ length: 3 }, (_, index) => <JobCardSkeleton key={index} />)}
               </div>
+            ) : jobsError ? (
+              <div className={styles.jobsEmpty} role="alert">
+                <p>Jobs are temporarily unavailable</p>
+                <span>We could not load opportunities right now. Please try again later.</span>
+              </div>
             ) : recommendedJobs.length ? (
               <div className={styles.jobsGrid}>
-                {recommendedJobs.map((job) => <JobCard key={job.id} job={job} />)}
+                {recommendedJobs.map((job) => <JobCard key={job.id} job={job} initiallySaved={savedJobIds.has(job.id)} savedStateReady={savedStateReady} />)}
               </div>
             ) : (
               <div className={styles.jobsEmpty}>
@@ -132,6 +149,7 @@ export default function HomePage() {
                 <span>New published opportunities will appear here.</span>
               </div>
             )}
+            {savedStateError && <p className={styles.savedStateNotice} role="status">Saved-job status is unavailable. Save controls are temporarily disabled.</p>}
             <Link href="/jobs" className={styles.viewAllJobs}>Browse all jobs <Icon name="chevron-right" size={16} /></Link>
           </div>
         </section>

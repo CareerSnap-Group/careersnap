@@ -114,6 +114,7 @@
 .cardBottom { margin-top: auto; align-items: flex-end; }
 .salary { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
 .posted { margin: 0; color: var(--color-text-tertiary); font-size: var(--font-size-xs); white-space: nowrap; }
+.saveError { margin: 0.5rem 0 0; color: var(--color-danger-700); font-size: var(--font-size-xs); line-height: 1.4; }
 
 .skeleton { gap: 1rem; }
 .skeletonTop,

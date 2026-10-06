@@ -22,6 +22,7 @@ export default function JobDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [similarJobs, setSimilarJobs] = useState<NonNullable<Awaited<ReturnType<typeof fetchPublishedJobs>>>>([]);
   const [isSaved, setIsSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [applicationSubmitted, setApplicationSubmitted] = useState(false);
   const router = useRouter();
@@ -80,15 +81,25 @@ export default function JobDetailsPage() {
       router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}`)}`);
       return;
     }
-    const { data } = await createClient().auth.getUser();
-    if (!data.user) {
-      router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}`)}`);
-      return;
+    setSaveError('');
+    try {
+      const { data } = await createClient().auth.getUser();
+      if (!data.user) {
+        router.push(`/login?next=${encodeURIComponent(`/jobs/${jobId}`)}`);
+        return;
+      }
+      const nextSaved = !isSaved;
+      const succeeded = nextSaved
+        ? await saveJob(data.user.id, job.id)
+        : await unsaveJob(data.user.id, job.id);
+      if (!succeeded) {
+        setSaveError('We could not update this saved job. Please try again.');
+        return;
+      }
+      setIsSaved(nextSaved);
+    } catch {
+      setSaveError('We could not update this saved job. Please try again.');
     }
-    const nextSaved = !isSaved;
-    setIsSaved(nextSaved);
-    if (nextSaved) await saveJob(data.user.id, job.id);
-    else await unsaveJob(data.user.id, job.id);
   };
 
   const handleApply = async () => {
@@ -261,6 +272,7 @@ export default function JobDetailsPage() {
             {/* Apply CTA */}
             <div className={styles.ctaBox}>
               {applicationSubmitted ? <p className={styles.applicationSuccess}><Icon name="check" />Application submitted</p> : <Button fullWidth size="lg" className={styles.applyButton} onClick={handleApply}>Apply Now</Button>}
+              {saveError && <p className={styles.applicationError} role="alert">{saveError}</p>}
               <Button
                 fullWidth
                 variant="outline"

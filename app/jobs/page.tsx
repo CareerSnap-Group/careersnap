@@ -13,6 +13,7 @@ import { Icon } from '@/components/icons';
 import styles from './jobs.module.css';
 import { fetchPublishedJobs } from '@/lib/supabase/data';
 import { JobCard, JobCardSkeleton } from '@/components/jobs/job-card';
+import { useSavedJobIds } from '@/components/jobs/use-saved-job-ids';
 
 function searchJobs(query: string, jobs: Job[]): Job[] {
   if (!query.trim()) return jobs;
@@ -49,6 +50,7 @@ function JobsContent() {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [availableJobs, setAvailableJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const { savedJobIds, savedStateReady, savedStateError } = useSavedJobIds();
 
   useEffect(() => {
     fetchPublishedJobs().then((jobs) => {
@@ -228,9 +230,10 @@ function JobsContent() {
               </div>
             ) : (
               <div className={styles.jobGrid}>
-                {sortedJobs.map((job) => <JobCard key={job.id} job={job} />)}
+                {sortedJobs.map((job) => <JobCard key={job.id} job={job} initiallySaved={savedJobIds.has(job.id)} savedStateReady={savedStateReady} />)}
               </div>
             )}
+            {savedStateError && <p className={styles.savedStateNotice} role="status">Saved-job status is unavailable. Save controls are temporarily disabled.</p>}
           </div>
         </div>
       </div>
