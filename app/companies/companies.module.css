@@ -8,7 +8,7 @@
 .card { background: var(--color-background-primary); display: flex; flex-direction: column; gap: var(--spacing-md); min-height: 240px; padding: var(--spacing-lg); }
 .cardTop { align-items: center; display: flex; gap: var(--spacing-md); }
 .logo, .logoFallback { align-items: center; background: var(--color-primary-50); border-radius: var(--radius-md); display: flex; flex: 0 0 56px; height: 56px; justify-content: center; overflow: hidden; width: 56px; }
-.logo { background-position: center; background-size: cover; }
+.logo { background-position: center; background-size: contain; background-repeat: no-repeat; background-color: #fff; }
 .logoFallback { color: var(--color-primary-700); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); }
 .companyName { color: var(--color-text-primary); font-size: var(--font-size-lg); margin: 0; }
 .industry, .meta { color: var(--color-text-tertiary); font-size: var(--font-size-sm); margin: .2rem 0 0; }

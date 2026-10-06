@@ -8,11 +8,11 @@ import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
 import { Job, JobType, ExperienceLevel, WorkLocation } from '@/lib/types';
 import { Icon } from '@/components/icons';
 import styles from './jobs.module.css';
 import { fetchPublishedJobs } from '@/lib/supabase/data';
+import { JobCard, JobCardSkeleton } from '@/components/jobs/job-card';
 
 function searchJobs(query: string, jobs: Job[]): Job[] {
   if (!query.trim()) return jobs;
@@ -45,7 +45,8 @@ function JobsContent() {
   const [selectedJobType, setSelectedJobType] = useState<JobType | ''>('');
   const [selectedExperience, setSelectedExperience] = useState<ExperienceLevel | ''>('');
   const [selectedWorkLocation, setSelectedWorkLocation] = useState<WorkLocation | ''>('');
-  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [availableJobs, setAvailableJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -70,7 +71,9 @@ function JobsContent() {
     return results;
   }, [availableJobs, keyword, location, selectedJobType, selectedExperience, selectedWorkLocation]);
 
-  const selectedJob = selectedJobId ? filteredJobs.find((j) => j.id === selectedJobId) : filteredJobs[0];
+  const sortedJobs = useMemo(() => [...filteredJobs].sort((left, right) => sortOrder === 'newest'
+    ? right.postedDate.getTime() - left.postedDate.getTime()
+    : left.postedDate.getTime() - right.postedDate.getTime()), [filteredJobs, sortOrder]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +86,7 @@ function JobsContent() {
     setSelectedJobType('');
     setSelectedExperience('');
     setSelectedWorkLocation('');
+    setFilterPanelOpen(false);
   };
 
   return (
@@ -113,11 +117,27 @@ function JobsContent() {
           </div>
         </form>
 
+        <div className={styles.mobileToolbar}>
+          <Button
+            variant="outline"
+            className={styles.mobileFilterButton}
+            onClick={() => setFilterPanelOpen((open) => !open)}
+            aria-expanded={filterPanelOpen}
+            aria-controls="job-filter-panel"
+          >
+            <Icon name="filter" size={16} />Filters
+          </Button>
+          <span>{filteredJobs.length} jobs</span>
+        </div>
+
         <div className={styles.content}>
           {/* Filters Sidebar */}
-          <aside className={styles.sidebar}>
+          <aside id="job-filter-panel" className={`${styles.sidebar} ${filterPanelOpen ? styles.sidebarOpen : ''}`}>
             <div className={styles.filterSection}>
-              <h3 className={styles.filterTitle}>Filters</h3>
+              <div className={styles.filterHeader}>
+                <h3 className={styles.filterTitle}>Filters</h3>
+                <button type="button" className={styles.filterClose} onClick={() => setFilterPanelOpen(false)} aria-label="Close filters"><Icon name="x" /></button>
+              </div>
 
               {/* Job Type */}
               <div className={styles.filterGroup}>
@@ -183,133 +203,32 @@ function JobsContent() {
           <div className={styles.results}>
             {/* Results Header */}
             <div className={styles.resultsHeader}>
-              <h2 className={styles.resultsCount}>{filteredJobs.length} jobs found</h2>
+              <div>
+                <h1 className={styles.resultsTitle}>Recommended Jobs</h1>
+                <p className={styles.resultsCount}>{filteredJobs.length} {filteredJobs.length === 1 ? 'job' : 'jobs'} found</p>
+              </div>
+              <label className={styles.sortControl}>
+                <span>Sort by</span>
+                <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value as 'newest' | 'oldest')}>
+                  <option value="newest">Most recent</option>
+                  <option value="oldest">Oldest first</option>
+                </select>
+              </label>
             </div>
 
             {loading ? (
-              <div className={styles.emptyState}>
-                <p className={styles.emptyStateTitle}>Loading jobs...</p>
+              <div className={styles.jobGrid} aria-label="Loading jobs">
+                {Array.from({ length: 6 }, (_, index) => <JobCardSkeleton key={index} />)}
               </div>
             ) : filteredJobs.length === 0 ? (
               <div className={styles.emptyState}>
-                <p className={styles.emptyStateTitle}>{availableJobs.length === 0 ? 'No jobs are available yet' : 'No jobs found'}</p>
-                <p className={styles.emptyStateDescription}>{availableJobs.length === 0 ? 'Published opportunities will appear here when employers post them.' : 'Try adjusting your search or filters to find more results.'}</p>
+                <p className={styles.emptyStateTitle}>No jobs found</p>
+                <p className={styles.emptyStateDescription}>{availableJobs.length === 0 ? 'Published opportunities will appear here when employers post them.' : 'Try adjusting your search criteria or removing some filters.'}</p>
+                <Button variant="outline" onClick={clearFilters}>Clear filters</Button>
               </div>
             ) : (
-              <div className={styles.resultsLayout}>
-                {/* Job List */}
-                <div className={styles.jobList}>
-                  {filteredJobs.map((job) => (
-                    <div
-                      key={job.id}
-                      className={`${styles.jobListItem} ${selectedJob?.id === job.id ? styles.selected : ''}`}
-                      onClick={() => setSelectedJobId(job.id)}
-                    >
-                      <Link href={`/jobs/${job.id}`}>
-                        <Card className={styles.jobCardSmall}>
-                          <div className={styles.companyRow}>
-                            {job.company.logo ? <div className={styles.companyLogo} style={{ backgroundImage: `url(${job.company.logo})` }} role="img" aria-label={`${job.company.name} logo`} /> : <div className={styles.companyLogoFallback} aria-hidden="true">{job.company.name.slice(0, 1).toUpperCase()}</div>}
-                            <div className={styles.companyInfo}>
-                              <h3 className={styles.jobCardTitle}>{job.title}</h3>
-                              <p className={styles.jobCardCompany}>{job.company.name}</p>
-                            </div>
-                          </div>
-                          <div className={styles.jobCardInfo}>
-                            <p><Icon name="map-pin" />{job.location}</p>
-                            {job.salary && (
-                              <p>
-                                <Icon name="dollar-sign" />{job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}
-                              </p>
-                            )}
-                          </div>
-                          <div className={styles.jobCardBadges}>
-                            <Badge variant="secondary">{job.jobType}</Badge>
-                            <Badge variant="secondary">{job.workLocation}</Badge>
-                          </div>
-                          <p className={styles.jobPosted}>Posted {job.postedDate.toLocaleDateString('en-ZA', { month: 'short', day: 'numeric' })}</p>
-                        </Card>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Job Details */}
-                {selectedJob && (
-                  <div className={styles.jobDetails}>
-                    <Link href={`/jobs/${selectedJob.id}`} className={styles.jobDetailsContent}>
-                      <div className={styles.detailsHeader}>
-                        <div>
-                          <h2 className={styles.detailsTitle}>{selectedJob.title}</h2>
-                          <p className={styles.detailsCompany}>{selectedJob.company.name}</p>
-                        </div>
-                      </div>
-
-                      <div className={styles.detailsMeta}>
-                        <div>
-                          <p className={styles.metaLabel}>Location</p>
-                          <p className={styles.metaValue}>{selectedJob.location}</p>
-                        </div>
-                        <div>
-                          <p className={styles.metaLabel}>Type</p>
-                          <p className={styles.metaValue}>{selectedJob.jobType}</p>
-                        </div>
-                        {selectedJob.salary && (
-                          <div>
-                            <p className={styles.metaLabel}>Salary</p>
-                            <p className={styles.metaValue}>
-                              {selectedJob.salary.min.toLocaleString()}-{selectedJob.salary.max.toLocaleString()} {selectedJob.salary.currency}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className={styles.detailsBadges}>
-                        <Badge variant="secondary">{selectedJob.workLocation}</Badge>
-                        <Badge variant="secondary">{selectedJob.experienceLevel}</Badge>
-                      </div>
-
-                      <div className={styles.detailsDescription}>
-                        <h3 className={styles.sectionTitle}>About the role</h3>
-                        <p>{selectedJob.description}</p>
-                      </div>
-
-                      <div className={styles.detailsSection}>
-                        <h3 className={styles.sectionTitle}>Responsibilities</h3>
-                        <ul>
-                          {selectedJob.responsibilities.map((resp, idx) => (
-                            <li key={idx}><Icon name="check" />{resp}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className={styles.detailsSection}>
-                        <h3 className={styles.sectionTitle}>Requirements</h3>
-                        <ul>
-                          {selectedJob.requirements.map((req, idx) => (
-                            <li key={idx}><Icon name="check" />{req}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {selectedJob.benefits && (
-                        <div className={styles.detailsSection}>
-                          <h3 className={styles.sectionTitle}>Benefits</h3>
-                          <ul>
-                            {selectedJob.benefits.map((benefit, idx) => (
-                              <li key={idx}><Icon name="check" />{benefit}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </Link>
-
-                    <div className={styles.detailsActions}>
-                      <Link href={`/jobs/${selectedJob.id}`} className={styles.actionLink}>
-                        <Button fullWidth>View Full Details & Apply</Button>
-                      </Link>
-                    </div>
-                  </div>
-                )}
+              <div className={styles.jobGrid}>
+                {sortedJobs.map((job) => <JobCard key={job.id} job={job} />)}
               </div>
             )}
           </div>

@@ -11,6 +11,7 @@ type IconName =
   | 'chevron-up'
   | 'dollar-sign'
   | 'file'
+  | 'filter'
   | 'heart'
   | 'heart-off'
   | 'lock'
@@ -42,6 +43,7 @@ const paths: Record<IconName, JSX.Element> = {
   'chevron-up': <path d="m18 15-6-6-6 6" />,
   'dollar-sign': <><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></>,
   file: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6" /></>,
+  filter: <><path d="M4 6h16" /><path d="M7 12h10" /><path d="M10 18h4" /></>,
   heart: <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />,
   'heart-off': <><path d="m2 2 20 20" /><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23" /><path d="m9.5 9.5 5 5" /><path d="M12 5.67 13.06 4.61" /></>,
   lock: <><rect width="16" height="12" x="4" y="10" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></>,

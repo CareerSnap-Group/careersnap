@@ -603,3 +603,117 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.page { background: var(--color-background-secondary); }
+.container { max-width: 1440px; padding: 1.5rem 1.5rem 3rem; }
+.header { align-items: center; padding: 0 0 1.25rem; border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0; background: transparent; box-shadow: none; }
+.title { max-width: 800px; margin-bottom: 0.35rem; font-size: 2rem; line-height: 1.2; }
+.company { color: var(--color-text-secondary); font-size: var(--font-size-base); }
+.headerActions { align-items: center; }
+.meta { margin: 1rem 0; padding: 0.9rem 1.1rem; border: 1px solid var(--color-border); border-radius: 0.875rem; background: #fff; box-shadow: none; }
+.metaLabel { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--color-text-tertiary); text-transform: none; }
+.metaLabel :global(svg) { margin: 0; }
+.metaValue { font-size: var(--font-size-sm); }
+.badges { gap: 0.5rem; }
+.badges > span { padding: 0.35rem 0.7rem; border-radius: 999px; font-size: var(--font-size-xs); text-transform: capitalize; }
+.contentLayout { grid-template-columns: 220px minmax(0, 1fr) 300px; grid-template-areas: 'related main sidebar'; align-items: start; gap: 1.15rem; }
+.contentLayoutNoRelated { grid-template-columns: minmax(0, 1fr) 300px; grid-template-areas: 'main sidebar'; }
+.relatedColumn { grid-area: related; position: sticky; top: 90px; }
+.mainContent { grid-area: main; min-width: 0; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 3px 14px rgb(28 51 80 / 4%); }
+.sidebar { grid-area: sidebar; min-width: 0; gap: 0.9rem; position: sticky; top: 90px; }
+.section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; }
+.sectionTitle { margin-bottom: 0.75rem; font-size: 1.125rem; }
+.sectionText, .list li { font-size: var(--font-size-sm); line-height: 1.7; }
+.list { gap: 0.7rem; }
+.list :global(svg) { color: var(--color-success-500); }
+.relatedTitle { margin: 0 0 0.75rem; font-size: 1rem; }
+.similarJobsList { gap: 0.7rem; }
+.similarJobCard { padding: 0.9rem !important; border-radius: 0.875rem; }
+.similarJobTitle { font-size: var(--font-size-sm); }
+.similarJobCompany { margin-bottom: 0.3rem; font-size: var(--font-size-xs); }
+.similarJobLocation { font-size: var(--font-size-xs); }
+.companyCard { padding: 1.1rem; border-radius: 1rem; }
+.companyIntro { align-items: center; margin-bottom: 0.8rem; }
+.companyLogoLarge, .companyLogoLargeFallback { width: 48px; height: 48px; flex-basis: 48px; border-radius: 0.625rem; background-color: #fff; background-size: contain; background-repeat: no-repeat; }
+.companyName { margin: 0; font-size: 1rem; }
+.companyIndustry { margin: 0.25rem 0 0; color: var(--color-text-tertiary); font-size: var(--font-size-xs); }
+.companyDescription { margin-bottom: 0.75rem; font-size: var(--font-size-sm); line-height: 1.55; }
+.companyWebsite, .companyProfileLink { display: block; margin-top: 0.6rem; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
+.companyProfileLink { padding-top: 0.65rem; border-top: 1px solid var(--color-border); }
+.ctaBox, .applicationCard { padding: 1rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 3px 14px rgb(28 51 80 / 4%); }
+.ctaBox { gap: 0.65rem; }
+.ctaBox .applyButton { min-height: 52px; border-radius: 0.75rem; }
+.saveButton { border-radius: 0.75rem; }
+.safetyNotice { background: var(--color-warning-50); border-left-color: var(--color-warning-500); }
+.safetyText { color: var(--color-warning-800); font-size: var(--font-size-sm); }
+
+@media (max-width: 1180px) {
+  .contentLayout { grid-template-columns: minmax(0, 1fr) 280px; grid-template-areas: 'main sidebar' 'related related'; }
+  .contentLayoutNoRelated { grid-template-columns: minmax(0, 1fr) 280px; grid-template-areas: 'main sidebar'; }
+  .relatedColumn { position: static; }
+  .relatedColumn .similarJobsList { grid-template-columns: repeat(3, minmax(0, 1fr)); display: grid; }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 1rem 1rem 2.5rem; }
+  .header { align-items: flex-start; flex-direction: row; gap: 0.5rem; }
+  .title { font-size: 1.5rem; }
+  .headerActions { flex-wrap: wrap; justify-content: flex-end; }
+  .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; padding: 0.9rem; }
+  .contentLayout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: 'sidebar' 'main' 'related'; gap: 1rem; }
+  .contentLayoutNoRelated { grid-template-areas: 'sidebar' 'main'; }
+  .mainContent { padding: 1rem; }
+  .sidebar { position: static; }
+  .ctaBox { position: sticky; bottom: 0.5rem; z-index: 5; box-shadow: 0 4px 20px rgb(28 51 80 / 12%); }
+  .relatedColumn .similarJobsList { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 420px) {
+  .header { flex-direction: column; }
+  .headerActions { width: 100%; justify-content: flex-start; }
+}
+
+.loadingContainer > span,
+.skeletonHeader span,
+.skeletonMeta span,
+.skeletonRelated span,
+.skeletonMain span,
+.skeletonCompany span {
+  display: block;
+  border-radius: 0.65rem;
+  background: linear-gradient(90deg, #e5ebf2 25%, #f4f7fa 50%, #e5ebf2 75%);
+  background-size: 200% 100%;
+  animation: detailShimmer 1.5s infinite;
+}
+
+.skeletonHeader { display: flex; justify-content: space-between; margin: 1.5rem 0; }
+.skeletonHeader span:first-child { width: min(480px, 68%); height: 40px; }
+.skeletonHeader span:last-child { width: 112px; height: 42px; }
+.skeletonMeta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
+.skeletonMeta span { height: 72px; background-color: #fff; }
+.skeletonRelated, .skeletonMain, .skeletonCompany { display: flex; flex-direction: column; gap: 0.8rem; }
+.skeletonRelated span { height: 110px; }
+.skeletonMain { min-height: 520px; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; }
+.skeletonMain span { height: 74px; }
+.skeletonMain span:first-child { height: 36px; width: 55%; }
+.skeletonCompany span { height: 90px; }
+
+@keyframes detailShimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .loadingContainer > span,
+  .skeletonHeader span,
+  .skeletonMeta span,
+  .skeletonRelated span,
+  .skeletonMain span,
+  .skeletonCompany span { animation: none; }
+}
+
+@media (max-width: 1180px) {
+  .skeletonRelated { display: none; }
+}
+
+@media (max-width: 768px) {
+  .skeletonMeta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .skeletonCompany { order: -1; }
+}

@@ -6,86 +6,91 @@
 export const colors = {
   // Primary - CareerSnap professional blue accent
   primary: {
-    50: '#EFF6FF',
-    100: '#DBEAFE',
-    200: '#BFDBFE',
-    300: '#93C5FD',
-    400: '#60A5FA',
-    500: '#2563EB',
-    600: '#1D4ED8',
-    700: '#1E40AF',
-    800: '#1E3A8A',
-    900: '#172554',
+    50: '#EAF3FF',
+    100: '#D8E9FF',
+    200: '#B7D5FF',
+    300: '#8BB9F7',
+    400: '#5C9CF2',
+    500: '#2F80ED',
+    600: '#2674DC',
+    700: '#1F5FB8',
+    800: '#194C91',
+    900: '#153C70',
   },
   button: {
-    primary: '#2563EB',
-    primaryHover: '#1D4ED8',
+    primary: '#2F80ED',
+    primaryHover: '#2674DC',
   },
   // Neutral - Professional grays
   neutral: {
-    50: '#f8f9fb',
-    100: '#f1f3f5',
-    200: '#e4e7eb',
-    300: '#cbd1d8',
-    400: '#a4acb8',
-    500: '#7a8491',
-    600: '#626c79',
-    700: '#4b5561',
-    800: '#343b45',
-    900: '#1f252d',
+    50: '#ffffff',
+    100: '#f6f8fb',
+    200: '#eef1f5',
+    300: '#dce2e9',
+    400: '#bbc4cf',
+    500: '#8a8a8a',
+    600: '#777f89',
+    700: '#666666',
+    800: '#34383d',
+    900: '#171717',
   },
   // Accent - Green for positive actions
   success: {
-    50: '#f0fdf4',
-    100: '#ECFDF5',
+    50: '#e9f9f0',
+    100: '#d9f4e4',
     200: '#bbf7d0',
     300: '#86efac',
     400: '#4ade80',
-    500: '#10B981',
+    500: '#25B96F',
     600: '#16a34a',
-    700: '#15803d',
-    800: '#047857',
+    700: '#1a8b50',
+    800: '#147943',
   },
   // Warning
   warning: {
-    50: '#fffbeb',
-    100: '#fef3c7',
-    200: '#fde68a',
-    300: '#fcd34d',
-    400: '#fbbf24',
-    500: '#f59e0b',
-    600: '#d97706',
-    700: '#b45309',
-    800: '#92400e',
+    50: '#fff5e8',
+    100: '#ffebcf',
+    200: '#f8d393',
+    300: '#f6bd66',
+    400: '#f4af4d',
+    500: '#f3a33b',
+    600: '#c37a19',
+    700: '#a76610',
+    800: '#995d0b',
   },
   // Danger
   danger: {
-    50: '#fef2f2',
-    100: '#fee2e2',
-    200: '#fecaca',
-    300: '#fca5a5',
-    400: '#f87171',
-    500: '#ef4444',
-    600: '#dc2626',
-    700: '#b91c1c',
-    800: '#991b1b',
+    50: '#fff0ef',
+    100: '#ffe0dd',
+    200: '#ffc4bf',
+    300: '#f49c98',
+    400: '#ed6f71',
+    500: '#e5484d',
+    600: '#d9363e',
+    700: '#b42318',
+    800: '#8f1d22',
   },
   // Semantic colors
   text: {
-    primary: '#171b22',
-    secondary: '#46505d',
-    tertiary: '#687382',
+    primary: '#151515',
+    secondary: '#666666',
+    tertiary: '#8a8a8a',
     inverse: '#ffffff',
   },
   background: {
     primary: '#ffffff',
-    secondary: '#f8f9fb',
-    tertiary: '#f1f3f5',
+    secondary: '#eef4fb',
+    tertiary: '#f5f8fc',
   },
-  footer: '#171b22',
-  header: '#171b22',
-  border: '#e2e6eb',
-  divider: '#e2e6eb',
+  footer: '#111111',
+  header: '#111111',
+  headerBorder: '#303030',
+  headerText: '#f4f6f8',
+  headerControlBorder: '#626a74',
+  accentPurple: { 50: '#f5f1ff', 700: '#6c45bd' },
+  accentOrange: { 50: '#fff5e8', 700: '#995d0b' },
+  border: '#e5e9ef',
+  divider: '#e5e9ef',
 };
 
 export const typography = {
@@ -130,20 +135,20 @@ export const spacing = {
 
 export const borderRadius = {
   none: '0',
-  sm: '0.25rem', // 4px
-  md: '0.375rem', // 6px
-  lg: '0.5rem', // 8px
-  xl: '0.625rem', // 10px
+  sm: '0.5rem', // 8px
+  md: '0.75rem', // 12px
+  lg: '1rem', // 16px
+  xl: '1.25rem', // 20px
   full: '9999px',
 };
 
 export const shadows = {
   none: 'none',
-  sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-  md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-  xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-  '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+  sm: '0 2px 8px rgb(28 51 80 / 5%)',
+  md: '0 5px 16px rgb(28 51 80 / 7%)',
+  lg: '0 10px 24px rgb(28 51 80 / 9%)',
+  xl: '0 16px 36px rgb(28 51 80 / 11%)',
+  '2xl': '0 16px 36px rgb(28 51 80 / 11%)',
 };
 
 export const breakpoints = {

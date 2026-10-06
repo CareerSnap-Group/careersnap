@@ -5,18 +5,15 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import type { Job } from '@/lib/types';
 import styles from './saved-jobs.module.css';
 import { createClient } from '@/lib/supabase/browser';
-import { fetchSavedJobs, unsaveJob } from '@/lib/supabase/data';
+import { fetchSavedJobs } from '@/lib/supabase/data';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
-import { Icon } from '@/components/icons';
+import { JobCard, JobCardSkeleton } from '@/components/jobs/job-card';
 
 export default function SavedJobsPage() {
   const [savedJobs, setSavedJobs] = useState<Job[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -28,7 +25,6 @@ export default function SavedJobsPage() {
         setLoading(false);
         return;
       }
-      setUserId(data.user.id);
       const jobs = await fetchSavedJobs(data.user.id);
       if (jobs === null) setError('We could not load your saved jobs. Please try again.');
       setSavedJobs(jobs || []);
@@ -38,9 +34,6 @@ export default function SavedJobsPage() {
 
   const handleRemove = (jobId: string) => {
     setSavedJobs(savedJobs.filter((job) => job.id !== jobId));
-    if (userId) {
-      unsaveJob(userId, jobId);
-    }
   };
 
   return (
@@ -58,7 +51,7 @@ export default function SavedJobsPage() {
           </Link>
         </div>
 
-        {loading ? <div className={styles.emptyState}><div className={styles.emptyContent}><p className={styles.emptyDescription}>Loading your saved jobs...</p></div></div> : error ? (
+        {loading ? <div className={styles.jobsGrid} aria-label="Loading saved jobs">{Array.from({ length: 3 }, (_, index) => <JobCardSkeleton key={index} />)}</div> : error ? (
           <div className={styles.emptyState}><div className={styles.emptyContent}><h2 className={styles.emptyTitle}>Saved jobs unavailable</h2><p className={styles.emptyDescription}>{error}</p></div></div>
         ) : savedJobs.length === 0 ? (
           <div className={styles.emptyState}>
@@ -73,39 +66,7 @@ export default function SavedJobsPage() {
         ) : (
           <div className={styles.jobsGrid}>
             {savedJobs.map((job) => (
-              <div key={job.id} className={styles.jobCard}>
-                <Card>
-                  <div className={styles.cardHeader}>
-                    <div>
-                      <h3 className={styles.jobTitle}>{job.title}</h3>
-                      <p className={styles.jobCompany}>{job.company.name}</p>
-                    </div>
-                    <button className={styles.removeButton} onClick={() => handleRemove(job.id)} title="Remove from saved">
-                      <Icon name="x" />
-                    </button>
-                  </div>
-
-                  <div className={styles.jobInfo}>
-                    <p><Icon name="map-pin" />{job.location}</p>
-                    {job.salary && (
-                      <p>
-                        <Icon name="dollar-sign" />{job.salary.min.toLocaleString()}-{job.salary.max.toLocaleString()} {job.salary.currency}/month
-                      </p>
-                    )}
-                  </div>
-
-                  <div className={styles.badges}>
-                    <Badge variant="secondary">{job.jobType}</Badge>
-                    <Badge variant="secondary">{job.workLocation}</Badge>
-                  </div>
-
-                  <p className={styles.description}>{job.description.substring(0, 100)}...</p>
-
-                  <Link href={`/jobs/${job.id}`}>
-                    <Button fullWidth>View Details</Button>
-                  </Link>
-                </Card>
-              </div>
+              <JobCard key={job.id} job={job} initiallySaved onSavedChange={(isSaved) => { if (!isSaved) handleRemove(job.id); }} />
             ))}
           </div>
         )}

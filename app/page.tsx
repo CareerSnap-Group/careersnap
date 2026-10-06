@@ -1,22 +1,34 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { JobCard, JobCardSkeleton } from '@/components/jobs/job-card';
 import { Icon } from '@/components/icons';
 import { staticCategories } from '@/lib/static-data';
 import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
+import { fetchPublishedJobs } from '@/lib/supabase/data';
+import type { Job } from '@/lib/types';
 import styles from './page.module.css';
 
 export default function HomePage() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [employerPromotionDismissed, setEmployerPromotionDismissed] = useState(false);
+  const [publishedJobs, setPublishedJobs] = useState<Job[]>([]);
+  const [jobsLoading, setJobsLoading] = useState(true);
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const popularSearches = ['Software Developer', 'Registered Nurse', 'Data Analyst', 'Project Manager', 'Accountant', 'Marketing Manager'];
+
+  const recommendedJobs = useMemo(() => [...publishedJobs]
+    .sort((left, right) => sortOrder === 'newest'
+      ? right.postedDate.getTime() - left.postedDate.getTime()
+      : left.postedDate.getTime() - right.postedDate.getTime())
+    .slice(0, 6), [publishedJobs, sortOrder]);
 
   useEffect(() => {
     setEmployerPromotionDismissed(sessionStorage.getItem('careersnap-employer-promotion-dismissed') === 'true');
@@ -35,6 +47,16 @@ export default function HomePage() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    fetchPublishedJobs().then((jobs) => {
+      if (!active) return;
+      setPublishedJobs(jobs || []);
+      setJobsLoading(false);
+    });
+    return () => { active = false; };
+  }, []);
+
   const isLoggedOut = signedIn === false;
 
   const dismissEmployerPromotion = () => {
@@ -44,10 +66,9 @@ export default function HomePage() {
 
   return (
     <div className={styles.page}>
-      <Header variant="landing" />
-
       <main className={styles.homeBody}>
         <section className={styles.hero}>
+          <Header variant="landing" />
           <div className={styles.heroContent}>
             <p className={styles.heroEyebrow}>Find your next opportunity</p>
             <h1 className={styles.heroTitle}>Find work that moves your career forward</h1>
@@ -79,6 +100,39 @@ export default function HomePage() {
             ) : signedIn ? (
               <Link href="/jobs" className={styles.primaryCta}>Find jobs</Link>
             ) : null}
+          </div>
+        </section>
+
+        <section className={styles.featuredSection} aria-labelledby="recommended-jobs-title">
+          <div className={styles.container}>
+            <div className={styles.featuredHeader}>
+              <div>
+                <p className={styles.sectionEyebrow}>Explore opportunities</p>
+                <h2 id="recommended-jobs-title" className={styles.sectionTitle}>Recommended Jobs</h2>
+              </div>
+              <label className={styles.sortControl}>
+                <span>Sort by</span>
+                <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value as 'newest' | 'oldest')}>
+                  <option value="newest">Most recent</option>
+                  <option value="oldest">Oldest first</option>
+                </select>
+              </label>
+            </div>
+            {jobsLoading ? (
+              <div className={styles.jobsGrid} aria-label="Loading recommended jobs">
+                {Array.from({ length: 3 }, (_, index) => <JobCardSkeleton key={index} />)}
+              </div>
+            ) : recommendedJobs.length ? (
+              <div className={styles.jobsGrid}>
+                {recommendedJobs.map((job) => <JobCard key={job.id} job={job} />)}
+              </div>
+            ) : (
+              <div className={styles.jobsEmpty}>
+                <p>No jobs found</p>
+                <span>New published opportunities will appear here.</span>
+              </div>
+            )}
+            <Link href="/jobs" className={styles.viewAllJobs}>Browse all jobs <Icon name="chevron-right" size={16} /></Link>
           </div>
         </section>
 

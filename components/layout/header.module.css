@@ -431,3 +431,39 @@
 .mobileNav {
   border-top-color: var(--color-header-border);
 }
+
+.landingHeader {
+  position: relative;
+  top: auto;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.landingHeader .container {
+  height: 76px;
+  max-width: 1344px;
+}
+
+.landingHeader .desktopNav {
+  gap: 1.5rem;
+}
+
+.navLink::after {
+  background: var(--color-primary-400);
+}
+
+.mobileNavLink:hover,
+.mobileNavLink:focus-visible {
+  color: var(--color-primary-300);
+}
+
+.mobileMenuButton:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 5px;
+}
+
+@media (max-width: 1023px) {
+  .landingHeader .container { height: 64px; }
+  .landingHeader .mobileLogoImage { width: min(116px, 32vw); }
+}

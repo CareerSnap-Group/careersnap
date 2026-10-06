@@ -61,9 +61,15 @@ export default function JobDetailsPage() {
     return (
       <div className={styles.page}>
         <Header />
-        <div className={styles.notFound}>
-          <div className={styles.notFoundContent}><p>Loading job...</p></div>
-        </div>
+        <main className={`${styles.container} ${styles.loadingContainer}`} aria-label="Loading job details">
+          <div className={styles.skeletonHeader}><span /><span /></div>
+          <div className={styles.skeletonMeta}>{Array.from({ length: 4 }, (_, index) => <span key={index} />)}</div>
+          <div className={styles.contentLayout}>
+            <aside className={styles.skeletonRelated}><span /><span /><span /></aside>
+            <div className={styles.skeletonMain}><span /><span /><span /><span /><span /></div>
+            <aside className={styles.skeletonCompany}><span /><span /><span /></aside>
+          </div>
+        </main>
         <Footer />
       </div>
     );
@@ -147,10 +153,6 @@ export default function JobDetailsPage() {
             <span className={styles.metaLabel}><Icon name="briefcase" />Type</span>
             <span className={styles.metaValue}>{job.jobType}</span>
           </div>
-          <div className={styles.metaItem}>
-            <span className={styles.metaLabel}><Icon name="bar-chart" />Level</span>
-            <span className={styles.metaValue}>{job.experienceLevel}</span>
-          </div>
           {job.salary && (
             <div className={styles.metaItem}>
               <span className={styles.metaLabel}><Icon name="dollar-sign" />Salary</span>
@@ -177,7 +179,22 @@ export default function JobDetailsPage() {
           ))}
         </div>
 
-        <div className={styles.contentLayout}>
+        <div className={`${styles.contentLayout} ${similarJobs.length === 0 ? styles.contentLayoutNoRelated : ''}`}>
+          {similarJobs.length > 0 && <aside className={styles.relatedColumn} aria-label="Related jobs">
+              <h2 className={styles.relatedTitle}>Related jobs</h2>
+              <div className={styles.similarJobsList}>
+                {similarJobs.map((similarJob) => (
+                  <Link key={similarJob.id} href={`/jobs/${similarJob.id}`}>
+                    <Card hoverable className={styles.similarJobCard}>
+                      <h3 className={styles.similarJobTitle}>{similarJob.title}</h3>
+                      <p className={styles.similarJobCompany}>{similarJob.company.name}</p>
+                      <p className={styles.similarJobLocation}><Icon name="map-pin" />{similarJob.location}</p>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+          </aside>}
+
           {/* Main Content */}
           <div className={styles.mainContent}>
             {/* About the Role */}
@@ -218,32 +235,6 @@ export default function JobDetailsPage() {
               </section>
             )}
 
-            {/* Company Information */}
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>About {job.company.name}</h2>
-              <Card>
-                <div className={styles.companyIntro}>
-                  {job.company.logo ? <div className={styles.companyLogoLarge} style={{ backgroundImage: `url(${job.company.logo})` }} role="img" aria-label={`${job.company.name} logo`} /> : <div className={styles.companyLogoLargeFallback} aria-hidden="true">{job.company.name.slice(0, 1).toUpperCase()}</div>}
-                  <h3 className={styles.companyName}>{job.company.name}</h3>
-                </div>
-                <p className={styles.companyDescription}>{job.company.description}</p>
-                <div className={styles.companyDetails}>
-                  <div>
-                    <p className={styles.detailLabel}>Industry</p>
-                    <p className={styles.detailValue}>{job.company.industry}</p>
-                  </div>
-                  <div>
-                    <p className={styles.detailLabel}>Company Size</p>
-                    <p className={styles.detailValue}>{job.company.size}</p>
-                  </div>
-                  <div>
-                    <p className={styles.detailLabel}>Location</p>
-                    <p className={styles.detailValue}>{job.company.location}</p>
-                  </div>
-                </div>
-              </Card>
-            </section>
-
             {/* Safety Notice */}
             <div className={styles.safetyNotice}>
               <p className={styles.safetyText}>
@@ -252,8 +243,21 @@ export default function JobDetailsPage() {
             </div>
           </div>
 
-          {/* Sidebar */}
+          {/* Company and application panel */}
           <aside className={styles.sidebar}>
+            <Card className={styles.companyCard}>
+              <div className={styles.companyIntro}>
+                {job.company.logo ? <div className={styles.companyLogoLarge} style={{ backgroundImage: `url(${job.company.logo})` }} role="img" aria-label={`${job.company.name} logo`} /> : <div className={styles.companyLogoLargeFallback} aria-hidden="true">{job.company.name.slice(0, 1).toUpperCase()}</div>}
+                <div>
+                  <h2 className={styles.companyName}>{job.company.name}</h2>
+                  {job.company.industry && job.company.industry !== 'Various industries' && <p className={styles.companyIndustry}>{job.company.industry}</p>}
+                </div>
+              </div>
+              {job.company.description && <p className={styles.companyDescription}>{job.company.description}</p>}
+              {job.company.website && <a className={styles.companyWebsite} href={job.company.website} target="_blank" rel="noreferrer">Visit company website</a>}
+              <Link href={`/companies/${job.company.id}`} className={styles.companyProfileLink}>View company profile</Link>
+            </Card>
+
             {/* Apply CTA */}
             <div className={styles.ctaBox}>
               {applicationSubmitted ? <p className={styles.applicationSuccess}><Icon name="check" />Application submitted</p> : <Button fullWidth size="lg" className={styles.applyButton} onClick={handleApply}>Apply Now</Button>}
@@ -268,24 +272,6 @@ export default function JobDetailsPage() {
             </div>
 
             {showApplicationForm && !applicationSubmitted && <ApplicationForm jobId={jobId} onSubmitted={() => { setShowApplicationForm(false); setApplicationSubmitted(true); }} />}
-
-            {/* Similar Jobs */}
-            {similarJobs.length > 0 && (
-              <div className={styles.similarJobs}>
-                <h3 className={styles.similarJobsTitle}>Similar Jobs</h3>
-                <div className={styles.similarJobsList}>
-                  {similarJobs.map((similarJob) => (
-                    <Link key={similarJob.id} href={`/jobs/${similarJob.id}`}>
-                      <Card hoverable className={styles.similarJobCard}>
-                        <h4 className={styles.similarJobTitle}>{similarJob.title}</h4>
-                        <p className={styles.similarJobCompany}>{similarJob.company.name}</p>
-                        <p className={styles.similarJobLocation}><Icon name="map-pin" />{similarJob.location}</p>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
 
           </aside>
         </div>

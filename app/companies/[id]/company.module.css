@@ -4,7 +4,7 @@
 .profile { background: var(--color-background-primary); padding: var(--spacing-xl); }
 .profileHeader { align-items: flex-start; display: flex; gap: var(--spacing-lg); }
 .logo, .logoFallback { align-items: center; background: var(--color-primary-50); border-radius: var(--radius-md); display: flex; flex: 0 0 88px; height: 88px; justify-content: center; overflow: hidden; width: 88px; }
-.logo { background-position: center; background-size: cover; }
+.logo { background-position: center; background-size: contain; background-repeat: no-repeat; background-color: #fff; }
 .logoFallback { color: var(--color-primary-700); font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); }
 .name { color: var(--color-text-primary); font-size: 2.25rem; margin: 0 0 var(--spacing-sm); }
 .meta { color: var(--color-text-tertiary); margin: 0 0 var(--spacing-md); }
