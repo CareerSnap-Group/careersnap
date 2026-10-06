@@ -6,20 +6,20 @@
 export const colors = {
   // Primary - CareerSnap professional blue accent
   primary: {
-    50: '#EAF3FF',
-    100: '#D8E9FF',
-    200: '#B7D5FF',
-    300: '#8BB9F7',
-    400: '#5C9CF2',
-    500: '#2F80ED',
-    600: '#2674DC',
-    700: '#1F5FB8',
-    800: '#194C91',
-    900: '#153C70',
+    50: '#EDF5FF',
+    100: '#D9EBFF',
+    200: '#B9D9FF',
+    300: '#8FC2FF',
+    400: '#5EA4FF',
+    500: '#2A85FF',
+    600: '#2177E8',
+    700: '#1A67CC',
+    800: '#124FA5',
+    900: '#0B3977',
   },
   button: {
-    primary: '#2F80ED',
-    primaryHover: '#2674DC',
+    primary: '#2A85FF',
+    primaryHover: '#2177E8',
   },
   // Neutral - Professional grays
   neutral: {
@@ -28,8 +28,8 @@ export const colors = {
     200: '#eef1f5',
     300: '#dce2e9',
     400: '#bbc4cf',
-    500: '#8a8a8a',
-    600: '#777f89',
+    500: '#A1A1A1',
+    600: '#7A7A7A',
     700: '#666666',
     800: '#34383d',
     900: '#171717',
@@ -72,21 +72,21 @@ export const colors = {
   },
   // Semantic colors
   text: {
-    primary: '#151515',
-    secondary: '#666666',
+    primary: '#070707',
+    secondary: '#A1A1A1',
     tertiary: '#8a8a8a',
     inverse: '#ffffff',
   },
   background: {
     primary: '#ffffff',
-    secondary: '#eef4fb',
+    secondary: '#F0F5FA',
     tertiary: '#f5f8fc',
   },
-  footer: '#111111',
-  header: '#111111',
-  headerBorder: '#303030',
+  footer: '#070707',
+  header: '#070707',
+  headerBorder: '#1C1C1C',
   headerText: '#f4f6f8',
-  headerControlBorder: '#626a74',
+  headerControlBorder: '#7A7A7A',
   accentPurple: { 50: '#f5f1ff', 700: '#6c45bd' },
   accentOrange: { 50: '#fff5e8', 700: '#995d0b' },
   border: '#e5e9ef',
@@ -95,7 +95,7 @@ export const colors = {
 
 export const typography = {
   fontFamily: {
-    sans: '"Aptos", "Segoe UI Variable", "Segoe UI", sans-serif',
+    sans: '"Poppins", "Segoe UI", sans-serif',
     mono: '"Fira Code", "Courier New", monospace',
   },
   fontSize: {

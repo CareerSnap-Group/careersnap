@@ -1,5 +1,12 @@
 import type { Metadata, Viewport } from 'next';
+import { Poppins } from 'next/font/google';
 import '@/app/globals.css';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
+});
 
 export const metadata: Metadata = {
   title: 'CareerSnap — Find Your Next Career Opportunity',
@@ -19,12 +26,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={poppins.variable}>
       <head>
         <meta charSet="utf-8" />
         <link rel="icon" href="/careersnap-pro-logo.png" />
       </head>
-      <body>
+      <body className={poppins.className}>
         {children}
       </body>
     </html>

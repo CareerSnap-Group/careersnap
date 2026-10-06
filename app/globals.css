@@ -1,28 +1,39 @@
 :root {
-  /* Colors */
-  --color-primary-50: #eaf3ff;
-  --color-primary-100: #d8e9ff;
-  --color-primary-200: #b7d5ff;
-  --color-primary-300: #8bb9f7;
-  --color-primary-400: #5c9cf2;
-  --color-primary-500: #2f80ed;
-  --color-primary-600: #2674dc;
-  --color-primary-700: #1f5fb8;
-  --color-primary-800: #194c91;
-  --color-primary-900: #153c70;
-  --color-header: #111111;
-  --color-header-border: #303030;
+  /* Brand palette */
+  --color-primary-50: #edf5ff;
+  --color-primary-100: #d9ebff;
+  --color-primary-200: #b9d9ff;
+  --color-primary-300: #8fc2ff;
+  --color-primary-400: #5ea4ff;
+  --color-primary-500: #2a85ff;
+  --color-primary-600: #2177e8;
+  --color-primary-700: #1a67cc;
+  --color-primary-800: #124fa5;
+  --color-primary-900: #0b3977;
+
+  --color-gray-50: #f8f8f8;
+  --color-gray-100: #f0f5fa;
+  --color-gray-300: #d9dce1;
+  --color-gray-500: #a1a1a1;
+  --color-gray-700: #7a7a7a;
+
+  --color-brand-black: #070707;
+  --color-brand-light: #f0f5fa;
+
+  --color-header: #070707;
+  --color-header-border: #1c1c1c;
   --color-header-text: #f4f6f8;
-  --color-header-control-border: #626a74;
-  --color-button-primary: #2f80ed;
-  --color-button-primary-hover: #2674dc;
+  --color-header-control-border: #7a7a7a;
+  --color-button-primary: #2a85ff;
+  --color-button-primary-hover: #2177e8;
+
   --color-neutral-50: #ffffff;
   --color-neutral-100: #f6f8fb;
   --color-neutral-200: #eef1f5;
   --color-neutral-300: #dce2e9;
   --color-neutral-400: #bbc4cf;
-  --color-neutral-500: #8a8a8a;
-  --color-neutral-600: #777f89;
+  --color-neutral-500: #a1a1a1;
+  --color-neutral-600: #7a7a7a;
   --color-neutral-700: #666666;
   --color-neutral-800: #34383d;
   --color-neutral-900: #171717;
@@ -43,19 +54,19 @@
   --color-accent-orange-50: #fff5e8;
   --color-accent-orange-700: #995d0b;
 
-  --color-text-primary: #151515;
-  --color-text-secondary: #666666;
+  --color-text-primary: #070707;
+  --color-text-secondary: #a1a1a1;
   --color-text-tertiary: #8a8a8a;
   --color-text-inverse: #ffffff;
   --color-background-primary: #ffffff;
-  --color-background-secondary: #eef4fb;
+  --color-background-secondary: #f0f5fa;
   --color-background-tertiary: #f5f8fc;
-  --color-footer: #111111;
+  --color-footer: #070707;
   --color-border: #e5e9ef;
   --color-divider: #e5e9ef;
 
   /* Typography */
-  --font-family-sans: 'Aptos', 'Segoe UI Variable', 'Segoe UI', sans-serif;
+  --font-family-sans: var(--font-poppins), 'Segoe UI', sans-serif;
   --font-family-mono: 'Fira Code', 'Courier New', monospace;
 
   --font-size-xs: 0.75rem;
