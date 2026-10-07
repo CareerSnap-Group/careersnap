@@ -32,20 +32,12 @@
 
 .heroTitle {
   max-width: 700px;
-  margin: 2.5rem auto 0.9rem;
+  margin: 2.5rem auto 2rem;
   font-size: 18px;
-  font-weight: var(--font-weight-semibold);
+  font-weight: 400;
   color: var(--color-text-primary);
   letter-spacing: 0;
   line-height: 1.15;
-}
-
-.heroSubtitle {
-  max-width: 570px;
-  margin: 0 auto 2rem;
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  line-height: 1.55;
 }
 
 .searchForm {

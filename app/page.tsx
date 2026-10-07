@@ -82,9 +82,7 @@ export default function HomePage() {
         <section className={styles.hero}>
           <Header variant="landing" />
           <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>Find your next opportunity</p>
             <h1 className={styles.heroTitle}>Find work that moves your career forward</h1>
-            <p className={styles.heroSubtitle}>Discover opportunities from leading companies, explore new roles, and take the next step in your career.</p>
             <form className={styles.searchForm} onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
