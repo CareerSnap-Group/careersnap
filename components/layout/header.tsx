@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import styles from './header.module.css';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 import { createClient } from '@/lib/supabase/browser';
 import { useAccountRole } from './use-account-role';
 import { NotificationBell } from './notification-bell';
+import { AuthenticatedDesktopSidebar, MobileAuthenticatedNavigation } from './mobile-authenticated-navigation';
 
 function getInitials(name: string) {
   const initials = name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase());
@@ -17,7 +19,11 @@ function getInitials(name: string) {
 
 export function Header({ variant }: { variant?: 'landing' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
   const { signedIn, role, displayName, profilePhotoUrl, userId } = useAccountRole();
+  const seekerAppPaths = ['/job-seeker', '/applications', '/saved-jobs', '/profile', '/settings', '/notifications', '/jobs', '/companies', '/resources'];
+  const employerAppPaths = ['/employer', '/employers/post-job', '/notifications'];
+  const isAuthenticatedAppRoute = signedIn && role && variant !== 'landing' && (role === 'job_seeker' ? seekerAppPaths : employerAppPaths).some((path) => pathname === path || pathname.startsWith(`${path}/`));
   const mobileLogoSrc = '/careersnap-pro-logo.png';
 
   const handleSignOut = async () => {
@@ -25,7 +31,8 @@ export function Header({ variant }: { variant?: 'landing' }) {
   };
 
   return (
-    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''}`}>
+    <>
+    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''} ${isAuthenticatedAppRoute ? styles.authenticatedHeader : ''}`}>
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="CareerSnap home">
@@ -109,7 +116,6 @@ export function Header({ variant }: { variant?: 'landing' }) {
             <span className={styles.menuIcon}></span>
             <span className={styles.menuIcon}></span>
           </button>
-          <NotificationBell userId={userId} className={styles.notificationSlot} />
           {signedIn === true ? (
             <Link
               href="/profile"
@@ -179,5 +185,8 @@ export function Header({ variant }: { variant?: 'landing' }) {
         </nav>
       )}
     </header>
+    {isAuthenticatedAppRoute && role && <AuthenticatedDesktopSidebar role={role} displayName={displayName || 'CareerSnap Member'} avatarUrl={profilePhotoUrl} />}
+    {isAuthenticatedAppRoute && role && <MobileAuthenticatedNavigation role={role} />}
+    </>
   );
 }

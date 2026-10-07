@@ -11,6 +11,8 @@
   box-shadow: none;
 }
 
+.authenticatedHeader .desktopNav { display: none; }
+
 .landingHeader .container {
   max-width: 1200px;
   height: 64px;

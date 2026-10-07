@@ -1,116 +1,172 @@
 import Link from 'next/link';
 import { requireRole } from '@/lib/auth/server';
 import { getCurrentCompanyBillingContext } from '@/lib/billing/server';
-import { EmployerHeader as Header } from '@/components/layout/employer-header';
-import { Footer } from '@/components/layout/footer';
-import { Card } from '@/components/ui/card';
-import styles from '../../applications/applications.module.css';
+import { AuthenticatedAppShell } from '@/components/layout/authenticated-app-shell';
+import { Icon } from '@/components/icons';
+import dashboardStyles from '@/components/layout/authenticated-dashboard.module.css';
+import styles from '../../job-seeker/dashboard/dashboard.module.css';
+
+type CompanyPreview = { name: string; logo_url: string | null; industry: string | null; location: string | null; description: string | null; website_url: string | null };
+type EmployerApplication = { id: string; applicant_id: string; status: string; created_at: string; jobs: { title: string } | { title: string }[] | null };
+
+function greeting() {
+  const hour = new Date().getHours();
+  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+}
+
+function shortDate(value: string) {
+  return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' }).format(new Date(value));
+}
 
 export default async function EmployerDashboard() {
-  const { supabase, user } = await requireRole('employer');
-  const { data: rawMembership } = await supabase.from('employer_users').select('company_id, companies(name)').eq('user_id', user.id).order('created_at', { ascending: true }).limit(1).maybeSingle();
-  const membership = rawMembership as unknown as { company_id: string; companies: { name: string }[] | null } | null;
-  const companyId = membership?.company_id ?? null;
+  const { supabase, user, profile } = await requireRole('employer');
+  const relationClient = supabase as any;
+  const [{ data: rawMembership }, companyContext] = await Promise.all([
+    relationClient.from('employer_users')
+      .select('company_id, companies(name, logo_url, industry, location, description, website_url)')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle(),
+    getCurrentCompanyBillingContext(),
+  ]);
 
-  const companyContext = await getCurrentCompanyBillingContext();
+  const membership = rawMembership as { company_id: string; companies: CompanyPreview[] | null } | null;
+  const company = membership?.companies?.[0] || null;
+  const companyId = membership?.company_id ?? null;
   const activeEntitlement = companyContext.activeEntitlement;
   const plan = companyContext.plan;
   const freeEntitlement = plan?.code === 'introductory-free' ? activeEntitlement : null;
   const freeRemaining = freeEntitlement ? Math.max(freeEntitlement.granted_quantity - freeEntitlement.consumed_quantity, 0) : 0;
 
-  const [{ data: companyJobs }, { data: applicationRows }] = companyId ? await Promise.all([
+  const [jobsResult, applicationsResult] = companyId ? await Promise.all([
     supabase.from('jobs').select('id, status').eq('company_id', companyId),
-    supabase.from('applications').select('applicant_id, jobs!inner(company_id)').eq('jobs.company_id', companyId),
-  ]) : [{ data: [] as Array<{ id: string; status: string }> }, { data: [] as Array<{ applicant_id: string }> }];
+    relationClient.from('applications')
+      .select('id, applicant_id, status, created_at, jobs!inner(title, company_id)')
+      .eq('jobs.company_id', companyId)
+      .order('created_at', { ascending: false }),
+  ]) : [
+    { data: [] as Array<{ id: string; status: string }>, error: null },
+    { data: [] as EmployerApplication[], error: null },
+  ];
 
-  const jobIds = (companyJobs || []).map((job) => job.id);
-  const { count: views } = jobIds.length ? await supabase.from('job_views').select('*', { count: 'exact', head: true }).in('job_id', jobIds) : { count: 0 };
-  const jobs = (companyJobs || []).filter((job) => job.status === 'published').length;
-  const managedJobs = (companyJobs || []).filter((job) => ['draft', 'published'].includes(job.status)).length;
-  const applications = applicationRows?.length || 0;
-  const candidates = new Set((applicationRows || []).map((application) => application.applicant_id)).size;
-
+  const companyJobs = jobsResult.data || [];
+  const applicationRows = (applicationsResult.data || []) as EmployerApplication[];
+  const jobIds = companyJobs.map((job) => job.id);
+  const viewsResult = jobIds.length
+    ? await supabase.from('job_views').select('*', { count: 'exact', head: true }).in('job_id', jobIds)
+    : { count: 0, error: null };
+  const jobs = companyJobs.filter((job) => job.status === 'published').length;
+  const managedJobs = companyJobs.filter((job) => ['draft', 'published'].includes(job.status)).length;
+  const applications = applicationRows.length;
+  const interviews = applicationRows.filter((application) => application.status === 'interview').length;
+  const candidates = new Set(applicationRows.map((application) => application.applicant_id)).size;
   const activeJobsLimit = activeEntitlement?.active_job_limit ?? null;
   const remainingJobs = activeJobsLimit === null ? null : Math.max(activeJobsLimit - managedJobs, 0);
   const remainingPostings = activeEntitlement ? Math.max(activeEntitlement.granted_quantity - activeEntitlement.consumed_quantity, 0) : 0;
-  const companyName = membership?.companies?.[0]?.name || companyContext.companyName || 'Set up your company to start hiring.';
+  const companyName = company?.name || companyContext.companyName || 'Your company';
+  const companyProfileFields = company ? [company.name, company.description, company.industry, company.location, company.website_url, company.logo_url] : [];
+  const companyProfileCompletion = companyProfileFields.length ? Math.round(companyProfileFields.filter(Boolean).length / companyProfileFields.length * 100) : 0;
+  const recentApplications = applicationRows.slice(0, 5);
+  const recentApplicantIds = [...new Set(recentApplications.map((application) => application.applicant_id))];
+  const candidateProfilesResult = recentApplicantIds.length
+    ? await supabase.from('profiles').select('id, full_name, first_name, last_name').in('id', recentApplicantIds)
+    : { data: [], error: null };
+  const candidateNames = new Map((candidateProfilesResult.data || []).map((candidate) => [
+    candidate.id,
+    candidate.full_name || [candidate.first_name, candidate.last_name].filter(Boolean).join(' ') || 'Candidate',
+  ]));
+  const dashboardUnavailable = Boolean(jobsResult.error || applicationsResult.error || viewsResult.error);
+  const applicantInitials = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'C';
 
-  return <><Header /><main className={styles.page}><div className={styles.container}>
-    <header className={styles.header}><h1 className={styles.title}>Employer Dashboard</h1><p className={styles.subtitle}>{companyName}</p></header>
+  return (
+    <AuthenticatedAppShell role="employer" userId={user.id} displayName={companyName} avatarUrl={company?.logo_url || profile.profile_photo_url}>
+      <main className={dashboardStyles.dashboard}>
+        <header className={dashboardStyles.welcome}>
+          <div>
+            <p className={dashboardStyles.eyebrow}>Employer workspace</p>
+            <h1 className={dashboardStyles.greeting}>{greeting()}, {companyName}</h1>
+            <p className={dashboardStyles.welcomeText}>Find talent, manage hiring, and keep your team moving.</p>
+          </div>
+          <span className={dashboardStyles.welcomeAvatar} aria-hidden="true">
+            {company?.logo_url ? <span className={styles.companyLogo} style={{ backgroundImage: `url(${company.logo_url})` }} /> : companyName.slice(0, 1).toUpperCase()}
+          </span>
+        </header>
 
-    <div className={styles.statsGrid}>
-      <Card className={styles.statCard}><p className={styles.statLabel}>Active Jobs</p><p className={styles.statValue}>{jobs ?? 0}</p></Card>
-      <Card className={styles.statCard}><p className={styles.statLabel}>Applications</p><p className={styles.statValue}>{applications ?? 0}</p></Card>
-      <Card className={styles.statCard}><p className={styles.statLabel}>Candidates</p><p className={styles.statValue}>{candidates}</p></Card>
-      <Card className={styles.statCard}><p className={styles.statLabel}>Job Views</p><p className={styles.statValue}>{views ?? 0}</p></Card>
-      <Card className={styles.statCard}><p className={styles.statLabel}>Free Job Postings</p><p className={styles.statValue}>{freeRemaining} of {plan?.code === 'introductory-free' ? 4 : 0}</p></Card>
-      <Card className={styles.statCard}><p className={styles.statLabel}>Current Package</p><p className={styles.statValue}>{plan?.name || 'No package active'}</p></Card>
-      <Card className={styles.statCard}><p className={styles.statLabel}>Jobs Remaining</p><p className={styles.statValue}>{activeJobsLimit === null ? 'No cap' : remainingJobs}</p></Card>
-    </div>
+        {dashboardUnavailable ? (
+          <div className={dashboardStyles.emptyState} role="alert"><h2 className={dashboardStyles.emptyTitle}>Hiring data is temporarily unavailable</h2><p className={dashboardStyles.emptyText}>We could not load your company jobs and applications. Please try again later.</p></div>
+        ) : (
+          <>
+            <section className={dashboardStyles.overviewRail} aria-label="Hiring overview">
+              <article className={`${dashboardStyles.overviewCard} ${dashboardStyles.overviewCardPrimary}`}>
+                <div><h2 className={dashboardStyles.overviewTitle}>Hiring overview</h2><p className={dashboardStyles.overviewValue}>{jobs}</p><p className={dashboardStyles.overviewDetail}>Open positions</p></div>
+                <div className={dashboardStyles.cardStats}><span>{applications} applications</span><span>{interviews} interviews</span><span>{viewsResult.count ?? 0} job views</span></div>
+                <Link href="/employer/applications" className={dashboardStyles.overviewLink}>Manage hiring <Icon name="chevron-right" size={15} /></Link>
+              </article>
 
-    <div className={styles.legendCard}>
-      <h2 className={styles.legendTitle}>Recruitment overview</h2>
-      <div className={styles.legendItems}>
-        <div className={styles.legendItem}>
-          <p>Company</p>
-          <p>{companyName}</p>
-        </div>
-        <div className={styles.legendItem}>
-          <p>Package</p>
-          <p>{plan ? `${plan.name} · ${plan.currency} ${Number(plan.price).toFixed(2)}` : 'No package active'}</p>
-        </div>
-        <div className={styles.legendItem}>
-          <p>Posting capacity</p>
-          <p>{activeJobsLimit === null ? 'No active jobs limit configured' : `${remainingJobs} of ${activeJobsLimit} active jobs available`}</p>
-        </div>
-      </div>
-    </div>
+              <article className={dashboardStyles.overviewCard}>
+                <div><h2 className={dashboardStyles.overviewTitle}>Active jobs</h2><p className={dashboardStyles.overviewValue}>{jobs}</p><p className={dashboardStyles.overviewDetail}>{managedJobs} published or draft positions</p></div>
+                <Link href="/employer/jobs" className={dashboardStyles.overviewLink}>View jobs <Icon name="chevron-right" size={15} /></Link>
+              </article>
 
-    <div className={styles.legendCard} style={{ marginTop: '1.5rem' }}>
-      <h2 className={styles.legendTitle}>Quick actions</h2>
-      <p><Link href="/employers/post-job" className={styles.actionLink}>Post a job</Link>{' | '}<Link href="/employer/jobs" className={styles.actionLink}>Manage jobs</Link>{' | '}<Link href="/employer/subscription" className={styles.actionLink}>View subscription</Link></p>
-    </div>
+              <article className={dashboardStyles.overviewCard}>
+                <div><h2 className={dashboardStyles.overviewTitle}>Applicant pool</h2><p className={dashboardStyles.overviewValue}>{candidates}</p><p className={dashboardStyles.overviewDetail}>Candidates who applied to your jobs</p></div>
+                <Link href="/employer/cvs" className={dashboardStyles.overviewLink}>Find candidates <Icon name="chevron-right" size={15} /></Link>
+              </article>
 
-    {activeEntitlement && <div className={styles.legendCard} style={{ marginTop: '1.5rem' }}>
-      <h2 className={styles.legendTitle}>{plan?.code === 'introductory-free' ? 'Introductory allowance' : 'Active package allowance'}</h2>
-      <p>{freeRemaining > 0 ? `${freeRemaining} job postings remain for the current package.` : 'Your current package has no remaining postings.'}</p>
-    </div>}
+              <article className={dashboardStyles.overviewCard}>
+                <div>
+                  <h2 className={dashboardStyles.overviewTitle}>Company profile</h2>
+                  {company ? <><p className={dashboardStyles.overviewValue}>{companyProfileCompletion}%</p><p className={dashboardStyles.overviewDetail}>Profile completion</p><div className={dashboardStyles.progressTrack} role="progressbar" aria-label="Company profile completion" aria-valuenow={companyProfileCompletion} aria-valuemin={0} aria-valuemax={100}><div className={dashboardStyles.progressFill} style={{ width: `${companyProfileCompletion}%` }} /></div></> : <p className={dashboardStyles.overviewMessage}>Create a company profile to introduce your team to candidates.</p>}
+                </div>
+                <Link href="/employer/company" className={dashboardStyles.overviewLink}>{company ? 'Manage profile' : 'Set up profile'} <Icon name="chevron-right" size={15} /></Link>
+              </article>
+            </section>
 
-    {!activeEntitlement && membership && <div className={styles.legendCard} style={{ marginTop: '1.5rem' }}>
-      <h2 className={styles.legendTitle}>Package status</h2>
-      <p>No package active.</p>
-    </div>}
+            <nav className={dashboardStyles.quickActions} aria-label="Quick actions">
+              <Link href="/employers/post-job" className={dashboardStyles.quickAction}><span className={dashboardStyles.quickIcon}><Icon name="briefcase" size={22} /></span><span>Post Job</span></Link>
+              <Link href="/employer/cvs" className={dashboardStyles.quickAction}><span className={dashboardStyles.quickIcon}><Icon name="search" size={22} /></span><span>Candidates</span></Link>
+              <Link href="/employer/applications" className={dashboardStyles.quickAction}><span className={dashboardStyles.quickIcon}><Icon name="calendar" size={22} /></span><span>Applications</span></Link>
+            </nav>
 
-    {jobs && jobs > 0 ? (
-      <div className={styles.legendCard} style={{ marginTop: '1.5rem' }}>
-        <h2 className={styles.legendTitle}>Jobs snapshot</h2>
-        <p>You currently have {jobs} active or draft jobs on your account.</p>
-        <p>{activeEntitlement && remainingPostings > 0 ? `${remainingPostings} new job slots remain in your current package.` : 'You have reached the posting limit for your current package.'}</p>
-      </div>
-    ) : (
-      <div className={styles.emptyState} style={{ marginTop: '1.5rem' }}>
-        <div className={styles.emptyContent}>
-          <h3 className={styles.emptyTitle}>No jobs yet</h3>
-          <p className={styles.emptyDescription}>Your recruitment pipeline is ready. Add the first listing to start hiring.</p>
-          <Link href="/employers/post-job" className={styles.emptyLink}><span className={styles.emptyButton}>Post your first job</span></Link>
-        </div>
-      </div>
-    )}
+            <section className={dashboardStyles.planStrip} aria-label="Posting plan">
+              <div className={dashboardStyles.planTop}><h2 className={dashboardStyles.planTitle}>{plan?.code === 'introductory-free' ? 'Free job postings' : 'Current package'}</h2><Link href="/employer/subscription" className={dashboardStyles.planLink}>View plan</Link></div>
+              <p className={dashboardStyles.planDetail}>
+                {plan?.code === 'introductory-free'
+                  ? `${freeRemaining} of 4 introductory postings remain.`
+                  : plan
+                    ? `${remainingPostings} postings remain on ${plan.name}.`
+                    : 'No active package is currently available.'}
+                {activeJobsLimit !== null ? ` ${remainingJobs} active job slots remain.` : ''}
+              </p>
+            </section>
 
-    {applications && applications > 0 ? (
-      <div className={styles.legendCard} style={{ marginTop: '1.5rem' }}>
-        <h2 className={styles.legendTitle}>Applicant activity</h2>
-        <p>{applications} applications have been received across your company listings.</p>
-        <p><Link href="/employer/applications" className={styles.actionLink}>Review applications</Link></p>
-      </div>
-    ) : (
-      <div className={styles.emptyState} style={{ marginTop: '1.5rem' }}>
-        <div className={styles.emptyContent}>
-          <h3 className={styles.emptyTitle}>No applications yet</h3>
-          <p className={styles.emptyDescription}>When candidates apply, their details will appear here for review.</p>
-          <Link href="/employer/jobs" className={styles.emptyLink}><span className={styles.emptyButton}>View jobs</span></Link>
-        </div>
-      </div>
-    )}
-  </div></main><Footer /></>;
+            <section className={dashboardStyles.section} aria-labelledby="recent-hiring-activity-title">
+              <div className={dashboardStyles.sectionHeader}>
+                <h2 id="recent-hiring-activity-title" className={dashboardStyles.sectionTitle}>Recent hiring activity</h2>
+                <Link href="/employer/applications" className={dashboardStyles.sectionLink}>View all</Link>
+              </div>
+              {recentApplications.length ? (
+                <div className={dashboardStyles.activityList}>
+                  {recentApplications.map((application) => {
+                    const job = Array.isArray(application.jobs) ? application.jobs[0] : application.jobs;
+                    const candidateName = candidateNames.get(application.applicant_id) || 'Candidate';
+                    return (
+                      <Link key={application.id} href={`/employer/applications/${application.id}`} className={dashboardStyles.activityRow}>
+                        <span className={dashboardStyles.candidateAvatar}>{applicantInitials(candidateName)}</span>
+                        <span className={dashboardStyles.activityMain}><span className={dashboardStyles.activityTitle}>{candidateName}</span><span className={dashboardStyles.activitySubtitle}>{job?.title || 'Job application'}</span></span>
+                        <span className={dashboardStyles.activityMeta}><span className={`${dashboardStyles.status} ${application.status === 'shortlisted' || application.status === 'interview' ? dashboardStyles.statusAttention : ''}`}>{application.status}</span><time dateTime={application.created_at}>{shortDate(application.created_at)}</time></span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className={dashboardStyles.emptyState}><h3 className={dashboardStyles.emptyTitle}>No applications yet</h3><p className={dashboardStyles.emptyText}>Applications for your published jobs will appear here.</p><Link href="/employers/post-job" className={dashboardStyles.overviewLink}>Post a job <Icon name="chevron-right" size={15} /></Link></div>
+              )}
+            </section>
+          </>
+        )}
+      </main>
+    </AuthenticatedAppShell>
+  );
 }

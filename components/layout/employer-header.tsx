@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import styles from './employer-header.module.css';
 import { useAccountRole } from './use-account-role';
 import { NotificationBell } from './notification-bell';
+import { AuthenticatedDesktopSidebar, MobileAuthenticatedNavigation } from './mobile-authenticated-navigation';
 
 const links = [
   ['/employer/dashboard', 'Dashboard'], ['/employers/post-job', 'Post a Job'], ['/employer/cvs', 'Find CVs'],
@@ -18,11 +19,11 @@ const links = [
 
 export function EmployerHeader() {
   const [open, setOpen] = useState(false);
-  const { userId } = useAccountRole();
+  const { userId, role } = useAccountRole();
   const router = useRouter();
   const signOut = async () => { await createClient().auth.signOut(); router.push('/login'); router.refresh(); };
   const navigation = links.map(([href, label]) => <Link key={href} href={href} className={styles.navLink} onClick={() => setOpen(false)}>{label}</Link>);
-  return <header className={styles.header}><div className={styles.container}>
+  return <><header className={`${styles.header} ${styles.authenticatedHeader}`}><div className={styles.container}>
     <Link href="/employer/dashboard" className={styles.logo} aria-label="CareerSnap employer dashboard"><Image src="/careersnap-pro-logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
     <nav className={styles.nav}>{navigation}<Button size="sm" className={styles.signOut} onClick={signOut}>Sign Out</Button></nav>
     <NotificationBell userId={userId} className={styles.notificationSlot} />
@@ -31,5 +32,5 @@ export function EmployerHeader() {
       <span className={styles.menuIcon} aria-hidden="true" />
       <span className={styles.menuIcon} aria-hidden="true" />
     </button>
-  </div>{open && <nav className={styles.mobileNav}>{navigation}<Button className={styles.signOut} onClick={signOut}>Sign Out</Button></nav>}</header>;
+  </div>{open && <nav className={styles.mobileNav}>{navigation}<Button className={styles.signOut} onClick={signOut}>Sign Out</Button></nav>}</header>{userId && role === 'employer' && <><AuthenticatedDesktopSidebar role={role} displayName="Employer" /><MobileAuthenticatedNavigation role={role} /></>}</>;
 }

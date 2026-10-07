@@ -3,6 +3,7 @@
 .logo { display: flex; align-items: center; margin-right: auto; }
 .logoImage { display: block; width: min(181px, 45vw); height: auto; }
 .nav { display: none; align-items: center; gap: var(--spacing-lg); }
+.authenticatedHeader .nav { display: none; }
 .navLink, .mobileNavLink { color: var(--color-header-text); text-decoration: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
 .navLink:hover, .mobileNavLink:hover { color: var(--color-primary-300); }
 .notificationSlot { display: inline-flex; width: 40px; height: 40px; flex: 0 0 40px; }
