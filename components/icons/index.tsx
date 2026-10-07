@@ -2,6 +2,7 @@ import type { SVGProps } from 'react';
 
 type IconName =
   | 'bar-chart'
+  | 'bell'
   | 'briefcase'
   | 'calendar'
   | 'check'
@@ -34,6 +35,7 @@ type IconProps = Omit<SVGProps<SVGSVGElement>, 'strokeWidth'> & {
 
 const paths: Record<IconName, JSX.Element> = {
   'bar-chart': <><path d="M3 3v18h18" /><path d="M7 16v-5" /><path d="M12 16V7" /><path d="M17 16v-8" /></>,
+  bell: <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" /><path d="M10 21h4" /></>,
   briefcase: <><rect width="18" height="14" x="3" y="7" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><path d="M3 12h18" /></>,
   calendar: <><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></>,
   check: <path d="m5 12 4 4L19 6" />,

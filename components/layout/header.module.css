@@ -177,6 +177,24 @@
   transition: color var(--transition-fast);
 }
 
+.notificationButton {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--color-text-inverse);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.notificationButton:hover {
+  color: var(--color-primary-300);
+}
+
 .desktopSearchLink:hover {
   color: var(--color-text-inverse);
 }
@@ -206,7 +224,7 @@
 
 .mobileSignInControl,
 .mobileProfileLink,
-.mobileSearchLink {
+.notificationButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -230,13 +248,14 @@
 
 .mobileSignInControl:hover,
 .mobileProfileLink:hover,
-.mobileSearchLink:hover {
+.notificationButton:hover {
   color: var(--color-text-inverse);
   background-color: transparent;
 }
 
 .mobileSignInControl:focus-visible,
-.mobileProfileLink:focus-visible {
+.mobileProfileLink:focus-visible,
+.notificationButton:focus-visible {
   outline: 2px solid var(--color-primary-500);
   outline-offset: 2px;
 }
@@ -298,7 +317,7 @@
   background-color: var(--color-header);
 }
 
-.mobileSearchLink :global(svg),
+.notificationButton :global(svg),
 .mobileSignInControl :global(svg) {
   margin: 0;
 }
@@ -340,7 +359,7 @@
     left: var(--spacing-md);
   }
 
-  .mobileSearchLink {
+  .notificationButton {
     position: absolute;
     right: 52px;
   }
@@ -411,6 +430,7 @@
 .navLink:focus-visible,
 .employersLink:hover,
 .desktopSearchLink:hover,
+.notificationButton:hover,
 .mobileNavLink:hover {
   color: var(--color-primary-300);
 }

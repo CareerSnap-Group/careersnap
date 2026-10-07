@@ -85,6 +85,11 @@ export function Header({ variant }: { variant?: 'landing' }) {
           <Link href="/jobs" className={styles.desktopSearchLink} aria-label="Search jobs">
             <Icon name="search" size={20} />
           </Link>
+          {signedIn && (
+            <button type="button" className={styles.notificationButton} aria-label="Notifications" title="Notifications">
+              <Icon name="bell" size={20} />
+            </button>
+          )}
           {signedIn === true ? (
             <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>
           ) : (
@@ -108,9 +113,11 @@ export function Header({ variant }: { variant?: 'landing' }) {
             <span className={styles.menuIcon}></span>
             <span className={styles.menuIcon}></span>
           </button>
-          <Link href="/jobs" className={styles.mobileSearchLink} aria-label="Search jobs">
-            <Icon name="search" size={20} />
-          </Link>
+          {signedIn && (
+            <button type="button" className={styles.notificationButton} aria-label="Notifications" title="Notifications">
+              <Icon name="bell" size={20} />
+            </button>
+          )}
           {signedIn === true ? (
             <Link
               href="/profile"
