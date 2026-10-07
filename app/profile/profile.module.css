@@ -54,7 +54,7 @@
 
 .name {
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-xs) 0;
 }
@@ -90,7 +90,7 @@
 
 .completionTitle {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -160,7 +160,7 @@
 
 .sectionTitle {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -202,7 +202,7 @@
 
 .expTitle {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -240,7 +240,7 @@
 
 .eduInstitution {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-xs) 0;
 }
@@ -294,7 +294,7 @@
 
 .cardTitle {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-lg) 0;
 }
@@ -308,7 +308,7 @@
 
 .contactLabel {
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-tertiary);
   text-transform: uppercase;
   margin: 0 0 var(--spacing-xs) 0;

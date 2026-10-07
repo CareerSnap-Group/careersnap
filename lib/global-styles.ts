@@ -48,8 +48,15 @@ export const globalStyles = `
 
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
-    font-weight: ${typography.fontWeight.semibold};
     line-height: ${typography.lineHeight.tight};
+  }
+
+  h1, h2, h3 {
+    font-weight: ${typography.fontWeight.medium};
+  }
+
+  h4, h5, h6 {
+    font-weight: ${typography.fontWeight.regular};
   }
 
   h1 {

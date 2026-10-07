@@ -90,7 +90,7 @@
 .title {
   margin: 1rem 0 0.75rem;
   font-size: 1.125rem;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   line-height: 1.35;
 }
 

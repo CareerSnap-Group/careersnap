@@ -306,7 +306,7 @@
 .sectionTitle {
   margin-bottom: 2rem;
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   text-align: center;
 }
@@ -469,7 +469,7 @@
 
 .employerTitle {
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   margin-bottom: var(--spacing-lg);
 }
 
@@ -554,7 +554,7 @@
   margin: 0 0 1rem;
   color: var(--color-text-primary);
   font-size: 3rem;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-regular);
   letter-spacing: 0;
   line-height: 1.08;
 }
@@ -763,13 +763,13 @@
 .featuredSection { padding: 3.25rem 0 1rem; }
 .featuredSection .container { max-width: 1320px; }
 .featuredHeader { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.35rem; }
-.sectionEyebrow { margin: 0 0 0.45rem; color: var(--color-primary-700); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); text-transform: uppercase; }
+.sectionEyebrow { margin: 0 0 0.45rem; color: var(--color-primary-700); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); text-transform: uppercase; }
 .featuredHeader .sectionTitle { margin: 0; font-size: 1.5rem; text-align: left; }
 .sortControl { display: flex; align-items: center; gap: 0.55rem; color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
 .sortControl select { min-height: 40px; padding: 0 2rem 0 0.75rem; border: 1px solid var(--color-border); border-radius: 0.625rem; background: #fff; color: var(--color-text-primary); font: inherit; }
 .jobsGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem; }
 .jobsEmpty { padding: 2.25rem; border: 1px dashed var(--color-neutral-300); border-radius: 1rem; background: #fff; text-align: center; }
-.jobsEmpty p { margin: 0 0 0.35rem; color: var(--color-text-primary); font-weight: var(--font-weight-semibold); }
+.jobsEmpty p { margin: 0 0 0.35rem; color: var(--color-text-primary); font-weight: var(--font-weight-medium); }
 .jobsEmpty span { color: var(--color-text-secondary); font-size: var(--font-size-sm); }
 .savedStateNotice { margin: 0.85rem 0 0; color: var(--color-danger-700); font-size: var(--font-size-sm); }
 .viewAllJobs { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 1.25rem; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }

@@ -28,7 +28,7 @@
   margin: 0;
   color: var(--color-primary-600);
   font-size: 0.75rem;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0.12em;
   line-height: 1.4;
   text-transform: uppercase;
@@ -203,8 +203,8 @@
 
 .founderMarker { width: 64px; height: 64px; }
 .founderContent h2 { margin-bottom: 26px; }
-.founderName { margin: 0; font-size: 1.35rem; font-weight: var(--font-weight-semibold); }
-.founderTitle { margin: 4px 0 22px; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
+.founderName { margin: 0; font-size: 1.35rem; font-weight: var(--font-weight-medium); }
+.founderTitle { margin: 4px 0 22px; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
 .founderContent > p:last-child { margin-bottom: 0; }
 
 .visionInner { padding: 88px 0; }
@@ -215,7 +215,7 @@
   padding: 88px 0 104px;
   color: var(--color-primary-800);
   font-size: 2rem;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   letter-spacing: 0;
   line-height: 1.2;
   text-align: center;
