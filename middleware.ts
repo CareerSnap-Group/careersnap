@@ -5,7 +5,7 @@ import type { Database } from '@/lib/supabase/database.types';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { getSafeRedirectPath } from '@/lib/auth/redirect';
 
-const protectedPaths = ['/saved-jobs', '/applications', '/profile', '/employers/post-job', '/job-seeker', '/employer'];
+const protectedPaths = ['/saved-jobs', '/applications', '/notifications', '/profile', '/employers/post-job', '/job-seeker', '/employer'];
 const employerPaths = ['/employer', '/employers/post-job'];
 const seekerPaths = ['/job-seeker', '/saved-jobs', '/applications', '/profile'];
 

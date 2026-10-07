@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 import { createClient } from '@/lib/supabase/browser';
 import { useAccountRole } from './use-account-role';
+import { NotificationBell } from './notification-bell';
 
 function getInitials(name: string) {
   const initials = name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase());
@@ -16,7 +17,7 @@ function getInitials(name: string) {
 
 export function Header({ variant }: { variant?: 'landing' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { signedIn, role, displayName, profilePhotoUrl } = useAccountRole();
+  const { signedIn, role, displayName, profilePhotoUrl, userId } = useAccountRole();
   const mobileLogoSrc = '/careersnap-pro-logo.png';
 
   const handleSignOut = async () => {
@@ -85,11 +86,6 @@ export function Header({ variant }: { variant?: 'landing' }) {
           <Link href="/jobs" className={styles.desktopSearchLink} aria-label="Search jobs">
             <Icon name="search" size={20} />
           </Link>
-          {signedIn && (
-            <button type="button" className={styles.notificationButton} aria-label="Notifications" title="Notifications">
-              <Icon name="bell" size={20} />
-            </button>
-          )}
           {signedIn === true ? (
             <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>
           ) : (
@@ -113,11 +109,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
             <span className={styles.menuIcon}></span>
             <span className={styles.menuIcon}></span>
           </button>
-          {signedIn && (
-            <button type="button" className={styles.notificationButton} aria-label="Notifications" title="Notifications">
-              <Icon name="bell" size={20} />
-            </button>
-          )}
+          <NotificationBell userId={userId} className={styles.notificationSlot} />
           {signedIn === true ? (
             <Link
               href="/profile"
@@ -137,6 +129,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
             </Link>
           ) : null}
         </div>
+        <NotificationBell userId={userId} className={styles.notificationSlot} />
       </div>
 
       {/* Mobile Navigation */}

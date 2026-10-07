@@ -17,6 +17,7 @@ export type Database = {
       jobs: { Row: Job; Insert: JobInsert; Update: JobUpdate; Relationships: [] };
       job_skills: { Row: JobSkill; Insert: JobSkillInsert; Update: JobSkillUpdate; Relationships: [] };
       applications: { Row: Application; Insert: ApplicationInsert; Update: ApplicationUpdate; Relationships: [] };
+      notifications: { Row: Notification; Insert: NotificationInsert; Update: never; Relationships: [] };
       saved_jobs: { Row: SavedJob; Insert: SavedJobInsert; Update: SavedJobUpdate; Relationships: [] };
       job_views: { Row: JobView; Insert: JobViewInsert; Update: JobViewUpdate; Relationships: [] };
       employer_plans: { Row: EmployerPlan; Insert: EmployerPlanInsert; Update: EmployerPlanUpdate; Relationships: [] };
@@ -38,10 +39,11 @@ export type Database = {
       record_job_view: { Args: { target_job_id: string; target_viewer_key: string }; Returns: undefined };
       consume_job_posting_entitlement: { Args: Record<string, never>; Returns: undefined };
       save_job_seeker_profile: { Args: { p_profile: Json; p_experience?: Json; p_education?: Json; p_skills?: Json; p_certifications?: Json; p_languages?: Json; p_links?: Json }; Returns: boolean };
+      mark_notification_read: { Args: { p_notification_id: string }; Returns: boolean };
     };
     Enums: {
       user_type: 'job_seeker' | 'employer';
-      application_status: 'applied' | 'viewed' | 'submitted' | 'reviewing' | 'shortlisted' | 'interview' | 'offer' | 'hired' | 'rejected';
+      application_status: 'applied' | 'viewed' | 'submitted' | 'reviewing' | 'shortlisted' | 'interview' | 'offer' | 'hired' | 'rejected' | 'accepted';
     };
     CompositeTypes: Record<string, never>;
   };
@@ -91,6 +93,9 @@ type JobSkillUpdate = never;
 type Application = Timestamps & { id: string; job_id: string; user_id: string; applicant_id: string; resume_id: string | null; cover_letter: string | null; status: Database['public']['Enums']['application_status']; notes: string | null };
 type ApplicationInsert = Omit<Application, 'id' | 'created_at' | 'updated_at'> & Partial<Pick<Application, 'id'>>;
 type ApplicationUpdate = Partial<Pick<Application, 'resume_id' | 'cover_letter' | 'status' | 'notes'>>;
+type NotificationType = 'new_application' | 'application_shortlisted' | 'application_rejected' | 'application_accepted';
+type Notification = { id: string; recipient_user_id: string; notification_type: NotificationType; title: string; message: string; application_id: string; job_id: string | null; company_id: string | null; read_at: string | null; created_at: string };
+type NotificationInsert = Omit<Notification, 'id' | 'created_at' | 'read_at'> & Partial<Pick<Notification, 'id' | 'created_at' | 'read_at'>>;
 type SavedJob = { user_id: string; job_id: string; created_at: string };
 type SavedJobInsert = Omit<SavedJob, 'created_at'>;
 type SavedJobUpdate = never;

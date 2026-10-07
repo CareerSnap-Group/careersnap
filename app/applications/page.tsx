@@ -20,6 +20,7 @@ const statusColors = {
   interview: 'primary',
   offer: 'success',
   hired: 'success',
+  accepted: 'success',
   rejected: 'danger',
 } as const;
 

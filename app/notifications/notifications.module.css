@@ -1,0 +1,23 @@
+.page { min-height: 100vh; display: flex; flex-direction: column; background: var(--color-background-secondary); }
+.main { width: min(960px, calc(100% - 32px)); flex: 1; margin: 0 auto; padding: var(--spacing-2xl) 0 var(--spacing-4xl); }
+.header { margin-bottom: var(--spacing-xl); }
+.title { margin: 0 0 var(--spacing-xs); color: var(--color-text-primary); font-size: var(--font-size-3xl); font-weight: var(--font-weight-medium); }
+.subtitle { margin: 0; color: var(--color-text-secondary); }
+.list { display: grid; gap: var(--spacing-md); }
+.item { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-lg); padding: var(--spacing-lg); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-background-primary); }
+.unread { border-left: 3px solid var(--color-primary-500); }
+.itemContent { min-width: 0; }
+.itemHeading { display: flex; align-items: center; gap: var(--spacing-sm); }
+.itemHeading h2 { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-lg); font-weight: var(--font-weight-medium); }
+.itemContent p { margin: var(--spacing-xs) 0; color: var(--color-text-secondary); }
+.itemContent time { color: var(--color-text-tertiary); font-size: var(--font-size-xs); }
+.unreadMark { width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: var(--color-primary-500); }
+.actions { display: flex; flex: 0 0 auto; align-items: center; gap: var(--spacing-md); }
+.actions button, .actions a { padding: 0; border: 0; background: transparent; color: var(--color-primary-700); font: inherit; font-size: var(--font-size-sm); text-decoration: none; cursor: pointer; }
+.actions button:disabled { cursor: wait; opacity: .65; }
+.actions a:hover, .actions button:hover:not(:disabled) { text-decoration: underline; }
+.empty { padding: var(--spacing-2xl); border: 1px dashed var(--color-neutral-300); border-radius: var(--radius-md); background: var(--color-background-primary); text-align: center; }
+.empty h2 { margin: 0 0 var(--spacing-xs); font-size: var(--font-size-lg); font-weight: var(--font-weight-medium); }
+.empty p { margin: 0; color: var(--color-text-secondary); }
+.error { margin: 0; color: var(--color-danger-700); }
+@media (max-width: 640px) { .item { align-items: flex-start; flex-direction: column; gap: var(--spacing-md); } .actions { flex-wrap: wrap; } }

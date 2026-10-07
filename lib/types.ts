@@ -47,7 +47,7 @@ export interface JobCategory {
   jobCount?: number;
 }
 
-export type ApplicationStatus = 'applied' | 'viewed' | 'submitted' | 'reviewing' | 'shortlisted' | 'interview' | 'offer' | 'hired' | 'rejected';
+export type ApplicationStatus = 'applied' | 'viewed' | 'submitted' | 'reviewing' | 'shortlisted' | 'interview' | 'offer' | 'hired' | 'rejected' | 'accepted';
 
 export interface Application {
   id: string;

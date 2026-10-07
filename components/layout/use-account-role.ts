@@ -9,12 +9,14 @@ export type AccountState = 'loading' | 'logged-out' | AccountRole;
 
 export function useAccountRole() {
   const [authState, setAuthState] = useState<AccountState>('loading');
+  const [userId, setUserId] = useState<string | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isSupabaseConfigured()) {
       setAuthState('logged-out');
+      setUserId(null);
       setDisplayName('');
       setProfilePhotoUrl(null);
       return;
@@ -27,6 +29,7 @@ export function useAccountRole() {
       if (!user) {
         if (isMounted) {
           setAuthState('logged-out');
+          setUserId(null);
           setDisplayName('');
           setProfilePhotoUrl(null);
         }
@@ -34,6 +37,7 @@ export function useAccountRole() {
       }
 
       if (isMounted) {
+        setUserId(user.id);
         setAuthState('loading');
       }
 
@@ -81,6 +85,7 @@ export function useAccountRole() {
     authState,
     role,
     signedIn,
+    userId,
     isLoading: authState === 'loading',
     isLoggedOut: authState === 'logged-out',
     displayName,

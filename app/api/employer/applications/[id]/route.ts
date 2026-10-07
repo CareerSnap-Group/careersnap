@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
 
-const applicationStatuses = ['applied', 'submitted', 'viewed', 'reviewing', 'shortlisted', 'interview', 'offer', 'hired', 'rejected'] as const;
+const applicationStatuses = ['applied', 'submitted', 'viewed', 'reviewing', 'shortlisted', 'interview', 'offer', 'hired', 'rejected', 'accepted'] as const;
 type ApplicationStatus = typeof applicationStatuses[number];
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
