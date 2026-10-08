@@ -8,9 +8,8 @@ import styles from './header.module.css';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icons';
 import { createClient } from '@/lib/supabase/browser';
-import { useAccountRole } from './use-account-role';
+import { isAuthenticatedAppRoute, useAccountRole } from './use-account-role';
 import { NotificationBell } from './notification-bell';
-import { AuthenticatedDesktopSidebar, MobileAuthenticatedNavigation } from './mobile-authenticated-navigation';
 
 function getInitials(name: string) {
   const initials = name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase());
@@ -21,18 +20,20 @@ export function Header({ variant }: { variant?: 'landing' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { signedIn, role, displayName, profilePhotoUrl, userId } = useAccountRole();
-  const seekerAppPaths = ['/job-seeker', '/applications', '/saved-jobs', '/profile', '/settings', '/notifications', '/jobs', '/companies', '/resources'];
-  const employerAppPaths = ['/employer', '/employers/post-job', '/notifications'];
-  const isAuthenticatedAppRoute = signedIn && role && variant !== 'landing' && (role === 'job_seeker' ? seekerAppPaths : employerAppPaths).some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  const isAuthenticatedRoute = Boolean(signedIn && role && variant !== 'landing' && isAuthenticatedAppRoute(pathname, role));
   const mobileLogoSrc = '/careersnap-pro-logo.png';
 
   const handleSignOut = async () => {
     await createClient().auth.signOut();
   };
 
+  if (isAuthenticatedRoute) {
+    return null;
+  }
+
   return (
     <>
-    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''} ${isAuthenticatedAppRoute ? styles.authenticatedHeader : ''}`}>
+    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''}`}>
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="CareerSnap home">
@@ -185,8 +186,6 @@ export function Header({ variant }: { variant?: 'landing' }) {
         </nav>
       )}
     </header>
-    {isAuthenticatedAppRoute && role && <AuthenticatedDesktopSidebar role={role} displayName={displayName || 'CareerSnap Member'} avatarUrl={profilePhotoUrl} />}
-    {isAuthenticatedAppRoute && role && <MobileAuthenticatedNavigation role={role} />}
     </>
   );
 }

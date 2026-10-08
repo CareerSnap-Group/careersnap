@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
+import { AuthenticatedAppShellBoundary } from '@/components/layout/authenticated-app-shell-boundary';
 import '@/app/globals.css';
 
 const poppins = Poppins({
@@ -32,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/careersnap-pro-logo.png" />
       </head>
       <body className={poppins.className}>
-        {children}
+        <AuthenticatedAppShellBoundary>{children}</AuthenticatedAppShellBoundary>
       </body>
     </html>
   );

@@ -54,7 +54,7 @@ export default async function JobSeekerDashboard() {
   const offers = applications.filter((application) => ['offer', 'accepted', 'hired'].includes(application.status)).length;
 
   return (
-    <AuthenticatedAppShell role="job_seeker" userId={user.id} displayName={profile.full_name || displayName} greeting={`${greeting()}, ${displayName}`} avatarUrl={profile.profile_photo_url}>
+    <AuthenticatedAppShell role="job_seeker" displayName={profile.full_name || displayName} greeting={`${greeting()}, ${displayName}`} avatarUrl={profile.profile_photo_url}>
       <main className={dashboardStyles.dashboard}>
         <section className={dashboardStyles.overviewRail} aria-label="Career overview">
           <article className={`${dashboardStyles.overviewCard} ${dashboardStyles.overviewCardPrimary}`}>

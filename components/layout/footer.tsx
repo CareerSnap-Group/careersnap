@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Icon } from '@/components/icons';
 import styles from './footer.module.css';
-import { useAccountRole } from './use-account-role';
+import { isAuthenticatedAppRoute, useAccountRole } from './use-account-role';
 
 const socialLinks = [
   { name: 'Facebook', href: 'https://www.facebook.com/careersnaphq', icon: 'facebook' },
@@ -18,8 +19,10 @@ const socialLinks = [
 export function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
   const { authState, isLoading } = useAccountRole();
+  const pathname = usePathname();
   const year = new Date().getFullYear();
   const mobileLogoSrc = '/careersnap-pro-logo.png';
+  const role = authState === 'job_seeker' || authState === 'employer' ? authState : null;
 
   const sections = useMemo(() => {
     if (authState === 'job_seeker') {
@@ -51,6 +54,10 @@ export function Footer() {
       { title: 'About', links: [['/about', 'About'], ['/terms', 'Terms'], ['/privacy', 'Privacy'], ['/cookies', 'Cookies']] },
     ] as const;
   }, [authState, isLoading]);
+
+  if (role && pathname && isAuthenticatedAppRoute(pathname, role)) {
+    return null;
+  }
 
   return (
     <footer className={styles.footer}>

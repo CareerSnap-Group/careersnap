@@ -7,6 +7,15 @@ import { isSupabaseConfigured } from '@/lib/supabase/config';
 export type AccountRole = 'job_seeker' | 'employer';
 export type AccountState = 'loading' | 'logged-out' | AccountRole;
 
+const authenticatedPaths: Record<AccountRole, string[]> = {
+  job_seeker: ['/job-seeker', '/applications', '/saved-jobs', '/profile', '/settings', '/notifications', '/jobs', '/companies', '/resources'],
+  employer: ['/employer', '/employers/post-job', '/notifications'],
+};
+
+export function isAuthenticatedAppRoute(pathname: string, role: AccountRole) {
+  return authenticatedPaths[role].some((path) => pathname === path || pathname.startsWith(`${path}/`));
+}
+
 export function useAccountRole() {
   const [authState, setAuthState] = useState<AccountState>('loading');
   const [userId, setUserId] = useState<string | null>(null);
