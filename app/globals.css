@@ -152,6 +152,11 @@ body {
   body:has([data-authenticated-sidebar='true']) {
     padding-left: 248px;
   }
+
+  body:has([data-dashboard-theme='monochrome']) {
+    padding-left: 0;
+    background-color: #f5f5f5;
+  }
 }
 
 a {

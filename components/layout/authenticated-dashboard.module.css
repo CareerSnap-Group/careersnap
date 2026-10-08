@@ -81,12 +81,12 @@
 
 :global([data-dashboard-theme='monochrome']) .dashboard {
   --color-primary-50: #f5f5f5;
-  --color-primary-100: #e5e5e5;
-  --color-primary-200: #e5e5e5;
+  --color-primary-100: #e8e3dc;
+  --color-primary-200: #e2e2e2;
   --color-primary-500: #000000;
   --color-primary-700: #000000;
   --color-primary-800: #0a0a0a;
-  --color-neutral-300: #e5e5e5;
+  --color-neutral-300: #e2e2e2;
   --color-success-50: #f5f5f5;
   --color-success-800: #737373;
   --color-text-primary: #0a0a0a;
@@ -94,13 +94,13 @@
   --color-text-tertiary: #737373;
   --color-background-secondary: #f5f5f5;
   --color-background-tertiary: #f5f5f5;
-  --color-border: #e5e5e5;
-  --color-divider: #e5e5e5;
+  --color-border: #e2e2e2;
+  --color-divider: #e2e2e2;
   min-width: 0;
 }
 
 :global([data-dashboard-theme='monochrome']) .dashboard .overviewCard {
-  border-color: #e5e5e5;
+  border-color: #e2e2e2;
   border-radius: .9rem;
   background: #fff;
   box-shadow: none;
@@ -120,6 +120,10 @@
   background: #000;
 }
 
+:global([data-dashboard-theme='monochrome']) .dashboard .progressTrack {
+  background: #e8e3dc;
+}
+
 :global([data-dashboard-theme='monochrome']) .dashboard .quickIcon {
   background: #fff;
   color: #000;
@@ -133,5 +137,5 @@
 :global([data-dashboard-theme='monochrome']) .dashboard .emptyState {
   border-style: solid;
   border-radius: .9rem;
-  background: #fff;
+  background: #f5f5f5;
 }
