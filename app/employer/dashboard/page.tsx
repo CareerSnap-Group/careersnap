@@ -4,7 +4,7 @@ import { getCurrentCompanyBillingContext } from '@/lib/billing/server';
 import { AuthenticatedAppShell } from '@/components/layout/authenticated-app-shell';
 import { Icon } from '@/components/icons';
 import dashboardStyles from '@/components/layout/authenticated-dashboard.module.css';
-import styles from '../../job-seeker/dashboard/dashboard.module.css';
+import styles from './dashboard.module.css';
 
 type CompanyPreview = { name: string; logo_url: string | null; industry: string | null; location: string | null; description: string | null; website_url: string | null };
 type EmployerApplication = { id: string; applicant_id: string; status: string; created_at: string; jobs: { title: string } | { title: string }[] | null };
@@ -80,24 +80,13 @@ export default async function EmployerDashboard() {
   const applicantInitials = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'C';
 
   return (
-    <AuthenticatedAppShell role="employer" userId={user.id} displayName={companyName} avatarUrl={company?.logo_url || profile.profile_photo_url}>
+    <AuthenticatedAppShell role="employer" userId={user.id} displayName={companyName} greeting={`${greeting()}, ${companyName}`} avatarUrl={company?.logo_url || profile.profile_photo_url}>
       <main className={dashboardStyles.dashboard}>
-        <header className={dashboardStyles.welcome}>
-          <div>
-            <p className={dashboardStyles.eyebrow}>Employer workspace</p>
-            <h1 className={dashboardStyles.greeting}>{greeting()}, {companyName}</h1>
-            <p className={dashboardStyles.welcomeText}>Find talent, manage hiring, and keep your team moving.</p>
-          </div>
-          <span className={dashboardStyles.welcomeAvatar} aria-hidden="true">
-            {company?.logo_url ? <span className={styles.companyLogo} style={{ backgroundImage: `url(${company.logo_url})` }} /> : companyName.slice(0, 1).toUpperCase()}
-          </span>
-        </header>
-
         {dashboardUnavailable ? (
           <div className={dashboardStyles.emptyState} role="alert"><h2 className={dashboardStyles.emptyTitle}>Hiring data is temporarily unavailable</h2><p className={dashboardStyles.emptyText}>We could not load your company jobs and applications. Please try again later.</p></div>
         ) : (
           <>
-            <section className={dashboardStyles.overviewRail} aria-label="Hiring overview">
+            <section className={`${dashboardStyles.overviewRail} ${styles.overviewRail}`} aria-label="Hiring overview">
               <article className={`${dashboardStyles.overviewCard} ${dashboardStyles.overviewCardPrimary}`}>
                 <div><h2 className={dashboardStyles.overviewTitle}>Hiring overview</h2><p className={dashboardStyles.overviewValue}>{jobs}</p><p className={dashboardStyles.overviewDetail}>Open positions</p></div>
                 <div className={dashboardStyles.cardStats}><span>{applications} applications</span><span>{interviews} interviews</span><span>{viewsResult.count ?? 0} job views</span></div>
@@ -123,25 +112,25 @@ export default async function EmployerDashboard() {
               </article>
             </section>
 
-            <nav className={dashboardStyles.quickActions} aria-label="Quick actions">
+            <nav className={`${dashboardStyles.quickActions} ${styles.quickActions}`} aria-label="Quick actions">
               <Link href="/employers/post-job" className={dashboardStyles.quickAction}><span className={dashboardStyles.quickIcon}><Icon name="briefcase" size={22} /></span><span>Post Job</span></Link>
               <Link href="/employer/cvs" className={dashboardStyles.quickAction}><span className={dashboardStyles.quickIcon}><Icon name="search" size={22} /></span><span>Candidates</span></Link>
               <Link href="/employer/applications" className={dashboardStyles.quickAction}><span className={dashboardStyles.quickIcon}><Icon name="calendar" size={22} /></span><span>Applications</span></Link>
             </nav>
 
-            <section className={dashboardStyles.planStrip} aria-label="Posting plan">
+            <section className={`${dashboardStyles.planStrip} ${styles.planStrip}`} aria-label="Posting plan">
               <div className={dashboardStyles.planTop}><h2 className={dashboardStyles.planTitle}>{plan?.code === 'introductory-free' ? 'Free job postings' : 'Current package'}</h2><Link href="/employer/subscription" className={dashboardStyles.planLink}>View plan</Link></div>
               <p className={dashboardStyles.planDetail}>
                 {plan?.code === 'introductory-free'
                   ? `${freeRemaining} of 4 introductory postings remain.`
                   : plan
-                    ? `${remainingPostings} postings remain on ${plan.name}.`
+                    ? `${plan.name} · ${plan.currency} ${Number(plan.price).toFixed(2)}. ${remainingPostings} postings remain.`
                     : 'No active package is currently available.'}
                 {activeJobsLimit !== null ? ` ${remainingJobs} active job slots remain.` : ''}
               </p>
             </section>
 
-            <section className={dashboardStyles.section} aria-labelledby="recent-hiring-activity-title">
+            <section className={`${dashboardStyles.section} ${styles.recentActivity}`} aria-labelledby="recent-hiring-activity-title">
               <div className={dashboardStyles.sectionHeader}>
                 <h2 id="recent-hiring-activity-title" className={dashboardStyles.sectionTitle}>Recent hiring activity</h2>
                 <Link href="/employer/applications" className={dashboardStyles.sectionLink}>View all</Link>

@@ -29,12 +29,14 @@ export function AuthenticatedAppShell({
   role,
   userId,
   displayName,
+  greeting,
   avatarUrl,
   children,
 }: {
   role: AppRole;
   userId: string;
   displayName: string;
+  greeting: string;
   avatarUrl?: string | null;
   children: React.ReactNode;
 }) {
@@ -92,10 +94,10 @@ export function AuthenticatedAppShell({
 
       <div className={styles.mainColumn}>
         <header className={styles.topbar}>
-          <Link href={role === 'job_seeker' ? '/job-seeker/dashboard' : '/employer/dashboard'} className={styles.mobileBrand} aria-label="CareerSnap home">
-            <Image src="/careersnap-pro-logo.png" alt="CareerSnap" width={217} height={48} priority />
-          </Link>
-          <span className={styles.workspaceLabel}>{role === 'job_seeker' ? 'Career workspace' : 'Hiring workspace'}</span>
+          <div className={styles.greetingHeader}>
+            <p className={styles.workspaceLabel}>{role === 'job_seeker' ? 'Career workspace' : 'Hiring workspace'}</p>
+            <h1 className={styles.greeting}>{greeting}</h1>
+          </div>
           <div className={styles.topActions}>
             <Link href={searchHref} className={styles.iconLink} aria-label={role === 'job_seeker' ? 'Search jobs' : 'Find candidates'} title={role === 'job_seeker' ? 'Search jobs' : 'Find candidates'}>
               <Icon name="search" size={20} />

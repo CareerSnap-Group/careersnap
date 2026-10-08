@@ -1,10 +1,11 @@
 .shell { min-height: 100vh; color: var(--color-text-primary); background: var(--color-background-secondary); }
 .sidebar { display: none; }
 .mainColumn { min-width: 0; min-height: 100vh; }
-.topbar { position: sticky; top: 0; z-index: 30; display: flex; min-height: 64px; align-items: center; justify-content: space-between; gap: 1rem; padding: 0 1rem; border-bottom: 1px solid var(--color-border); background: rgb(255 255 255 / 96%); backdrop-filter: blur(12px); }
-.mobileBrand { display: inline-flex; width: 112px; align-items: center; }
-.mobileBrand img, .brand img { display: block; width: 100%; height: auto; }
-.workspaceLabel { display: none; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.topbar { position: sticky; top: 0; z-index: 30; display: flex; min-height: 76px; align-items: center; justify-content: space-between; gap: .6rem; padding: .65rem 1rem; border-bottom: 1px solid var(--color-border); background: rgb(255 255 255 / 97%); backdrop-filter: blur(12px); }
+.brand img { display: block; width: 100%; height: auto; }
+.greetingHeader { display: grid; min-width: 0; flex: 1; gap: .15rem; }
+.workspaceLabel { margin: 0; color: var(--color-primary-700); font-size: 10px; font-weight: var(--font-weight-medium); letter-spacing: .04em; text-transform: uppercase; }
+.greeting { overflow: hidden; margin: 0; color: var(--color-text-primary); font-size: 1.2rem; font-weight: var(--font-weight-medium); line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
 .topActions { display: flex; align-items: center; gap: .35rem; }
 .iconLink, .topAvatar { display: inline-flex; width: 40px; height: 40px; flex: 0 0 40px; align-items: center; justify-content: center; color: var(--color-text-secondary); border-radius: 50%; text-decoration: none; }
 .iconLink:hover, .topAvatar:hover { color: var(--color-primary-700); background: var(--color-primary-50); }
@@ -13,7 +14,7 @@
 .avatarImage { display: block; width: 100%; height: 100%; background-position: center; background-size: cover; background-repeat: no-repeat; }
 .topAvatar { font-size: var(--font-size-sm); }
 .mobileSignOut { padding: .45rem .6rem; color: var(--color-text-secondary); border: 0; background: transparent; font: inherit; font-size: var(--font-size-xs); }
-.content { width: min(1440px, 100%); margin: 0 auto; padding: 1.25rem 1rem calc(6.5rem + env(safe-area-inset-bottom)); }
+.content { width: min(1440px, 100%); margin: 0 auto; padding: 1rem 1rem calc(6.5rem + env(safe-area-inset-bottom)); }
 .bottomNav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); min-height: calc(64px + env(safe-area-inset-bottom)); padding: .45rem .45rem calc(.45rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--color-border); background: rgb(255 255 255 / 97%); backdrop-filter: blur(12px); }
 .bottomLink { display: flex; min-width: 0; min-height: 52px; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; color: var(--color-text-tertiary); font-size: 10px; text-decoration: none; }
 .bottomLink :global(svg) { margin: 0; }
@@ -23,7 +24,7 @@
 
 @media (min-width: 640px) {
   .topbar { min-height: 72px; padding: 0 2rem; }
-  .mobileBrand { width: 136px; }
+  .greeting { font-size: 1.45rem; }
   .mobileSignOut { padding: .55rem .75rem; font-size: var(--font-size-sm); }
   .content { padding: 2rem 2rem calc(7rem + env(safe-area-inset-bottom)); }
 }
@@ -47,16 +48,16 @@
   .sidebarSignOut:hover { color: var(--color-primary-700); }
   .mainColumn { min-height: 100vh; }
   .topbar { min-height: 76px; }
-  .mobileBrand { display: none; }
-  .workspaceLabel { display: block; }
+  .topbar { min-height: 88px; padding-right: 2rem; padding-left: 2rem; }
+  .greeting { font-size: 1.65rem; }
   .mobileSignOut { display: none; }
   .content { padding: 2.25rem clamp(2rem, 4vw, 4.5rem) 4rem; }
   .bottomNav { display: none; }
 }
 
 @media (max-width: 380px) {
-  .topbar { gap: .5rem; padding-right: .65rem; padding-left: .65rem; }
-  .mobileBrand { width: 88px; }
+  .topbar { gap: .4rem; padding-right: .65rem; padding-left: .65rem; }
+  .greeting { font-size: 1.05rem; }
   .topActions { gap: .15rem; }
   .mobileSignOut { padding-right: .3rem; padding-left: .3rem; font-size: 10px; }
 }

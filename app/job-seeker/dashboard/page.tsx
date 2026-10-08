@@ -49,24 +49,13 @@ export default async function JobSeekerDashboard() {
   const applications = applicationStatsResult.data || [];
   const recentApplications = (recentApplicationsResult.data || []) as ApplicationPreview[];
   const publishedJobs = (publishedJobsResult.data || []) as JobPreview[];
-  const applicationCount = applicationStatsResult.count ?? applications.length;
+  const applicationCount = applicationStatsResult.error ? null : applicationStatsResult.count ?? applications.length;
   const interviews = applications.filter((application) => application.status === 'interview').length;
   const offers = applications.filter((application) => ['offer', 'accepted', 'hired'].includes(application.status)).length;
 
   return (
-    <AuthenticatedAppShell role="job_seeker" userId={user.id} displayName={profile.full_name || displayName} avatarUrl={profile.profile_photo_url}>
+    <AuthenticatedAppShell role="job_seeker" userId={user.id} displayName={profile.full_name || displayName} greeting={`${greeting()}, ${displayName}`} avatarUrl={profile.profile_photo_url}>
       <main className={dashboardStyles.dashboard}>
-        <header className={dashboardStyles.welcome}>
-          <div>
-            <p className={dashboardStyles.eyebrow}>Job Seeker</p>
-            <h1 className={dashboardStyles.greeting}>{greeting()}, {displayName}</h1>
-            <p className={dashboardStyles.welcomeText}>Find opportunities, build your career, and keep your search moving.</p>
-          </div>
-          <span className={dashboardStyles.welcomeAvatar} aria-hidden="true">
-            {profile.profile_photo_url ? <span className={styles.avatarImage} style={{ backgroundImage: `url(${profile.profile_photo_url})` }} /> : displayName.slice(0, 1).toUpperCase()}
-          </span>
-        </header>
-
         <section className={dashboardStyles.overviewRail} aria-label="Career overview">
           <article className={`${dashboardStyles.overviewCard} ${dashboardStyles.overviewCardPrimary}`}>
             <div>
@@ -83,9 +72,11 @@ export default async function JobSeekerDashboard() {
           <article className={dashboardStyles.overviewCard}>
             <div>
               <h2 className={dashboardStyles.overviewTitle}>Applications</h2>
-              <p className={dashboardStyles.overviewValue}>{applicationCount}</p>
+              <p className={dashboardStyles.overviewValue}>{applicationCount ?? '—'}</p>
               <div className={dashboardStyles.cardStats}>
-                <span>{interviews} interviews</span><span>{offers} offers</span>
+                <span>{applicationStatsResult.error ? 'Applications unavailable' : `${interviews} interviews`}</span>
+                <span>{applicationStatsResult.error ? 'Offers unavailable' : `${offers} offers`}</span>
+                <span>{savedJobsResult.error ? 'Saved jobs unavailable' : `${savedJobsResult.count ?? 0} saved jobs`}</span>
               </div>
             </div>
             <Link href="/applications" className={dashboardStyles.overviewLink}>View applications <Icon name="chevron-right" size={15} /></Link>
@@ -118,7 +109,7 @@ export default async function JobSeekerDashboard() {
           <Link href="/saved-jobs" className={dashboardStyles.quickAction}><span className={dashboardStyles.quickIcon}><Icon name="heart" size={22} /></span><span>Saved Jobs</span></Link>
         </nav>
 
-        <section className={dashboardStyles.section} aria-labelledby="recommended-jobs-title">
+        <section className={`${dashboardStyles.section} ${styles.latestOpportunities}`} aria-labelledby="recommended-jobs-title">
           <div className={dashboardStyles.sectionHeader}>
             <h2 id="recommended-jobs-title" className={dashboardStyles.sectionTitle}>Latest opportunities</h2>
             <Link href="/jobs" className={dashboardStyles.sectionLink}>View all</Link>
@@ -148,7 +139,7 @@ export default async function JobSeekerDashboard() {
           )}
         </section>
 
-        <section className={dashboardStyles.section} aria-labelledby="application-activity-title">
+        <section className={`${dashboardStyles.section} ${styles.applicationActivity}`} aria-labelledby="application-activity-title">
           <div className={dashboardStyles.sectionHeader}>
             <h2 id="application-activity-title" className={dashboardStyles.sectionTitle}>Recent applications</h2>
             <Link href="/applications" className={dashboardStyles.sectionLink}>View all</Link>
