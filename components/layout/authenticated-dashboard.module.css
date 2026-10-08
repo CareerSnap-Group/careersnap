@@ -78,3 +78,60 @@
 @media (prefers-reduced-motion: reduce) {
   .quickIcon { transition: none; }
 }
+
+:global([data-dashboard-theme='monochrome']) .dashboard {
+  --color-primary-50: #f5f5f5;
+  --color-primary-100: #e5e5e5;
+  --color-primary-200: #e5e5e5;
+  --color-primary-500: #000000;
+  --color-primary-700: #000000;
+  --color-primary-800: #0a0a0a;
+  --color-neutral-300: #e5e5e5;
+  --color-success-50: #f5f5f5;
+  --color-success-800: #737373;
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #737373;
+  --color-text-tertiary: #737373;
+  --color-background-secondary: #f5f5f5;
+  --color-background-tertiary: #f5f5f5;
+  --color-border: #e5e5e5;
+  --color-divider: #e5e5e5;
+  min-width: 0;
+}
+
+:global([data-dashboard-theme='monochrome']) .dashboard .overviewCard {
+  border-color: #e5e5e5;
+  border-radius: .9rem;
+  background: #fff;
+  box-shadow: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+:global([data-dashboard-theme='monochrome']) .dashboard .overviewCard:hover {
+  border-color: #a3a3a3;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 4%);
+}
+
+:global([data-dashboard-theme='monochrome']) .dashboard .overviewValue {
+  font-weight: var(--font-weight-regular);
+}
+
+:global([data-dashboard-theme='monochrome']) .dashboard .progressFill {
+  background: #000;
+}
+
+:global([data-dashboard-theme='monochrome']) .dashboard .quickIcon {
+  background: #fff;
+  color: #000;
+  box-shadow: none;
+}
+
+:global([data-dashboard-theme='monochrome']) .dashboard .quickAction:hover .quickIcon {
+  background: #f5f5f5;
+}
+
+:global([data-dashboard-theme='monochrome']) .dashboard .emptyState {
+  border-style: solid;
+  border-radius: .9rem;
+  background: #fff;
+}

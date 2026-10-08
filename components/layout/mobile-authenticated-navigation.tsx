@@ -33,7 +33,7 @@ export function MobileAuthenticatedNavigation({ role }: { role: AccountRole }) {
       {navigation[role].map((item) => {
         const active = pathname === item.href || (item.href !== '/job-seeker/dashboard' && item.href !== '/employer/dashboard' && pathname.startsWith(`${item.href}/`));
         return (
-          <Link key={item.href} href={item.href} className={`${styles.item} ${active ? styles.active : ''}`} aria-current={active ? 'page' : undefined}>
+          <Link key={item.href} href={item.href} className={`${styles.item} ${active ? styles.active : ''}`} data-nav-active={active ? 'true' : undefined} aria-current={active ? 'page' : undefined}>
             <Icon name={item.icon} size={20} strokeWidth={1.8} />
             <span>{item.label}</span>
           </Link>
@@ -79,22 +79,22 @@ export function AuthenticatedDesktopSidebar({ role, displayName, avatarUrl }: { 
 
   return (
     <aside className={styles.sidebar} aria-label={`${isSeeker ? 'Job Seeker' : 'Employer'} navigation`} data-authenticated-sidebar="true">
-      <Link href={isSeeker ? '/job-seeker/dashboard' : '/employer/dashboard'} className={styles.brand} aria-label="CareerSnap home">
+      <Link href={isSeeker ? '/job-seeker/dashboard' : '/employer/dashboard'} className={styles.brand} data-sidebar-brand="true" aria-label="CareerSnap home">
         <Image src="/careersnap-pro-logo.png" alt="CareerSnap" width={217} height={48} priority />
       </Link>
-      <Link href={profileHref} className={styles.profile}>
-        <span className={styles.avatar} style={avatarUrl ? { backgroundImage: `url(${avatarUrl})` } : undefined}>{avatarUrl ? null : initials}</span>
-        <span className={styles.identity}><strong>{displayName}</strong><small>{isSeeker ? 'Job Seeker' : 'Employer'}</small></span>
+      <Link href={profileHref} className={styles.profile} data-sidebar-profile="true">
+        <span className={styles.avatar} data-sidebar-avatar="true" style={avatarUrl ? { backgroundImage: `url(${avatarUrl})` } : undefined}>{avatarUrl ? null : initials}</span>
+        <span className={styles.identity}><strong data-sidebar-name="true">{displayName}</strong><small data-sidebar-role="true">{isSeeker ? 'Job Seeker' : 'Employer'}</small></span>
       </Link>
       <nav className={styles.primary}>
         {sidebarNavigation.map((item) => {
           const active = pathname === item.href || (item.href !== '/job-seeker/dashboard' && item.href !== '/employer/dashboard' && pathname.startsWith(`${item.href}/`));
-          return <Link key={item.href} href={item.href} className={`${styles.sidebarLink} ${active ? styles.active : ''}`} aria-current={active ? 'page' : undefined}><Icon name={item.icon} size={20} strokeWidth={1.8} /><span>{item.label}</span></Link>;
+          return <Link key={item.href} href={item.href} className={`${styles.sidebarLink} ${active ? styles.active : ''}`} data-nav-active={active ? 'true' : undefined} aria-current={active ? 'page' : undefined}><Icon name={item.icon} size={20} strokeWidth={1.8} /><span>{item.label}</span></Link>;
         })}
       </nav>
       <nav className={styles.secondary} aria-label="More options">
-        {extraItems.map((item) => <Link key={item.href} href={item.href} className={linkClass(item.href)}><Icon name={item.icon} size={20} strokeWidth={1.8} /><span>{item.label}</span></Link>)}
-        <Link href="/notifications" className={linkClass('/notifications')}><Icon name="bell" size={20} strokeWidth={1.8} /><span>Notifications</span></Link>
+        {extraItems.map((item) => <Link key={item.href} href={item.href} className={linkClass(item.href)} data-nav-active={pathname === item.href || pathname.startsWith(`${item.href}/`) ? 'true' : undefined}><Icon name={item.icon} size={20} strokeWidth={1.8} /><span>{item.label}</span></Link>)}
+        <Link href="/notifications" className={linkClass('/notifications')} data-nav-active={pathname.startsWith('/notifications') ? 'true' : undefined}><Icon name="bell" size={20} strokeWidth={1.8} /><span>Notifications</span></Link>
       </nav>
       <button type="button" className={styles.signOut} onClick={signOut}><Icon name="log-out" size={20} strokeWidth={1.8} /><span>Sign out</span></button>
     </aside>

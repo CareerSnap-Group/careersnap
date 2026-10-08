@@ -80,7 +80,7 @@ export default async function EmployerDashboard() {
   const applicantInitials = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'C';
 
   return (
-    <AuthenticatedAppShell role="employer" displayName={companyName} greeting={`${greeting()}, ${companyName}`} avatarUrl={profile.profile_photo_url}>
+    <AuthenticatedAppShell role="employer" displayName={companyName} greeting={`${greeting()}, ${companyName}`} avatarUrl={company?.logo_url || profile.profile_photo_url} monochrome>
       <main className={dashboardStyles.dashboard}>
         {dashboardUnavailable ? (
           <div className={dashboardStyles.emptyState} role="alert"><h2 className={dashboardStyles.emptyTitle}>Hiring data is temporarily unavailable</h2><p className={dashboardStyles.emptyText}>We could not load your company jobs and applications. Please try again later.</p></div>
