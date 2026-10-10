@@ -33,7 +33,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
 
   return (
     <>
-    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''}`}>
+    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''}`} data-public-site-header="true">
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="CareerSnap home">

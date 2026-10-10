@@ -13,6 +13,17 @@
   flex: 1;
 }
 
+:global([data-authenticated-app-shell='true']) .page {
+  min-height: 0;
+  background: transparent;
+}
+
+:global([data-authenticated-app-shell='true']) .container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
 .searchBar {
   background-color: var(--color-background-primary);
   padding: var(--spacing-lg);

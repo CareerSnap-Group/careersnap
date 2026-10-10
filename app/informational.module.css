@@ -9,6 +9,9 @@
   padding: var(--spacing-3xl) 0 var(--spacing-4xl);
 }
 
+:global([data-authenticated-app-shell='true']) .page { min-height: 0; background: transparent; }
+:global([data-authenticated-app-shell='true']) .main { width: 100%; max-width: none; margin: 0; padding: 0; }
+
 .hero {
   max-width: 760px;
   margin-bottom: var(--spacing-3xl);

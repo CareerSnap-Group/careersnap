@@ -13,6 +13,18 @@
   flex: 1;
 }
 
+:global([data-authenticated-app-shell='true']) .page {
+  display: block;
+  min-height: 0;
+  background: transparent;
+}
+
+:global([data-authenticated-app-shell='true']) .container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
 .header {
   display: flex;
   justify-content: space-between;

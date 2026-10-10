@@ -142,23 +142,6 @@ body {
   background-color: var(--color-background-secondary);
 }
 
-@media (max-width: 1023px) {
-  body:has([data-authenticated-mobile-nav='true']) {
-    padding-bottom: calc(64px + env(safe-area-inset-bottom));
-  }
-}
-
-@media (min-width: 1024px) {
-  body:has([data-authenticated-sidebar='true']) {
-    padding-left: 248px;
-  }
-
-  body:has([data-dashboard-theme='monochrome']) {
-    padding-left: 0;
-    background-color: #f5f5f5;
-  }
-}
-
 a {
   color: var(--color-text-primary);
   text-decoration: none;

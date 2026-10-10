@@ -13,6 +13,17 @@
   flex: 1;
 }
 
+:global([data-authenticated-app-shell='true']) .page {
+  min-height: 0;
+  background: transparent;
+}
+
+:global([data-authenticated-app-shell='true']) .container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
 .header {
   text-align: center;
   margin-bottom: var(--spacing-2xl);

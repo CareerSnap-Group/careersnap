@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { requireRole } from '@/lib/auth/server';
 import { getJobSeekerProfileData } from '@/lib/profile-data';
-import { AuthenticatedAppShell } from '@/components/layout/authenticated-app-shell';
 import { Icon } from '@/components/icons';
 import dashboardStyles from '@/components/layout/authenticated-dashboard.module.css';
 import styles from './dashboard.module.css';
@@ -12,11 +11,6 @@ type ApplicationPreview = { id: string; status: string; created_at: string; jobs
 
 function firstCompany(value: CompanyPreview) {
   return Array.isArray(value) ? value[0] : value;
-}
-
-function greeting() {
-  const hour = new Date().getHours();
-  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 }
 
 function shortDate(value: string) {
@@ -44,8 +38,6 @@ export default async function JobSeekerDashboard() {
       .limit(4),
   ]);
 
-  const profile = profileData.profile;
-  const displayName = profile.first_name || profile.full_name?.split(/\s+/)[0] || user.email?.split('@')[0] || 'there';
   const applications = applicationStatsResult.data || [];
   const recentApplications = (recentApplicationsResult.data || []) as ApplicationPreview[];
   const publishedJobs = (publishedJobsResult.data || []) as JobPreview[];
@@ -54,8 +46,7 @@ export default async function JobSeekerDashboard() {
   const offers = applications.filter((application) => ['offer', 'accepted', 'hired'].includes(application.status)).length;
 
   return (
-    <AuthenticatedAppShell role="job_seeker" displayName={profile.full_name || displayName} greeting={`${greeting()}, ${displayName}`} avatarUrl={profile.profile_photo_url}>
-      <main className={dashboardStyles.dashboard}>
+    <main className={dashboardStyles.dashboard}>
         <section className={dashboardStyles.overviewRail} aria-label="Career overview">
           <article className={`${dashboardStyles.overviewCard} ${dashboardStyles.overviewCardPrimary}`}>
             <div>
@@ -165,7 +156,6 @@ export default async function JobSeekerDashboard() {
           )}
         </section>
         {Boolean(savedJobsResult.error || applicationStatsResult.error) && <p className={styles.dataNotice} role="status">Some career overview information could not be loaded.</p>}
-      </main>
-    </AuthenticatedAppShell>
+    </main>
   );
 }

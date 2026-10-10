@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { requireRole } from '@/lib/auth/server';
 import { getCurrentCompanyBillingContext } from '@/lib/billing/server';
-import { AuthenticatedAppShell } from '@/components/layout/authenticated-app-shell';
 import { Icon } from '@/components/icons';
 import dashboardStyles from '@/components/layout/authenticated-dashboard.module.css';
 import styles from './dashboard.module.css';
@@ -9,17 +8,12 @@ import styles from './dashboard.module.css';
 type CompanyPreview = { name: string; logo_url: string | null; industry: string | null; location: string | null; description: string | null; website_url: string | null };
 type EmployerApplication = { id: string; applicant_id: string; status: string; created_at: string; jobs: { title: string } | { title: string }[] | null };
 
-function greeting() {
-  const hour = new Date().getHours();
-  return hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-}
-
 function shortDate(value: string) {
   return new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' }).format(new Date(value));
 }
 
 export default async function EmployerDashboard() {
-  const { supabase, user, profile } = await requireRole('employer');
+  const { supabase, user } = await requireRole('employer');
   const relationClient = supabase as any;
   const [{ data: rawMembership }, companyContext] = await Promise.all([
     relationClient.from('employer_users')
@@ -64,7 +58,6 @@ export default async function EmployerDashboard() {
   const activeJobsLimit = activeEntitlement?.active_job_limit ?? null;
   const remainingJobs = activeJobsLimit === null ? null : Math.max(activeJobsLimit - managedJobs, 0);
   const remainingPostings = activeEntitlement ? Math.max(activeEntitlement.granted_quantity - activeEntitlement.consumed_quantity, 0) : 0;
-  const companyName = company?.name || companyContext.companyName || 'Your company';
   const companyProfileFields = company ? [company.name, company.description, company.industry, company.location, company.website_url, company.logo_url] : [];
   const companyProfileCompletion = companyProfileFields.length ? Math.round(companyProfileFields.filter(Boolean).length / companyProfileFields.length * 100) : 0;
   const recentApplications = applicationRows.slice(0, 5);
@@ -80,8 +73,7 @@ export default async function EmployerDashboard() {
   const applicantInitials = (name: string) => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'C';
 
   return (
-    <AuthenticatedAppShell role="employer" displayName={companyName} greeting={`${greeting()}, ${companyName}`} avatarUrl={company?.logo_url || profile.profile_photo_url} monochrome>
-      <main className={dashboardStyles.dashboard}>
+    <main className={dashboardStyles.dashboard}>
         {dashboardUnavailable ? (
           <div className={dashboardStyles.emptyState} role="alert"><h2 className={dashboardStyles.emptyTitle}>Hiring data is temporarily unavailable</h2><p className={dashboardStyles.emptyText}>We could not load your company jobs and applications. Please try again later.</p></div>
         ) : (
@@ -155,7 +147,6 @@ export default async function EmployerDashboard() {
             </section>
           </>
         )}
-      </main>
-    </AuthenticatedAppShell>
+    </main>
   );
 }

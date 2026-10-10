@@ -60,7 +60,7 @@ export function Footer() {
   }
 
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} data-public-site-footer="true">
       <div className={styles.container}>
         <Link href="/" className={styles.brand} aria-label="CareerSnap home">
           <Image src={mobileLogoSrc} alt="CareerSnap" width={217} height={48} className={styles.brandImage} />

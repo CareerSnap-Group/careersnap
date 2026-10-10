@@ -1,5 +1,7 @@
 .page { background: var(--color-background-secondary); min-height: 100vh; }
 .container { margin: 0 auto; max-width: 1000px; padding: var(--spacing-3xl) var(--spacing-md); }
+:global([data-authenticated-app-shell='true']) .page { min-height: 0; background: transparent; }
+:global([data-authenticated-app-shell='true']) .container { width: 100%; max-width: none; margin: 0; padding: 0; }
 .back { color: var(--color-primary-700); display: inline-block; font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); margin-bottom: var(--spacing-lg); }
 .profile { background: var(--color-background-primary); padding: var(--spacing-xl); }
 .profileHeader { align-items: flex-start; display: flex; gap: var(--spacing-lg); }

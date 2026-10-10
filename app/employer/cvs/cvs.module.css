@@ -1,5 +1,9 @@
 .page { background: var(--color-background-secondary); min-height: 100vh; }
 .container, .detailContainer { max-width: 1280px; margin: 0 auto; padding: var(--spacing-lg) var(--spacing-md) var(--spacing-3xl); }
+:global([data-authenticated-app-shell='true']) .page,
+:global([data-authenticated-app-shell='true']) .detailPage { min-height: 0; background: transparent; }
+:global([data-authenticated-app-shell='true']) .container,
+:global([data-authenticated-app-shell='true']) .detailContainer { max-width: none; margin: 0; padding: 0; }
 .header { background: var(--color-background-primary); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); margin-bottom: var(--spacing-lg); padding: var(--spacing-lg); }
 .eyebrow { color: var(--color-primary-600); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); letter-spacing: .05em; margin: 0 0 var(--spacing-xs); text-transform: uppercase; }
 .title { color: var(--color-text-primary); font-size: var(--font-size-3xl); margin: 0 0 var(--spacing-xs); }
