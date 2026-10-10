@@ -1,5 +1,3 @@
-import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header';
 import { requireRole } from '@/lib/auth/server';
 import { SettingsForm } from './settings-form';
 import styles from './settings.module.css';
@@ -17,7 +15,6 @@ export default async function SettingsPage() {
 
   return (
     <div className={styles.page}>
-      <Header />
       <main className={styles.main}>
         <header className={styles.header}>
           <p className={styles.eyebrow}>Job Seeker settings</p>
@@ -29,7 +26,6 @@ export default async function SettingsPage() {
           <DeleteAccount />
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

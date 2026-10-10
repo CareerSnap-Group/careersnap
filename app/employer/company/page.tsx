@@ -1,6 +1,4 @@
 import { getEmployerContext } from '@/lib/auth/server';
-import { EmployerHeader as Header } from '@/components/layout/employer-header';
-import { Footer } from '@/components/layout/footer';
 import { Card } from '@/components/ui/card';
 import { DeleteAccount } from '@/components/account/delete-account';
 import { CompanyForm } from './company-form';
@@ -49,7 +47,7 @@ export default async function EmployerCompanyPage() {
     youtube_url: company.youtube_url || '',
   } : emptyCompanyProfile;
 
-  return <><Header /><main className={styles.page}><div className={styles.container}><header className={styles.header}><h1 className={styles.title}>Company Profile</h1><p className={styles.subtitle}>Manage the public information candidates see about your company.</p></header><Card className={styles.legendCard}>{mode === 'read-only' ? <><h2 className={styles.legendTitle}>Company Profile</h2><p>Only company owners and admins can edit this profile.</p></> : <><h2 className={styles.legendTitle}>{mode === 'create' ? 'Company setup' : mode === 'claim' ? 'Claim company' : 'Company profile'}</h2>{mode === 'create' && <p>Create your company profile before posting a job.</p>}{mode === 'claim' && <p>This company was created by your account. Save to claim it and continue setup.</p>}<CompanyForm initial={initial} mode={mode} claimCompanyId={claimCompanyId} /></>}</Card><DeleteAccount /></div></main><Footer /></>;
+  return <main className={styles.page}><div className={styles.container}><header className={styles.header}><h1 className={styles.title}>Company Profile</h1><p className={styles.subtitle}>Manage the public information candidates see about your company.</p></header><Card className={styles.legendCard}>{mode === 'read-only' ? <><h2 className={styles.legendTitle}>Company Profile</h2><p>Only company owners and admins can edit this profile.</p></> : <><h2 className={styles.legendTitle}>{mode === 'create' ? 'Company setup' : mode === 'claim' ? 'Claim company' : 'Company profile'}</h2>{mode === 'create' && <p>Create your company profile before posting a job.</p>}{mode === 'claim' && <p>This company was created by your account. Save to claim it and continue setup.</p>}<CompanyForm initial={initial} mode={mode} claimCompanyId={claimCompanyId} /></>}</Card><DeleteAccount /></div></main>;
 }
 
 type CompanyProfile = {

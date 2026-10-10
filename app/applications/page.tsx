@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { createClient } from '@/lib/supabase/browser';
@@ -52,8 +50,6 @@ export default function ApplicationsPage() {
 
   return (
     <div className={styles.page}>
-      <Header />
-
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Application Tracker</h1>
@@ -172,7 +168,6 @@ export default function ApplicationsPage() {
         )}
       </div>
 
-      <Footer />
     </div>
   );
 }

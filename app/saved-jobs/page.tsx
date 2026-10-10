@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import type { Job } from '@/lib/types';
 import styles from './saved-jobs.module.css';
@@ -38,8 +36,6 @@ export default function SavedJobsPage() {
 
   return (
     <div className={styles.page}>
-      <Header />
-
       <div className={styles.container}>
         <div className={styles.header}>
           <div>
@@ -72,7 +68,6 @@ export default function SavedJobsPage() {
         )}
       </div>
 
-      <Footer />
     </div>
   );
 }

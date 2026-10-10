@@ -1,6 +1,5 @@
 import { requireRole } from '@/lib/auth/server';
 import { getCurrentCompanyBillingContext } from '@/lib/billing/server';
-import { EmployerHeader as Header } from '@/components/layout/employer-header';
 import { Card } from '@/components/ui/card';
 import styles from '../../applications/applications.module.css';
 
@@ -18,5 +17,5 @@ export default async function EmployerSubscriptionPage() {
   const activeLimit = activeEntitlement?.active_job_limit ?? null;
   const expiryDate = activeEntitlement?.expires_at ? new Date(activeEntitlement.expires_at).toLocaleDateString() : 'No expiry';
 
-  return <><Header /><main className={styles.page}><div className={styles.container}><header className={styles.header}><h1 className={styles.title}>Subscription</h1><p className={styles.subtitle}>Manage your employer package and recruitment access.</p></header><Card className={styles.legendCard}><h2 className={styles.legendTitle}>{plan?.name || 'No package active'}</h2><p>Company: {companyName}</p><p>Status: {packageStatus}</p><p>Price: {plan ? `${plan.currency} ${Number(plan.price).toFixed(2)}` : 'No package active'}</p><p>Remaining postings: {activeEntitlement ? `${remainingAllowance}` : '0'}</p><p>Active job limit: {activeLimit === null ? 'No active-job cap configured' : `${activeLimit}`}</p><p>Expiry: {expiryDate}</p><p>Plan access is calculated from the company-owned billing entitlement model.</p></Card></div></main></>;
+  return <main className={styles.page}><div className={styles.container}><header className={styles.header}><h1 className={styles.title}>Subscription</h1><p className={styles.subtitle}>Manage your employer package and recruitment access.</p></header><Card className={styles.legendCard}><h2 className={styles.legendTitle}>{plan?.name || 'No package active'}</h2><p>Company: {companyName}</p><p>Status: {packageStatus}</p><p>Price: {plan ? `${plan.currency} ${Number(plan.price).toFixed(2)}` : 'No package active'}</p><p>Remaining postings: {activeEntitlement ? `${remainingAllowance}` : '0'}</p><p>Active job limit: {activeLimit === null ? 'No active-job cap configured' : `${activeLimit}`}</p><p>Expiry: {expiryDate}</p><p>Plan access is calculated from the company-owned billing entitlement model.</p></Card></div></main>;
 }

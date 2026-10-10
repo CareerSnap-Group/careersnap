@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -16,7 +14,6 @@ export default async function ProfilePage() {
 
   return (
     <div className={styles.page}>
-      <Header />
       <div className={styles.container}>
         <div className={styles.profileHeader}>
           <div className={styles.profileInfo}>
@@ -135,7 +132,6 @@ export default async function ProfilePage() {
           </aside>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

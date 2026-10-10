@@ -1,9 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import type { Database } from '@/lib/supabase/database.types';
-import { Header } from '@/components/layout/header';
-import { EmployerHeader } from '@/components/layout/employer-header';
-import { Footer } from '@/components/layout/footer';
 import { NotificationList } from './notification-list';
 import styles from './notifications.module.css';
 
@@ -23,7 +20,6 @@ export default async function NotificationsPage() {
   const notifications = (data || []) as Database['public']['Tables']['notifications']['Row'][];
   return (
     <div className={styles.page}>
-      {profile?.user_type === 'employer' ? <EmployerHeader /> : <Header />}
       <main className={styles.main}>
         <header className={styles.header}>
           <h1 className={styles.title}>Notifications</h1>
@@ -31,7 +27,6 @@ export default async function NotificationsPage() {
         </header>
         <NotificationList notifications={notifications} unavailable={Boolean(error)} />
       </main>
-      <Footer />
     </div>
   );
 }

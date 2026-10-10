@@ -1,5 +1,3 @@
-import { Footer } from '@/components/layout/footer';
-import { Header } from '@/components/layout/header';
 import styles from '../informational.module.css';
 
 export const metadata = {
@@ -19,7 +17,6 @@ const resources = [
 export default function ResourcesPage() {
   return (
     <div className={styles.page}>
-      <Header />
       <main className={styles.main}>
         <header className={styles.hero}>
           <p className={styles.eyebrow}>Career resources</p>
@@ -35,7 +32,6 @@ export default function ResourcesPage() {
           ))}
         </section>
       </main>
-      <Footer />
     </div>
   );
 }
