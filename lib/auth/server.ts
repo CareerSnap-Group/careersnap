@@ -26,12 +26,13 @@ export async function requireRole(role: AccountRole) {
 
 export async function getEmployerContext() {
   const context = await requireRole('employer');
-  const { data: membership } = await context.supabase
+  const { data: membership, error } = await context.supabase
     .from('employer_users')
     .select('company_id, role, companies(*)')
     .eq('user_id', context.user.id)
     .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();
+  if (error) throw error;
   return { ...context, membership };
 }

@@ -1,0 +1,241 @@
+.page {
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eyebrow {
+  margin: 0 0 .35rem;
+  color: var(--color-primary-700);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: var(--font-weight-semibold);
+}
+
+.subtitle {
+  margin: .45rem 0 0;
+  color: var(--color-text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.planCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.35rem !important;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-background-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.currentPlan {
+  border-color: var(--color-primary-300);
+  box-shadow: 0 0 0 1px var(--color-primary-200), var(--shadow-sm);
+}
+
+.planHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.planName {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.period {
+  margin: .35rem 0 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.currentBadge {
+  flex: 0 0 auto;
+  padding: .25rem .55rem;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-50);
+  color: var(--color-primary-800);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.price {
+  margin: 1.2rem 0 .5rem;
+  color: var(--color-text-primary);
+  font-size: 1.9rem;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.15;
+}
+
+.description {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.55;
+}
+
+.entitlements {
+  display: grid;
+  gap: .7rem;
+  margin: 1.25rem 0 0;
+  padding-left: 1.15rem;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+}
+
+.entitlements li {
+  margin: 0;
+}
+
+.unspecified {
+  margin: auto 0 1rem;
+  padding-top: 1.2rem;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+}
+
+.primaryAction,
+.secondaryAction,
+.disabledAction {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: .65rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.planCard form,
+.planCard form button {
+  width: 100%;
+}
+
+.primaryAction {
+  color: #fff;
+  background: var(--color-primary-700);
+}
+
+.primaryAction:hover {
+  color: #fff;
+  background: var(--color-primary-800);
+}
+
+.secondaryAction {
+  border-color: var(--color-border);
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+}
+
+.secondaryAction:hover {
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+}
+
+.disabledAction {
+  width: 100%;
+  color: var(--color-text-tertiary);
+  background: var(--color-neutral-100);
+  cursor: not-allowed;
+}
+
+.currentNotice,
+.infoNotice,
+.errorNotice {
+  margin: 0;
+  padding: .85rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.currentNotice {
+  background: var(--color-primary-50);
+  color: var(--color-primary-800);
+}
+
+.infoNotice {
+  background: var(--color-neutral-100);
+  color: var(--color-text-secondary);
+}
+
+.errorNotice {
+  background: var(--color-danger-50);
+  color: var(--color-danger-800);
+}
+
+.emptyState {
+  padding: 1.5rem !important;
+}
+
+.emptyState h2 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.emptyState p {
+  margin: .5rem 0 0;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 600px) {
+  .pageHeader {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pageHeader > .secondaryAction {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 768px) {
+  .page {
+    gap: 1.75rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
