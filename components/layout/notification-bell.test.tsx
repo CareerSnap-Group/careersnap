@@ -37,6 +37,7 @@ describe('NotificationBell', () => {
 
   afterEach(() => {
     mockCreateClient.mockReset();
+    jest.restoreAllMocks();
   });
 
   it.each([
@@ -76,6 +77,22 @@ describe('NotificationBell', () => {
     unmount();
     fireEvent(window, new Event('careersnap:notifications-changed'));
     expect(query.is).toHaveBeenCalledTimes(requestCount);
+  });
+
+  it('keeps the last count and indicates when a refresh fails', async () => {
+    unreadCount = 4;
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(<NotificationBell userId="seeker-1" />);
+
+    expect(await screen.findByText('4')).toBeInTheDocument();
+    query.is.mockImplementationOnce(async () => ({ count: null, error: new Error('query failed') }));
+    fireEvent(window, new Event('careersnap:notifications-changed'));
+
+    expect(await screen.findByRole('link', {
+      name: 'Notifications, 4 unread, unread count may be out of date',
+    })).toBeInTheDocument();
+    expect(screen.getByText('!')).toBeInTheDocument();
+    expect(errorSpy).toHaveBeenCalled();
   });
 
   it('does not fetch a personal count for a logged-out user', () => {

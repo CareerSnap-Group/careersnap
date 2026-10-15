@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Icon } from '@/components/icons';
 import type { ReactNode } from 'react';
+import { NotificationBell } from './notification-bell';
 import type { AccountRole } from './use-account-role';
 import { AuthenticatedDesktopSidebar, MobileAuthenticatedNavigation } from './mobile-authenticated-navigation';
 import styles from './authenticated-app-shell.module.css';
@@ -16,12 +17,14 @@ function getGreeting() {
 
 export function AuthenticatedAppShell({
   role,
+  userId,
   displayName,
   greeting,
   avatarUrl,
   children,
 }: {
   role: AccountRole;
+  userId: string;
   displayName: string;
   greeting?: string;
   avatarUrl?: string | null;
@@ -42,6 +45,7 @@ export function AuthenticatedAppShell({
             <h1 className={styles.greeting}>{greeting || `${getGreeting()}, ${firstName}`}</h1>
           </div>
           <div className={styles.topActions}>
+            <NotificationBell userId={userId} className={styles.notificationBell} />
             <Link href={searchHref} className={styles.iconLink} aria-label={role === 'job_seeker' ? 'Search jobs' : 'Find candidates'} title={role === 'job_seeker' ? 'Search jobs' : 'Find candidates'}>
               <Icon name="search" size={20} strokeWidth={1.8} />
             </Link>

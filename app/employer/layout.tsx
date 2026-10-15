@@ -21,6 +21,7 @@ export default async function EmployerLayout({ children }: { children: ReactNode
   return (
     <AuthenticatedAppShell
       role="employer"
+      userId={user.id}
       displayName={displayName}
       avatarUrl={company?.logo_url || profile?.profile_photo_url}
     >

@@ -45,6 +45,7 @@ export function NotificationList({ notifications: initialNotifications, userId, 
   const [notifications, setNotifications] = useState(initialNotifications);
   const [pendingIds, setPendingIds] = useState<Set<string>>(() => new Set());
   const [error, setError] = useState('');
+  const [refreshError, setRefreshError] = useState('');
 
   useEffect(() => {
     let active = true;
@@ -59,9 +60,15 @@ export function NotificationList({ notifications: initialNotifications, userId, 
           .order('created_at', { ascending: false })
           .limit(50);
         if (fetchError) throw fetchError;
-        if (active && requestId === requestSequence && data) setNotifications(data);
+        if (active && requestId === requestSequence && data) {
+          setNotifications(data);
+          setRefreshError('');
+        }
       } catch (refreshError) {
         console.error('Could not refresh notifications', refreshError);
+        if (active && requestId === requestSequence) {
+          setRefreshError('We could not refresh your notifications. Showing the last loaded results.');
+        }
       }
     };
 
@@ -132,12 +139,21 @@ export function NotificationList({ notifications: initialNotifications, userId, 
   }
 
   if (!notifications.length) {
-    return <div className={styles.empty}><h2>You&apos;re all caught up</h2><p>New application updates will appear here.</p></div>;
+    return (
+      <>
+        {refreshError && <p className={styles.error} role="alert">{refreshError}</p>}
+        <div className={styles.empty}>
+          <h2>{refreshError ? 'Notifications unavailable' : "You're all caught up"}</h2>
+          <p>{refreshError ? 'We could not load your notifications. Please try again later.' : 'New application updates will appear here.'}</p>
+        </div>
+      </>
+    );
   }
 
   return (
     <div className={styles.list}>
       {error && <p className={styles.error} role="alert">{error}</p>}
+      {refreshError && <p className={styles.error} role="alert">{refreshError}</p>}
       {notifications.map((notification) => (
         <article key={notification.id} className={`${styles.item} ${notification.read_at ? '' : styles.unread}`}>
           <div className={styles.itemContent}>

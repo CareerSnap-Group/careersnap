@@ -48,3 +48,21 @@
   font-weight: var(--font-weight-semibold);
   line-height: 1;
 }
+
+.errorIndicator {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: flex;
+  width: 15px;
+  height: 15px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-header);
+  border-radius: var(--radius-full);
+  background: var(--color-danger-600);
+  color: var(--color-text-inverse);
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}

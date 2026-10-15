@@ -15,7 +15,7 @@ export default async function JobSeekerLayout({ children }: { children: ReactNod
   const displayName = profile?.full_name || profile?.first_name || user.email?.split('@')[0] || 'CareerSnap Member';
 
   return (
-    <AuthenticatedAppShell role="job_seeker" displayName={displayName} avatarUrl={profile?.profile_photo_url}>
+    <AuthenticatedAppShell role="job_seeker" userId={user.id} displayName={displayName} avatarUrl={profile?.profile_photo_url}>
       {children}
     </AuthenticatedAppShell>
   );

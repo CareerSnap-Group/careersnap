@@ -15,6 +15,29 @@ jest.mock('next/navigation', () => ({
 const mockCreateClient = jest.mocked(createClient);
 
 describe('notification read state and unread count', () => {
+  it('surfaces an initial refresh error instead of showing an empty success state', async () => {
+    const query = {
+      select: jest.fn(),
+      eq: jest.fn(),
+      order: jest.fn(),
+      limit: jest.fn().mockRejectedValue(new Error('query failed')),
+    };
+    query.select.mockReturnValue(query);
+    query.eq.mockReturnValue(query);
+    query.order.mockReturnValue(query);
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockCreateClient.mockReturnValue({
+      from: jest.fn(() => query),
+    } as unknown as ReturnType<typeof createClient>);
+
+    render(<NotificationList notifications={[]} userId="seeker-1" />);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Showing the last loaded results.');
+    expect(screen.getByText('Notifications unavailable')).toBeInTheDocument();
+    expect(screen.queryByText("You're all caught up")).not.toBeInTheDocument();
+    expect(errorSpy).toHaveBeenCalled();
+  });
+
   it('refreshes the bell count when a notification is marked as read', async () => {
     type Notification = Database['public']['Tables']['notifications']['Row'];
     const rows: Notification[] = [{
@@ -74,4 +97,5 @@ describe('notification read state and unread count', () => {
 
 afterEach(() => {
   mockCreateClient.mockReset();
+  jest.restoreAllMocks();
 });

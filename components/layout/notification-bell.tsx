@@ -8,9 +8,11 @@ import styles from './notification-bell.module.css';
 
 export function NotificationBell({ userId, className = '' }: { userId: string | null; className?: string }) {
   const [unreadCount, setUnreadCount] = useState(0);
+  const [refreshError, setRefreshError] = useState(false);
 
   useEffect(() => {
     setUnreadCount(0);
+    setRefreshError(false);
     if (!userId) return;
 
     let active = true;
@@ -22,7 +24,10 @@ export function NotificationBell({ userId, className = '' }: { userId: string | 
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError) throw authError;
         if (!user || user.id !== userId) {
-          if (active && requestId === requestSequence) setUnreadCount(0);
+          if (active && requestId === requestSequence) {
+            setUnreadCount(0);
+            setRefreshError(false);
+          }
           return;
         }
 
@@ -32,9 +37,13 @@ export function NotificationBell({ userId, className = '' }: { userId: string | 
           .eq('recipient_user_id', userId)
           .is('read_at', null);
         if (error) throw error;
-        if (active && requestId === requestSequence) setUnreadCount(count ?? 0);
+        if (active && requestId === requestSequence) {
+          setUnreadCount(count ?? 0);
+          setRefreshError(false);
+        }
       } catch (refreshError) {
         console.error('Could not refresh unread notification count', refreshError);
+        if (active && requestId === requestSequence) setRefreshError(true);
       }
     };
 
@@ -58,16 +67,21 @@ export function NotificationBell({ userId, className = '' }: { userId: string | 
 
   if (!userId) return null;
 
+  const accessibleLabel = unreadCount
+    ? `Notifications, ${unreadCount} unread${refreshError ? ', unread count may be out of date' : ''}`
+    : `Notifications${refreshError ? ', unread count may be out of date' : ''}`;
+
   return (
     <span className={`${styles.root} ${className}`}>
       <Link
         href="/notifications"
         className={styles.link}
-        aria-label={unreadCount ? `Notifications, ${unreadCount} unread` : 'Notifications'}
-        title="Notifications"
+        aria-label={accessibleLabel}
+        title={refreshError ? 'Unread notification count may be out of date' : 'Notifications'}
       >
         <Icon name="bell" size={20} />
         {unreadCount > 0 && <span className={styles.badge} aria-hidden="true">{unreadCount > 99 ? '99+' : unreadCount}</span>}
+        {refreshError && <span className={styles.errorIndicator} aria-hidden="true">!</span>}
       </Link>
     </span>
   );

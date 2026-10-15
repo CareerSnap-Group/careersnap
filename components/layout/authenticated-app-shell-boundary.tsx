@@ -17,6 +17,7 @@ export function AuthenticatedAppShellBoundary({ children }: { children: ReactNod
   return (
     <AuthenticatedAppShell
       role={role}
+      userId={userId}
       displayName={displayName || 'CareerSnap Member'}
       avatarUrl={profilePhotoUrl}
     >

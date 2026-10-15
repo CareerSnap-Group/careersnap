@@ -59,6 +59,24 @@
   gap: .4rem;
 }
 
+.notificationBell :global(a) {
+  color: var(--color-text-secondary);
+}
+
+.notificationBell :global(a:hover) {
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
+}
+
+.notificationBell :global(a:focus-visible) {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 2px;
+}
+
+.notificationBell :global(a > span) {
+  border-color: var(--color-background-primary);
+}
+
 .iconLink,
 .topAvatar {
   display: inline-flex;
@@ -71,6 +89,10 @@
   color: var(--color-text-secondary);
   border-radius: 50%;
   text-decoration: none;
+}
+
+.iconLink {
+  display: none;
 }
 
 .iconLink:hover,
