@@ -59,9 +59,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
         <nav className={styles.desktopNav}>
           {signedIn === false && <>
             <Link href="/jobs" className={styles.navLink}>Find Jobs</Link>
-            <Link href="/employer/cvs" className={styles.navLink}>Find Talent</Link>
-            <Link href="/employers/post-job" className={styles.navLink}>Post a Job</Link>
-            <Link href="/about" className={styles.navLink}>About</Link>
+            <Link href="/companies" className={styles.navLink}>Companies</Link>
           </>}
           {signedIn && role === 'job_seeker' && <>
             <Link href="/jobs" className={styles.navLink}>Find Jobs</Link>
@@ -141,9 +139,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
         <nav className={styles.mobileNav}>
           {signedIn === false && <>
             <Link href="/jobs" className={styles.mobileNavLink}>Find Jobs</Link>
-            <Link href="/employer/cvs" className={styles.mobileNavLink}>Find Talent</Link>
-            <Link href="/employers/post-job" className={styles.mobileNavLink}>Post a Job</Link>
-            <Link href="/about" className={styles.mobileNavLink}>About</Link>
+            <Link href="/companies" className={styles.mobileNavLink}>Companies</Link>
           </>}
           {signedIn && role === 'job_seeker' && <>
             <Link href="/jobs" className={styles.mobileNavLink}>Find Jobs</Link>

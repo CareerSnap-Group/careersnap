@@ -166,7 +166,7 @@ export default function HomePage() {
               <h2 className={styles.employerPromotionTitle}>Are you an employer?</h2>
               <p className={styles.employerPromotionText}>Post a job and reach qualified candidates.</p>
             </div>
-            <Link href="/login?next=%2Femployers%2Fpost-job" className={styles.employerPromotionCta}>Post a Job</Link>
+            <Link href="/employers" className={styles.employerPromotionCta}>Post a Job</Link>
           </aside>
         )}
 
