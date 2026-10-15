@@ -1,0 +1,84 @@
+.screen {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+  padding: 2rem 1rem;
+  background: var(--color-background-secondary, #FAFAFA);
+}
+
+.content {
+  display: flex;
+  width: min(100%, 20rem);
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  animation: enter 500ms ease-out both;
+}
+
+.logo {
+  display: block;
+  width: min(100%, 16rem);
+  height: auto;
+}
+
+.indicator {
+  position: relative;
+  width: 8rem;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #E5E5E5;
+}
+
+.indicatorBar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 42%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #F48120 0 72%, #FAAD3F 72% 100%);
+  animation: progress 1.35s cubic-bezier(.55, .1, .45, .9) infinite;
+}
+
+.label {
+  color: #737373;
+  font-size: .875rem;
+  font-weight: 400;
+  letter-spacing: .01em;
+  text-align: center;
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes progress {
+  from {
+    transform: translateX(-105%);
+  }
+
+  to {
+    transform: translateX(245%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    animation: none;
+  }
+
+  .indicatorBar {
+    width: 100%;
+    animation: none;
+    background: #F48120;
+  }
+}
