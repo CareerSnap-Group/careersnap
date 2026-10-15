@@ -166,27 +166,11 @@
   color: var(--color-text-inverse);
 }
 
-.desktopSearchLink {
-  display: inline-flex;
-  align-items: center;
-  color: var(--color-text-inverse);
-  text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
 .notificationSlot {
   display: inline-flex;
   width: 44px;
   height: 44px;
   flex: 0 0 44px;
-}
-
-.desktopSearchLink:hover {
-  color: var(--color-text-inverse);
-}
-
-.desktopSearchLink :global(svg) {
-  margin: 0;
 }
 
 /* Mobile Menu */
@@ -419,7 +403,6 @@
 .navLink:hover,
 .navLink:focus-visible,
 .employersLink:hover,
-.desktopSearchLink:hover,
 .notificationSlot:hover,
 .mobileNavLink:hover {
   color: var(--color-primary-300);

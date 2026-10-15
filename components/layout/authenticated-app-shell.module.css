@@ -139,6 +139,10 @@
     padding-left: 2rem;
   }
 
+  .iconLink {
+    display: none;
+  }
+
   .greeting {
     font-size: 1.55rem;
   }

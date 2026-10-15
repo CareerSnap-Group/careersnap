@@ -91,9 +91,6 @@ export function Header({ variant }: { variant?: 'landing' }) {
 
         {/* Auth Actions */}
         <div className={styles.actions}>
-          <Link href="/jobs" className={styles.desktopSearchLink} aria-label="Search jobs">
-            <Icon name="search" size={20} />
-          </Link>
           {signedIn === true ? (
             <Button variant="ghost" size="sm" onClick={handleSignOut}>Sign Out</Button>
           ) : (
