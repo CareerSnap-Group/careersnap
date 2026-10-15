@@ -6,7 +6,7 @@
 }
 
 .container {
-  max-width: 400px;
+  max-width: 440px;
   margin: auto;
   padding: var(--spacing-lg);
   width: 100%;
@@ -15,9 +15,9 @@
 .formCard {
   background-color: var(--color-background-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-2xl);
-  box-shadow: none;
+  box-shadow: var(--shadow-md);
 }
 
 .formHeader {
@@ -41,7 +41,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: 1.25rem;
 }
 
 .error {
@@ -51,6 +51,16 @@
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
   border-left: 4px solid var(--color-danger-500);
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  .formCard {
+    padding: var(--spacing-lg);
+  }
 }
 
 .submitButton {

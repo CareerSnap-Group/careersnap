@@ -612,7 +612,7 @@
 .title { max-width: 800px; margin-bottom: 0.35rem; font-size: 2rem; line-height: 1.2; }
 .company { color: var(--color-text-secondary); font-size: var(--font-size-base); }
 .headerActions { align-items: center; }
-.meta { margin: 1rem 0; padding: 0.9rem 1.1rem; border: 1px solid var(--color-border); border-radius: 0.875rem; background: #fff; box-shadow: none; }
+.meta { margin: 1rem 0; padding: 0.9rem 1.1rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
 .metaLabel { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--color-text-tertiary); text-transform: none; }
 .metaLabel :global(svg) { margin: 0; }
 .metaValue { font-size: var(--font-size-sm); }
@@ -621,7 +621,7 @@
 .contentLayout { grid-template-columns: 220px minmax(0, 1fr) 300px; grid-template-areas: 'related main sidebar'; align-items: start; gap: 1.15rem; }
 .contentLayoutNoRelated { grid-template-columns: minmax(0, 1fr) 300px; grid-template-areas: 'main sidebar'; }
 .relatedColumn { grid-area: related; position: sticky; top: 90px; }
-.mainContent { grid-area: main; min-width: 0; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 3px 14px rgb(28 51 80 / 4%); }
+.mainContent { grid-area: main; min-width: 0; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
 .sidebar { grid-area: sidebar; min-width: 0; gap: 0.9rem; position: sticky; top: 90px; }
 .section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; }
 .sectionTitle { margin-bottom: 0.75rem; font-size: 1.125rem; }
@@ -642,7 +642,7 @@
 .companyDescription { margin-bottom: 0.75rem; font-size: var(--font-size-sm); line-height: 1.55; }
 .companyWebsite, .companyProfileLink { display: block; margin-top: 0.6rem; color: var(--color-primary-700); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
 .companyProfileLink { padding-top: 0.65rem; border-top: 1px solid var(--color-border); }
-.ctaBox, .applicationCard { padding: 1rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 3px 14px rgb(28 51 80 / 4%); }
+.ctaBox, .applicationCard { padding: 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
 .ctaBox { gap: 0.65rem; }
 .ctaBox .applyButton { min-height: 52px; border-radius: 0.75rem; }
 .saveButton { border-radius: 0.75rem; }
@@ -666,7 +666,7 @@
   .contentLayoutNoRelated { grid-template-areas: 'sidebar' 'main'; }
   .mainContent { padding: 1rem; }
   .sidebar { position: static; }
-  .ctaBox { position: sticky; bottom: 0.5rem; z-index: 5; box-shadow: 0 4px 20px rgb(28 51 80 / 12%); }
+  .ctaBox { position: sticky; bottom: 0.5rem; z-index: 5; box-shadow: var(--shadow-lg); }
   .relatedColumn .similarJobsList { grid-template-columns: minmax(0, 1fr); }
 }
 

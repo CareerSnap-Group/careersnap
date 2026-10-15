@@ -481,7 +481,7 @@
 .jobListItem:hover .jobCardSmall,
 .jobListItem.selected .jobCardSmall {
   border-color: var(--color-primary-300);
-  box-shadow: 0 2px 8px rgb(23 27 34 / 6%);
+  box-shadow: var(--shadow-sm);
 }
 
 .companyLogo,
@@ -569,17 +569,17 @@
 }
 
 .container { max-width: 1380px; padding: 1.75rem 1.5rem 3rem; }
-.searchBar { padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 4px 16px rgb(28 51 80 / 5%); }
+.searchBar { padding: 0.5rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
 .searchInputs { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr) auto; gap: 0.4rem; }
 .searchInput { min-height: 52px; border-color: transparent; background: var(--color-background-tertiary); }
 .searchInput:focus { border-color: var(--color-primary-700); background: #fff; }
 .searchInputs > button { min-width: 116px; min-height: 52px; border-radius: 0.75rem; }
 .content { grid-template-columns: 258px minmax(0, 1fr); align-items: start; gap: 1.5rem; }
-.sidebar { padding: 1.25rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 3px 14px rgb(28 51 80 / 4%); }
+.sidebar { padding: 1.25rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; box-shadow: var(--shadow-sm); }
 .filterSection { gap: 1.15rem; }
 .filterHeader { display: flex; align-items: center; justify-content: space-between; }
 .filterTitle { font-size: 1rem; }
-.filterClose { display: none; width: 36px; height: 36px; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: 50%; color: var(--color-text-secondary); }
+.filterClose { display: none; width: 44px; height: 44px; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: 50%; color: var(--color-text-secondary); }
 .filterClose :global(svg) { margin: 0; }
 .filterGroup { padding-bottom: 1rem; }
 .checkboxLabel { min-height: 30px; }
@@ -591,7 +591,7 @@
 .resultsTitle { margin: 0 0 0.3rem; color: var(--color-text-primary); font-size: 1.5rem; }
 .resultsCount { margin: 0; color: var(--color-text-tertiary); font-size: var(--font-size-sm); font-weight: var(--font-weight-regular); }
 .sortControl { display: flex; align-items: center; gap: 0.5rem; color: var(--color-text-tertiary); font-size: var(--font-size-sm); white-space: nowrap; }
-.sortControl select { min-height: 40px; max-width: 150px; padding: 0 1.8rem 0 0.65rem; border: 1px solid var(--color-border); border-radius: 0.625rem; background: #fff; color: var(--color-text-primary); font: inherit; }
+.sortControl select { min-height: 44px; max-width: 150px; padding: 0 1.8rem 0 0.65rem; border: 1px solid var(--color-border); border-radius: 0.625rem; background: #fff; color: var(--color-text-primary); font: inherit; }
 .jobGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .emptyState { display: grid; justify-items: center; gap: 0.5rem; min-height: 220px; padding: 2.5rem 1.25rem; border: 1px dashed var(--color-neutral-300); border-radius: 1rem; background: #fff; }
 .emptyStateTitle { margin: 0; font-size: 1.125rem; }
@@ -610,7 +610,7 @@
   .searchInput { min-height: 48px; }
   .searchInputs > button { width: 100%; }
   .mobileToolbar { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.85rem; color: var(--color-text-tertiary); font-size: var(--font-size-sm); }
-  .mobileFilterButton { min-height: 40px; }
+  .mobileFilterButton { min-height: 44px; }
   .content { display: block; }
   .sidebar { display: none; margin-bottom: 1rem; }
   .sidebarOpen { display: block; }

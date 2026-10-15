@@ -143,11 +143,11 @@ export const borderRadius = {
 
 export const shadows = {
   none: 'none',
-  sm: '0 2px 8px rgb(28 51 80 / 5%)',
-  md: '0 5px 16px rgb(28 51 80 / 7%)',
-  lg: '0 10px 24px rgb(28 51 80 / 9%)',
-  xl: '0 16px 36px rgb(28 51 80 / 11%)',
-  '2xl': '0 16px 36px rgb(28 51 80 / 11%)',
+  sm: '0 2px 8px rgb(64 64 65 / 5%)',
+  md: '0 5px 16px rgb(64 64 65 / 7%)',
+  lg: '0 10px 24px rgb(64 64 65 / 9%)',
+  xl: '0 16px 36px rgb(64 64 65 / 11%)',
+  '2xl': '0 16px 36px rgb(64 64 65 / 11%)',
 };
 
 export const breakpoints = {

@@ -3,7 +3,8 @@
 .greeting { margin: 0; color: var(--color-text-primary); font-size: 2rem; font-weight: var(--font-weight-medium); line-height: 1.15; }
 .overviewRail { display: flex; gap: .85rem; margin: 0 -1rem; padding: .15rem 1rem .8rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 1rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .overviewRail::-webkit-scrollbar { display: none; }
-.overviewCard { position: relative; display: flex; min-width: min(84vw, 360px); min-height: 205px; flex-direction: column; justify-content: space-between; padding: 1.35rem; overflow: hidden; border: 1px solid var(--color-border); border-radius: 1.1rem; background: var(--color-background-primary); box-shadow: 0 6px 20px rgb(28 51 80 / 6%); scroll-snap-align: start; }
+.overviewCard { position: relative; display: flex; min-width: min(84vw, 360px); min-height: 205px; flex-direction: column; justify-content: space-between; padding: 1.35rem; overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-background-primary); box-shadow: var(--shadow-sm); scroll-snap-align: start; transition: border-color var(--transition-fast), box-shadow var(--transition-fast); }
+.overviewCard:hover { border-color: var(--color-neutral-400); box-shadow: var(--shadow-md); }
 .overviewCardPrimary { border-color: var(--color-primary-200); background: var(--color-primary-50); }
 .overviewTitle { margin: 0; color: var(--color-text-primary); font-size: var(--font-size-base); font-weight: var(--font-weight-medium); }
 .overviewValue { margin: .55rem 0 0; color: var(--color-text-primary); font-size: 2.35rem; font-weight: var(--font-weight-medium); line-height: 1.05; }
@@ -18,7 +19,7 @@
 .quickActions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; padding: .2rem 0; }
 .quickAction { display: grid; justify-items: center; gap: .65rem; min-height: 92px; padding: .25rem .1rem; color: var(--color-text-secondary); font-size: var(--font-size-xs); text-align: center; text-decoration: none; }
 .quickAction:hover { color: var(--color-primary-700); }
-.quickIcon { display: flex; width: 64px; height: 64px; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: 50%; background: var(--color-background-primary); color: var(--color-primary-700); box-shadow: 0 4px 14px rgb(28 51 80 / 6%); transition: transform var(--transition-fast), background-color var(--transition-fast); }
+.quickIcon { display: flex; width: 64px; height: 64px; align-items: center; justify-content: center; border: 1px solid var(--color-border); border-radius: 50%; background: var(--color-background-primary); color: var(--color-primary-700); box-shadow: var(--shadow-sm); transition: transform var(--transition-fast), background-color var(--transition-fast); }
 .quickAction:hover .quickIcon { transform: translateY(-2px); background: var(--color-primary-50); }
 .quickIcon :global(svg) { margin: 0; }
 .section { display: grid; gap: .9rem; }

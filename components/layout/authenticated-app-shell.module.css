@@ -14,7 +14,7 @@
   top: 0;
   z-index: 30;
   display: flex;
-  min-height: calc(76px + env(safe-area-inset-top));
+  min-height: calc(68px + env(safe-area-inset-top));
   align-items: center;
   justify-content: space-between;
   gap: .75rem;
@@ -46,7 +46,7 @@
   color: var(--color-text-primary);
   font-family: var(--font-poppins), sans-serif;
   font-size: 1.25rem;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -62,9 +62,9 @@
 .iconLink,
 .topAvatar {
   display: inline-flex;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -100,9 +100,9 @@
 }
 
 .content {
-  width: 100%;
+  width: min(100%, 1600px);
   min-width: 0;
-  margin: 0;
+  margin: 0 auto;
   padding: 1rem 1rem calc(6.5rem + env(safe-area-inset-bottom));
 }
 
@@ -113,7 +113,7 @@
 
 @media (min-width: 640px) {
   .topbar {
-    min-height: calc(80px + env(safe-area-inset-top));
+    min-height: calc(72px + env(safe-area-inset-top));
     padding-right: 2rem;
     padding-left: 2rem;
   }
@@ -134,7 +134,7 @@
   }
 
   .topbar {
-    min-height: 88px;
+    min-height: 80px;
     padding-right: 2rem;
     padding-left: 2rem;
   }

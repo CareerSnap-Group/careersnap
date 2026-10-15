@@ -6,7 +6,7 @@
 }
 
 .container {
-  max-width: 400px;
+  max-width: 440px;
   margin: auto;
   padding: var(--spacing-lg);
   width: 100%;
@@ -15,9 +15,9 @@
 .formCard {
   background-color: var(--color-background-primary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--spacing-2xl);
-  box-shadow: none;
+  box-shadow: var(--shadow-md);
 }
 
 .formHeader {
@@ -41,7 +41,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: 1.25rem;
 }
 
 .error {
@@ -61,6 +61,7 @@
 
 .rememberMe label {
   display: flex;
+  min-height: 44px;
   align-items: center;
   gap: var(--spacing-sm);
   cursor: pointer;
@@ -70,11 +71,15 @@
 
 .rememberMe input[type='checkbox'] {
   cursor: pointer;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary-600);
 }
 
 .forgotLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   font-size: var(--font-size-sm);
   color: var(--color-primary-600);
   text-decoration: none;
@@ -236,6 +241,20 @@
 
 .backLink a:hover {
   color: var(--color-primary-700);
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  .formCard {
+    padding: var(--spacing-lg);
+  }
+
+  .formHeader {
+    margin-bottom: var(--spacing-xl);
+  }
 }
 
 @media (max-width: 768px) {
