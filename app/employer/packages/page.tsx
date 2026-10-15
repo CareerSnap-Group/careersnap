@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { getEmployerContext } from '@/lib/auth/server';
 import { Card } from '@/components/ui/card';
-import { selectEmployerPackage } from './actions';
 import styles from './packages.module.css';
 
 type EmployerPlan = {
@@ -24,22 +23,55 @@ const messages: Record<string, string> = {
   'order-failed': 'We could not prepare the billing review. Please try again or contact support.',
 };
 
-function formatPrice(price: number, currency: string) {
-  return new Intl.NumberFormat('en-ZA', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-  }).format(price);
-}
-
-function billingPeriod(plan: EmployerPlan) {
-  if (plan.billing_model === 'recurring') {
-    return plan.duration_days
-      ? `Recurring; ${plan.duration_days}-day term (charge interval not configured)`
-      : 'Recurring (charge interval not configured)';
-  }
-  return plan.duration_days ? `One-time; ${plan.duration_days}-day term` : 'One-time purchase';
-}
+const proposedPackages = [
+  {
+    name: 'Per Job',
+    price: 'R500',
+    billing: 'One-time payment per job listing',
+    summary: 'Covers one job listing, intended to remain active for 30 days.',
+    features: [
+      'One job posting for 30 days',
+      'Up to 100 job views',
+      'Email notifications',
+      'Basic analytics',
+    ],
+    action: 'Post One Job',
+    note: 'Purchases are unavailable: this paid plan is not configured and no verified checkout is connected.',
+  },
+  {
+    name: 'Professional',
+    price: 'R1,500',
+    billing: 'Per month · recurring billing not configured',
+    summary: 'Proposed monthly package with a maximum of five active jobs.',
+    features: [
+      'Up to 5 active jobs',
+      'Unlimited job views',
+      'Priority support',
+      'Advanced analytics',
+      'Featured job listings',
+      'Social media posting',
+    ],
+    action: 'Choose Professional',
+    note: 'Subscriptions are unavailable: recurring billing and the paid plan are not configured.',
+    recommended: true,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom pricing',
+    billing: 'For large teams',
+    summary: 'Proposed enterprise package for teams with larger hiring needs.',
+    features: [
+      'Unlimited job postings',
+      'Unlimited applications',
+      'Dedicated support',
+      'Custom branding',
+      'API access',
+      'Bulk hiring tools',
+    ],
+    action: 'Contact Sales',
+    note: 'Enterprise service and a verified sales contact are not configured.',
+  },
+];
 
 export default async function EmployerPackagesPage({
   searchParams,
@@ -76,6 +108,7 @@ export default async function EmployerPackagesPage({
   );
   const currentPlan = availablePlans.find((plan) => plan.id === activeEntitlement?.plan_id);
   const errorMessage = searchParams.error ? messages[searchParams.error] : undefined;
+  const introductoryPlan = availablePlans.find((plan) => plan.code === 'introductory-free');
 
   return (
     <main className={styles.page}>
@@ -84,7 +117,7 @@ export default async function EmployerPackagesPage({
           <p className={styles.eyebrow}>Employer workspace</p>
           <h1 className={styles.title}>Recruitment packages</h1>
           <p className={styles.subtitle}>
-            Compare the active package configuration for your company.
+            Compare package pricing and terms. Paid package checkout is not currently available.
           </p>
         </div>
         <Link className={styles.secondaryAction} href="/employer/billing">View billing</Link>
@@ -104,63 +137,57 @@ export default async function EmployerPackagesPage({
         </p>
       )}
 
-      {availablePlans.length ? (
-        <section className={styles.grid} aria-label="Available recruitment packages">
-          {availablePlans.map((plan) => {
-            const isCurrent = plan.id === activeEntitlement?.plan_id;
-            const isIntroductory = plan.code === 'introductory-free';
-            return (
-              <Card className={`${styles.planCard} ${isCurrent ? styles.currentPlan : ''}`} key={plan.id}>
-                <div className={styles.planHeading}>
-                  <div>
-                    <h2 className={styles.planName}>{plan.name}</h2>
-                    <p className={styles.period}>{billingPeriod(plan)}</p>
-                  </div>
-                  {isCurrent && <span className={styles.currentBadge}>Current</span>}
-                </div>
-
-                <p className={styles.price}>{formatPrice(Number(plan.price), plan.currency)}</p>
-                {plan.description && <p className={styles.description}>{plan.description}</p>}
-
-                <ul className={styles.entitlements}>
-                  <li>{plan.job_posting_allowance} job posting{plan.job_posting_allowance === 1 ? '' : 's'} included</li>
-                  <li>
-                    {plan.active_job_limit === null
-                      ? 'No active-job cap configured'
-                      : `Up to ${plan.active_job_limit} active job listings`}
-                  </li>
-                </ul>
-
-                <p className={styles.unspecified}>
-                  Candidate-management features, hiring analytics, and support level are not configured as package entitlements.
-                </p>
-
-                {isCurrent ? (
-                  <Link className={styles.primaryAction} href="/employer/billing">View current package</Link>
-                ) : isIntroductory ? (
-                  <Link className={styles.secondaryAction} href="/employer/billing">View included allowance</Link>
-                ) : canManageBilling ? (
-                  <form action={selectEmployerPackage}>
-                    <input type="hidden" name="planId" value={plan.id} />
-                    <button className={styles.primaryAction} type="submit">
-                      Review package
-                    </button>
-                  </form>
-                ) : (
-                  <button className={styles.disabledAction} type="button" disabled>
-                    Owner or admin required
-                  </button>
-                )}
-              </Card>
-            );
-          })}
-        </section>
-      ) : (
-        <Card className={styles.emptyState}>
-          <h2>No packages are currently available</h2>
-          <p>There are no active employer packages configured for your account.</p>
+      {introductoryPlan && (
+        <Card className={styles.allowanceCard}>
+          <div>
+            <p className={styles.cardEyebrow}>Included introductory allowance</p>
+            <h2>{introductoryPlan.name}</h2>
+            <p>Four lifetime job postings for eligible new employers are used before paid entitlements.</p>
+          </div>
+          <Link className={styles.secondaryAction} href="/employer/billing">View allowance</Link>
         </Card>
       )}
+
+      <p className={styles.availabilityNotice} role="status">
+        These prices and package features are for presentation only. Paid plans are not configured in billing, no verified payment checkout is available, and these features are not active entitlements. Selecting a package will not create an order or grant access.
+      </p>
+
+      <section className={styles.grid} aria-label="Employer pricing packages">
+        {proposedPackages.map((packageOffer) => (
+          <Card
+            className={`${styles.planCard} ${'recommended' in packageOffer && packageOffer.recommended ? styles.recommendedPlan : ''}`}
+            key={packageOffer.name}
+          >
+            {'recommended' in packageOffer && packageOffer.recommended && (
+              <span className={styles.recommendedBadge}>Recommended</span>
+            )}
+            <div className={styles.planHeading}>
+              <h2 className={styles.planName}>{packageOffer.name}</h2>
+              <p className={styles.period}>{packageOffer.billing}</p>
+            </div>
+            <p className={styles.price}>{packageOffer.price}</p>
+            {packageOffer.name === 'Professional' && <p className={styles.limitEmphasis}>Up to 5 active jobs · monthly</p>}
+            <p className={styles.description}>{packageOffer.summary}</p>
+
+            <ul className={styles.entitlements}>
+              {packageOffer.features.map((feature) => (
+                <li key={feature}>
+                  <span>{feature}</span>
+                  <span className={styles.featureStatus}>Not active</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className={styles.packageAction}>
+              <button className={styles.disabledAction} type="button" disabled>
+                {packageOffer.action}
+              </button>
+              <p>{packageOffer.note}</p>
+              {!canManageBilling && <p>Package selection is restricted to company owners and administrators.</p>}
+            </div>
+          </Card>
+        ))}
+      </section>
     </main>
   );
 }
