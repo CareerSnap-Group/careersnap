@@ -17,11 +17,17 @@ export function ApplicationReviewPanel({ applicationId, status: initialStatus, n
 
   const saveChanges = async () => {
     setSaving(true); setError(''); setMessage('');
-    const response = await fetch(`/api/employer/applications/${applicationId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status, notes }) });
-    const result = await response.json() as { error?: string };
-    setSaving(false);
-    if (!response.ok) { setError(result.error || 'We could not update this application.'); return; }
-    setMessage('Application updated.');
+    try {
+      const response = await fetch(`/api/employer/applications/${applicationId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status, notes }) });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) { setError(result.error || 'We could not update this application.'); return; }
+      setMessage('Application updated.');
+    } catch (saveError) {
+      console.error('Could not save application review changes', saveError);
+      setError('We could not update this application. Please check your connection and try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const openResume = async () => {

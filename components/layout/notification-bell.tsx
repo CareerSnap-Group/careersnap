@@ -14,25 +14,45 @@ export function NotificationBell({ userId, className = '' }: { userId: string | 
     if (!userId) return;
 
     let active = true;
+    let requestSequence = 0;
+    const supabase = createClient();
     const refreshUnreadCount = async () => {
+      const requestId = ++requestSequence;
       try {
-        const { count, error } = await createClient()
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError) throw authError;
+        if (!user || user.id !== userId) {
+          if (active && requestId === requestSequence) setUnreadCount(0);
+          return;
+        }
+
+        const { count, error } = await supabase
           .from('notifications')
           .select('id', { count: 'exact', head: true })
           .eq('recipient_user_id', userId)
           .is('read_at', null);
-        if (active && !error) setUnreadCount(count || 0);
-      } catch {
-        if (active) setUnreadCount(0);
+        if (error) throw error;
+        if (active && requestId === requestSequence) setUnreadCount(count ?? 0);
+      } catch (refreshError) {
+        console.error('Could not refresh unread notification count', refreshError);
       }
     };
 
     const handleNotificationsChanged = () => { void refreshUnreadCount(); };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') void refreshUnreadCount();
+    };
     void refreshUnreadCount();
+    const intervalId = window.setInterval(() => { void refreshUnreadCount(); }, 30_000);
     window.addEventListener('careersnap:notifications-changed', handleNotificationsChanged);
+    window.addEventListener('focus', handleNotificationsChanged);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       active = false;
+      window.clearInterval(intervalId);
       window.removeEventListener('careersnap:notifications-changed', handleNotificationsChanged);
+      window.removeEventListener('focus', handleNotificationsChanged);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [userId]);
 

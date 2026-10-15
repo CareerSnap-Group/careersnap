@@ -64,6 +64,31 @@ create unique index if not exists notifications_application_viewed_once_idx
   on public.notifications (recipient_user_id, application_id)
   where notification_type = 'application_viewed';
 
+create or replace function public.prevent_application_identity_change()
+returns trigger
+language plpgsql
+security definer
+set search_path = pg_catalog, public
+as $$
+begin
+  if new.id is distinct from old.id
+     or new.job_id is distinct from old.job_id
+     or new.applicant_id is distinct from old.applicant_id
+     or new.user_id is distinct from old.user_id then
+    raise exception 'Application identity fields cannot be changed';
+  end if;
+
+  return new;
+end;
+$$;
+
+revoke all on function public.prevent_application_identity_change() from public, anon, authenticated;
+
+drop trigger if exists applications_identity_protection on public.applications;
+create trigger applications_identity_protection
+  before update on public.applications
+  for each row execute function public.prevent_application_identity_change();
+
 create or replace function public.create_application_notifications()
 returns trigger
 language plpgsql
@@ -97,12 +122,13 @@ begin
       eu.user_id,
       'new_application',
       'New application',
-      coalesce(nullif(btrim(p.full_name), ''), 'A Job Seeker') || ' applied for ' || v_job_title || '.',
+      coalesce(nullif(btrim(applicant_profile.full_name), ''), 'A Job Seeker') || ' applied for ' || v_job_title || '.',
       new.id,
       new.job_id,
       v_company_id
     from public.employer_users eu
     join public.profiles p on p.id = eu.user_id
+    left join public.profiles applicant_profile on applicant_profile.id = new.applicant_id
     where eu.company_id = v_company_id
       and eu.role in ('owner', 'admin', 'member')
       and p.user_type = 'employer'
@@ -133,7 +159,9 @@ begin
   end if;
 
   if new.user_id is distinct from new.applicant_id then
-    return new;
+    raise exception using
+      errcode = '23514',
+      message = 'Application user_id must match applicant_id before sending a status notification';
   end if;
 
   if not exists (
@@ -142,7 +170,9 @@ begin
     where p.id = new.applicant_id
       and p.user_type = 'job_seeker'
   ) then
-    return new;
+    raise exception using
+      errcode = '23514',
+      message = 'Application status notification recipient must be a job seeker profile';
   end if;
 
   if new.status::text = 'viewed' and exists (
@@ -162,7 +192,9 @@ begin
   where j.id = new.job_id;
 
   if not found then
-    return new;
+    raise exception using
+      errcode = '23503',
+      message = 'Application status notification job or company could not be resolved';
   end if;
 
   v_notification_title := case new.status::text

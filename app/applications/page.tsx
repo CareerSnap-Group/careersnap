@@ -44,6 +44,12 @@ export default function ApplicationsPage() {
 
   const applications = remoteApplications || [];
 
+  useEffect(() => {
+    if (loading || !window.location.hash.startsWith('#application-')) return;
+    const applicationRow = document.getElementById(window.location.hash.slice(1));
+    applicationRow?.scrollIntoView({ block: 'center' });
+  }, [loading, applications.length]);
+
   const getStatusLabel = (status: string) => {
     return status.charAt(0).toUpperCase() + status.slice(1);
   };

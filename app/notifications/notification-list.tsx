@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/browser';
 import type { Database } from '@/lib/supabase/database.types';
 import styles from './notifications.module.css';
@@ -40,27 +40,71 @@ function formatTimestamp(value: string) {
   }).format(new Date(value)) + ' UTC';
 }
 
-export function NotificationList({ notifications: initialNotifications, unavailable = false }: { notifications: Notification[]; unavailable?: boolean }) {
+export function NotificationList({ notifications: initialNotifications, userId, unavailable = false }: { notifications: Notification[]; userId: string; unavailable?: boolean }) {
   const router = useRouter();
   const [notifications, setNotifications] = useState(initialNotifications);
   const [pendingIds, setPendingIds] = useState<Set<string>>(() => new Set());
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    let active = true;
+    let requestSequence = 0;
+    const refreshNotifications = async () => {
+      const requestId = ++requestSequence;
+      try {
+        const { data, error: fetchError } = await createClient()
+          .from('notifications')
+          .select('*')
+          .eq('recipient_user_id', userId)
+          .order('created_at', { ascending: false })
+          .limit(50);
+        if (fetchError) throw fetchError;
+        if (active && requestId === requestSequence && data) setNotifications(data);
+      } catch (refreshError) {
+        console.error('Could not refresh notifications', refreshError);
+      }
+    };
+
+    const intervalId = window.setInterval(() => { void refreshNotifications(); }, 30_000);
+    window.addEventListener('careersnap:notifications-changed', refreshNotifications);
+    window.addEventListener('focus', refreshNotifications);
+    void refreshNotifications();
+    return () => {
+      active = false;
+      requestSequence += 1;
+      window.clearInterval(intervalId);
+      window.removeEventListener('careersnap:notifications-changed', refreshNotifications);
+      window.removeEventListener('focus', refreshNotifications);
+    };
+  }, [userId]);
+
   const markRead = async (notificationId: string) => {
     if (pendingIds.has(notificationId)) return false;
-    setPendingIds((current) => new Set(current).add(notificationId));
     setError('');
+    setPendingIds((current) => new Set(current).add(notificationId));
 
-    const { data, error: updateError } = await createClient().rpc('mark_notification_read', {
-      p_notification_id: notificationId,
-    });
-    setPendingIds((current) => {
-      const next = new Set(current);
-      next.delete(notificationId);
-      return next;
-    });
+    let data: boolean | null = null;
+    let updateError: { message: string } | null = null;
+    try {
+      const result = await createClient().rpc('mark_notification_read', {
+        p_notification_id: notificationId,
+      });
+      data = result.data;
+      updateError = result.error;
+    } catch (markReadError) {
+      console.error('Could not mark notification as read', markReadError);
+      setError('We could not mark that notification as read. Please try again.');
+      return false;
+    } finally {
+      setPendingIds((current) => {
+        const next = new Set(current);
+        next.delete(notificationId);
+        return next;
+      });
+    }
 
     if (updateError) {
+      console.error('Could not mark notification as read', updateError.message);
       setError('We could not mark that notification as read. Please try again.');
       return false;
     }

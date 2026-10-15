@@ -25,7 +25,7 @@ export default async function NotificationsPage() {
           <h1 className={styles.title}>Notifications</h1>
           <p className={styles.subtitle}>Application updates and new applications for your jobs.</p>
         </header>
-        <NotificationList notifications={notifications} unavailable={Boolean(error)} />
+        <NotificationList notifications={notifications} userId={user.id} unavailable={Boolean(error)} />
       </main>
     </div>
   );

@@ -32,6 +32,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     ...(body.notes !== undefined ? { notes: body.notes?.trim() || null } : {}),
   };
   const { error: updateError } = await supabase.from('applications').update(changes).eq('id', params.id);
-  if (updateError) return NextResponse.json({ error: 'We could not update this application.' }, { status: 400 });
+  if (updateError) {
+    console.error('Failed to update employer application', { applicationId: params.id, code: updateError.code, message: updateError.message });
+    return NextResponse.json({ error: 'We could not update this application. Please try again.' }, { status: 400 });
+  }
   return NextResponse.json({ ok: true });
 }
