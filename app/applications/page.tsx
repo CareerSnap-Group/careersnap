@@ -106,7 +106,7 @@ export default function ApplicationsPage() {
                   </thead>
                   <tbody>
                     {applications.map((app) => (
-                      <tr key={app.id} className={styles.tableRow}>
+                      <tr key={app.id} id={`application-${app.id}`} className={styles.tableRow}>
                         <td className={styles.cellJob}>
                           {app.job?.title || 'Job no longer available'}
                         </td>

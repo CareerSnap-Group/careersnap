@@ -9,10 +9,27 @@ import styles from './notifications.module.css';
 
 type Notification = Database['public']['Tables']['notifications']['Row'];
 
+const statusByNotification: Partial<Record<Notification['notification_type'], string>> = {
+  application_viewed: 'Viewed',
+  application_reviewing: 'Reviewing',
+  application_shortlisted: 'Shortlisted',
+  application_interview: 'Interview',
+  application_offer: 'Offer',
+  application_hired: 'Hired',
+  application_rejected: 'Rejected',
+  application_accepted: 'Accepted',
+};
+
 function notificationHref(notification: Notification) {
   return notification.notification_type === 'new_application'
     ? `/employer/applications/${notification.application_id}`
-    : '/applications';
+    : `/applications#application-${notification.application_id}`;
+}
+
+function notificationLinkLabel(notification: Notification) {
+  if (notification.notification_type === 'new_application') return 'Review application';
+  const status = statusByNotification[notification.notification_type];
+  return status ? `View ${status} update` : 'View application';
 }
 
 function formatTimestamp(value: string) {
@@ -94,7 +111,7 @@ export function NotificationList({ notifications: initialNotifications, unavaila
               </button>
             )}
             <Link href={notificationHref(notification)} onClick={(event) => { void openNotification(event, notification); }}>
-              {notification.notification_type === 'new_application' ? 'Review application' : 'View applications'}
+              {notificationLinkLabel(notification)}
             </Link>
           </div>
         </article>
