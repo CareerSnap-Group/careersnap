@@ -40,8 +40,11 @@ language plpgsql
 security invoker
 set search_path = pg_catalog, public, auth
 as $$
+declare
+  request_role text := auth.role();
 begin
-  if current_user in ('service_role', 'postgres', 'supabase_admin') then
+  if request_role = 'service_role'
+     or (request_role is null and current_user in ('postgres', 'supabase_admin')) then
     return new;
   end if;
 
