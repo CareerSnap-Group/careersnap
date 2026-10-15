@@ -80,7 +80,7 @@ export function AuthenticatedDesktopSidebar({ role, displayName, avatarUrl }: { 
   return (
     <aside className={styles.sidebar} aria-label={`${isSeeker ? 'Job Seeker' : 'Employer'} navigation`} data-authenticated-sidebar="true">
       <Link href={isSeeker ? '/job-seeker/dashboard' : '/employer/dashboard'} className={styles.brand} data-sidebar-brand="true" aria-label="CareerSnap home">
-        <Image src="/careersnap-pro-logo.png" alt="CareerSnap" width={217} height={48} priority />
+        <Image src="/careersnap-authenticated-logo.png" alt="CareerSnap" width={217} height={48} priority />
       </Link>
       <Link href={profileHref} className={styles.profile} data-sidebar-profile="true">
         <span className={styles.avatar} data-sidebar-avatar="true" style={avatarUrl ? { backgroundImage: `url(${avatarUrl})` } : undefined}>{avatarUrl ? null : initials}</span>
