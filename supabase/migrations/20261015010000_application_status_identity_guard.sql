@@ -12,10 +12,11 @@ begin
          and t.tgname = 'applications_identity_protection'
          and t.tgfoid = to_regprocedure('public.prevent_application_identity_change()')
          and not t.tgisinternal
-         and t.tgenabled <> 'D'
+         and t.tgenabled in ('O', 'A')
          and (t.tgtype & 1) = 1
          and (t.tgtype & 2) = 2
          and (t.tgtype & 16) = 16
+         and cardinality(t.tgattr) = 0
      ) then
     raise exception 'Apply 20261015000000_application_status_transition_notifications.sql before this migration';
   end if;
