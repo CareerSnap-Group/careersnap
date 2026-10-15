@@ -46,6 +46,7 @@ export function NotificationList({ notifications: initialNotifications, userId, 
   const [pendingIds, setPendingIds] = useState<Set<string>>(() => new Set());
   const [error, setError] = useState('');
   const [refreshError, setRefreshError] = useState('');
+  const [queryAvailable, setQueryAvailable] = useState(!unavailable);
 
   useEffect(() => {
     let active = true;
@@ -63,6 +64,7 @@ export function NotificationList({ notifications: initialNotifications, userId, 
         if (active && requestId === requestSequence && data) {
           setNotifications(data);
           setRefreshError('');
+          setQueryAvailable(true);
         }
       } catch (refreshError) {
         console.error('Could not refresh notifications', refreshError);
@@ -131,10 +133,11 @@ export function NotificationList({ notifications: initialNotifications, userId, 
   const openNotification = async (event: React.MouseEvent<HTMLAnchorElement>, notification: Notification) => {
     if (notification.read_at) return;
     event.preventDefault();
-    if (await markRead(notification.id)) router.push(notificationHref(notification));
+    await markRead(notification.id);
+    router.push(notificationHref(notification));
   };
 
-  if (unavailable) {
+  if (!queryAvailable) {
     return <div className={styles.empty} role="alert"><h2>Notifications unavailable</h2><p>We could not load your notifications. Please try again later.</p></div>;
   }
 

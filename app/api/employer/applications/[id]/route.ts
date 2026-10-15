@@ -31,10 +31,16 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     ...(hasStatus ? { status: body.status as Database['public']['Enums']['application_status'] } : {}),
     ...(body.notes !== undefined ? { notes: body.notes?.trim() || null } : {}),
   };
-  const { error: updateError } = await supabase.from('applications').update(changes).eq('id', params.id);
+  const { data: updatedApplication, error: updateError } = await supabase
+    .from('applications')
+    .update(changes)
+    .eq('id', params.id)
+    .select('id')
+    .maybeSingle();
   if (updateError) {
     console.error('Failed to update employer application', { applicationId: params.id, code: updateError.code, message: updateError.message });
     return NextResponse.json({ error: 'We could not update this application. Please try again.' }, { status: 400 });
   }
+  if (!updatedApplication) return NextResponse.json({ error: 'Application not found.' }, { status: 404 });
   return NextResponse.json({ ok: true });
 }
