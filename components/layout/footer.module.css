@@ -24,7 +24,7 @@
 .socialLink { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--color-text-inverse); background-color: transparent; border: 1px solid rgba(255, 255, 255, 0.55); border-radius: 50%; transition: color var(--transition-fast), background-color var(--transition-fast); }
 .socialLink svg { margin: 0; }
 .socialLink:hover { color: var(--color-text-inverse); background-color: var(--color-text-secondary); }
-.socialLink:focus-visible { color: var(--color-text-inverse); background-color: var(--color-text-secondary); outline: 2px solid var(--color-primary-500); outline-offset: 2px; }
+.socialLink:focus-visible { color: var(--color-text-inverse); background-color: var(--color-text-secondary); outline: 2px solid var(--color-text-inverse); outline-offset: 2px; }
 .bottom { display: flex; justify-content: space-between; align-items: center; gap: var(--spacing-lg); padding-top: var(--spacing-lg); margin-top: var(--spacing-xl); border-top: 1px solid rgba(255, 255, 255, 0.18); color: rgba(255, 255, 255, 0.72); font-size: var(--font-size-sm); }
 .bottom p { margin: 0; }
 .legal { display: flex; flex-wrap: wrap; gap: var(--spacing-lg); }

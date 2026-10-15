@@ -22,7 +22,7 @@
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid var(--color-primary-700);
   outline-offset: 2px;
 }
 
@@ -65,13 +65,15 @@
 }
 
 .variant-secondary {
-  background-color: var(--color-neutral-900);
-  color: var(--color-text-inverse);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
 }
 
 .variant-secondary:hover:not(:disabled) {
-  background-color: var(--color-neutral-800);
-  color: var(--color-text-inverse);
+  background-color: var(--color-neutral-100);
+  border-color: var(--color-neutral-400);
+  color: var(--color-text);
 }
 
 .variant-outline {
@@ -82,7 +84,7 @@
 
 .variant-outline:hover:not(:disabled) {
   border-color: var(--color-primary-500);
-  color: var(--color-primary-600);
+  color: var(--color-primary-700);
   background-color: var(--color-primary-50);
 }
 
@@ -93,7 +95,7 @@
 
 .variant-ghost:hover:not(:disabled) {
   background-color: var(--color-neutral-100);
-  color: var(--color-primary-600);
+  color: var(--color-primary-700);
 }
 
 .variant-danger {

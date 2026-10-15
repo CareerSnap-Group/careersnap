@@ -13,7 +13,7 @@
 .filterGrid { display: grid; gap: var(--spacing-md); grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .field { color: var(--color-text-primary); display: flex; flex-direction: column; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); gap: var(--spacing-xs); }
 .field input, .field select { background: white; border: 1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-primary); font: inherit; padding: .7rem .75rem; width: 100%; }
-.field input:focus, .field select:focus { border-color: var(--color-primary-500); box-shadow: 0 0 0 3px var(--color-primary-50); outline: none; }
+.field input:focus, .field select:focus { border-color: var(--color-primary-700); box-shadow: 0 0 0 3px var(--color-primary-50); outline: none; }
 .filterActions { display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg); }
 .resultsHeader { align-items: center; display: flex; justify-content: space-between; margin-bottom: var(--spacing-md); }
 .resultsTitle { color: var(--color-text-primary); font-size: var(--font-size-xl); margin: 0; }

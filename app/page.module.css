@@ -210,7 +210,7 @@
 }
 
 .dismissPromotion:focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid var(--color-primary-700);
   outline-offset: 2px;
 }
 
@@ -595,15 +595,15 @@
 
 .primaryCta,
 .employerPromotionCta {
-  border-color: var(--color-primary-500);
-  background: var(--color-primary-500);
+  border-color: var(--color-button-primary);
+  background: var(--color-button-primary);
   color: var(--color-text-inverse);
 }
 
 .primaryCta:hover,
 .employerPromotionCta:hover {
-  border-color: var(--color-primary-600);
-  background: var(--color-primary-600);
+  border-color: var(--color-button-primary-hover);
+  background: var(--color-button-primary-hover);
   color: var(--color-text-inverse);
   box-shadow: none;
 }
@@ -682,7 +682,7 @@
   overflow: hidden;
   padding: 0 1.5rem 4rem;
   border-radius: 0 0 1.75rem 1.75rem;
-  background: #111;
+  background: var(--color-charcoal);
   color: #fff;
   text-align: left;
 }
@@ -706,7 +706,7 @@
 .heroSubtitle {
   max-width: 620px;
   margin: 0;
-  color: #c5cbd3;
+  color: var(--color-neutral-300);
   font-size: 1rem;
 }
 
@@ -730,32 +730,32 @@
 .searchButton {
   min-width: 132px;
   height: 56px;
-  border: 1px solid var(--color-primary-500);
+  border: 1px solid var(--color-button-primary);
   border-radius: 0.75rem;
-  background: var(--color-primary-500);
+  background: var(--color-button-primary);
   color: #fff;
 }
 
 .searchButton:hover:not(:disabled),
 .searchButton:active:not(:disabled) {
-  border-color: var(--color-primary-600);
-  background: var(--color-primary-600);
+  border-color: var(--color-button-primary-hover);
+  background: var(--color-button-primary-hover);
   color: #fff;
   box-shadow: none;
 }
 
 .primaryCta,
 .employerPromotionCta {
-  border-color: var(--color-primary-500);
+  border-color: var(--color-button-primary);
   border-radius: 0.75rem;
-  background: var(--color-primary-500);
+  background: var(--color-button-primary);
   color: #fff;
 }
 
 .primaryCta:hover,
 .employerPromotionCta:hover {
-  border-color: var(--color-primary-600);
-  background: var(--color-primary-600);
+  border-color: var(--color-button-primary-hover);
+  background: var(--color-button-primary-hover);
   color: #fff;
   box-shadow: none;
 }

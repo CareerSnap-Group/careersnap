@@ -572,7 +572,7 @@
 .searchBar { padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 4px 16px rgb(28 51 80 / 5%); }
 .searchInputs { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr) auto; gap: 0.4rem; }
 .searchInput { min-height: 52px; border-color: transparent; background: var(--color-background-tertiary); }
-.searchInput:focus { border-color: var(--color-primary-500); background: #fff; }
+.searchInput:focus { border-color: var(--color-primary-700); background: #fff; }
 .searchInputs > button { min-width: 116px; min-height: 52px; border-radius: 0.75rem; }
 .content { grid-template-columns: 258px minmax(0, 1fr); align-items: start; gap: 1.5rem; }
 .sidebar { padding: 1.25rem; border: 1px solid var(--color-border); border-radius: 1rem; background: #fff; box-shadow: 0 3px 14px rgb(28 51 80 / 4%); }
@@ -583,7 +583,7 @@
 .filterClose :global(svg) { margin: 0; }
 .filterGroup { padding-bottom: 1rem; }
 .checkboxLabel { min-height: 30px; }
-.checkboxLabel input[type='checkbox'] { accent-color: var(--color-primary-500); }
+.checkboxLabel input[type='checkbox'] { accent-color: var(--color-primary-600); }
 .clearButton { min-height: 40px; margin-top: 0; }
 .mobileToolbar { display: none; }
 .results { min-width: 0; padding: 0; border-radius: 0; background: transparent; box-shadow: none; }

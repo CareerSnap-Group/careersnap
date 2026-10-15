@@ -23,7 +23,6 @@ export default async function EmployerLayout({ children }: { children: ReactNode
       role="employer"
       displayName={displayName}
       avatarUrl={company?.logo_url || profile?.profile_photo_url}
-      monochrome
     >
       {children}
     </AuthenticatedAppShell>

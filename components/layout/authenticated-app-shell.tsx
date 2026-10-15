@@ -19,14 +19,12 @@ export function AuthenticatedAppShell({
   displayName,
   greeting,
   avatarUrl,
-  monochrome = false,
   children,
 }: {
   role: AccountRole;
   displayName: string;
   greeting?: string;
   avatarUrl?: string | null;
-  monochrome?: boolean;
   children: ReactNode;
 }) {
   const firstName = displayName.trim().split(/\s+/)[0] || 'there';
@@ -35,7 +33,7 @@ export function AuthenticatedAppShell({
   const initials = displayName.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'C';
 
   return (
-    <div className={styles.shell} data-authenticated-app-shell="true" data-role={role} data-dashboard-theme={monochrome ? 'monochrome' : undefined}>
+    <div className={styles.shell} data-authenticated-app-shell="true" data-role={role}>
       <AuthenticatedDesktopSidebar role={role} displayName={displayName} avatarUrl={avatarUrl} />
       <div className={styles.mainColumn}>
         <header className={styles.topbar}>

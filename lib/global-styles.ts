@@ -21,17 +21,17 @@ export const globalStyles = `
   }
 
   a {
-    color: ${colors.primary[600]};
+    color: ${colors.primary[700]};
     text-decoration: none;
     transition: color 150ms ease-in-out;
   }
 
   a:hover {
-    color: ${colors.primary[700]};
+    color: ${colors.primary[800]};
   }
 
   a:focus {
-    outline: 2px solid ${colors.primary[500]};
+    outline: 2px solid ${colors.primary[700]};
     outline-offset: 2px;
   }
 
@@ -92,7 +92,7 @@ export const globalStyles = `
 
   /* Focus visible for accessibility */
   :focus-visible {
-    outline: 2px solid ${colors.primary[500]};
+    outline: 2px solid ${colors.primary[700]};
     outline-offset: 2px;
   }
 `;
