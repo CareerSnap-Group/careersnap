@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/browser';
 import { isSupabaseConfigured } from '@/lib/supabase/config';
 import { getSafeRedirectPath } from '@/lib/auth/redirect';
 import { getAuthRedirectUrl } from '@/lib/auth/url';
+import { getLoginErrorMessage } from '@/lib/auth/login-error';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -46,14 +47,16 @@ export default function LoginPage() {
     }
 
     setLoading(true);
+    let signedIn = false;
     try {
       const client = createClient();
       const { error: authError } = await client.auth.signInWithPassword({ email, password });
       if (authError) {
-        setError(authError.message);
+        setError(getLoginErrorMessage(authError));
         return;
       }
 
+      signedIn = true;
       const { data: authUser } = await client.auth.getUser();
       const profileQuery = client.from('profiles').select('user_type, role_initialized').eq('id', authUser.user?.id || '').maybeSingle();
       let { data: rawProfile, error: profileError } = await profileQuery;
@@ -76,6 +79,10 @@ export default function LoginPage() {
             : '/account-setup';
       router.push(hasExplicitNext && nextPath !== '/account-setup' ? nextPath : dashboard);
       router.refresh();
+    } catch (signInError) {
+      setError(signedIn
+        ? 'You are signed in, but we could not load your account. Please try again.'
+        : getLoginErrorMessage(signInError));
     } finally {
       setLoading(false);
     }
@@ -89,12 +96,15 @@ export default function LoginPage() {
     }
 
     setLoading(true);
-    const { error: authError } = await createClient().auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${getAuthRedirectUrl('/auth/callback')}?next=${encodeURIComponent(nextPath)}` },
-    });
-    if (authError) {
-      setError(authError.message);
+    try {
+      const { error: authError } = await createClient().auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: `${getAuthRedirectUrl('/auth/callback')}?next=${encodeURIComponent(nextPath)}` },
+      });
+      if (authError) setError(getLoginErrorMessage(authError));
+    } catch (signInError) {
+      setError(getLoginErrorMessage(signInError));
+    } finally {
       setLoading(false);
     }
   };
