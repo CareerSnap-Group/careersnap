@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import styles from './employer-public-header.module.css';
+import { useHeaderScroll } from './use-header-scroll';
 
 const postJobPath = '/login?next=%2Femployers%2Fpost-job';
 const findCvsPath = '/login?next=%2Femployer%2Fcvs';
@@ -12,12 +13,13 @@ const registerPath = '/register?role=employer';
 
 export function EmployerPublicHeader() {
   const [open, setOpen] = useState(false);
+  const scrolled = useHeaderScroll();
   const links = <>
     <Link href={postJobPath} className={styles.navLink}>Post a Job</Link>
     <Link href={findCvsPath} className={styles.navLink}>Find CVs</Link>
   </>;
-  return <header className={styles.header}><div className={styles.container}>
-    <Link href="/employers" className={styles.logo} aria-label="CareerSnap employer services"><Image src="/careersnap-pro-logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
+  return <header className={`${styles.header} ${scrolled && !open ? styles.scrolled : ''}`}><div className={styles.container}>
+    <Link href="/employers" className={styles.logo} aria-label="CareerSnap employer services"><Image src="/careersnap-authenticated-logo.png" alt="CareerSnap" width={217} height={48} className={styles.logoImage} priority /></Link>
     <nav className={styles.nav}>{links}</nav>
     <div className={styles.actions}><Link href="/login" className={styles.signIn}>Sign In</Link><Link href={registerPath}><Button size="sm">Create Account</Button></Link></div>
     <button type="button" className={styles.menuButton} onClick={() => setOpen(!open)} aria-label="Toggle employer menu" aria-expanded={open}>

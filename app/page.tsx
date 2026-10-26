@@ -78,9 +78,9 @@ export default function HomePage() {
 
   return (
     <div className={styles.page}>
+      <Header variant="landing" />
       <main className={styles.homeBody}>
         <section className={styles.hero}>
-          <Header variant="landing" />
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>Find work that moves your career forward</h1>
             <form className={styles.searchForm} onSubmit={(e) => {

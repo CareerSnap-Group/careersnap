@@ -1,14 +1,14 @@
-.header { background: var(--color-header); border-bottom: 1px solid var(--color-header-border); box-shadow: 0 1px 3px rgb(0 0 0 / 8%); position: sticky; top: 0; z-index: 100; }
-.container { max-width: 1280px; min-height: 70px; margin: 0 auto; padding: 0 var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-xl); }
+.header { background: var(--color-background-primary); border-bottom: 1px solid var(--color-border); box-shadow: 0 1px 3px rgb(0 0 0 / 8%); position: sticky; top: 0; z-index: 100; transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.container { width: 100%; max-width: none; min-height: 70px; margin: 0; padding: 0 10px; display: flex; align-items: center; gap: var(--spacing-xl); }
 .logo { display: flex; align-items: center; margin-right: auto; }
 .logoImage { display: block; width: min(181px, 45vw); height: auto; }
 .nav { display: none; align-items: center; gap: var(--spacing-lg); }
 .authenticatedHeader .nav { display: none; }
-.navLink, .mobileNavLink { color: var(--color-header-text); text-decoration: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
-.navLink:hover, .mobileNavLink:hover { color: var(--color-primary-300); }
+.navLink, .mobileNavLink { color: var(--color-text-primary); text-decoration: none; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+.navLink:hover, .navLink:focus-visible, .mobileNavLink:hover, .mobileNavLink:focus-visible { color: var(--color-primary-700); }
 .notificationSlot { display: inline-flex; width: 40px; height: 40px; flex: 0 0 40px; }
-.signOut, .menuButton { color: var(--color-text-inverse); background: transparent; border: 1px solid var(--color-header-control-border); }
+.signOut, .menuButton { color: var(--color-text-primary); background: transparent; border: 1px solid var(--color-text-primary); }
 .menuButton { display: flex; flex-direction: column; gap: 4px; padding: 10px; cursor: pointer; }
-.menuIcon { display: block; width: 22px; height: 2px; background: white; }
-.mobileNav { display: flex; flex-direction: column; gap: var(--spacing-md); padding: var(--spacing-md); background: var(--color-header); }
-@media (min-width: 1024px) { .container { padding-left: 32px; padding-right: 32px; } .nav { display: flex; } .menuButton, .mobileNav { display: none; } }
+.menuIcon { display: block; width: 22px; height: 2px; background: var(--color-text-primary); }
+.mobileNav { display: flex; flex-direction: column; gap: var(--spacing-md); padding: var(--spacing-md) 10px; background: var(--color-background-primary); }
+@media (min-width: 1024px) { .nav { display: flex; } .menuButton, .mobileNav { display: none; } }

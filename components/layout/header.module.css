@@ -1,22 +1,20 @@
 .header {
-  background-color: var(--color-header);
-  border-bottom: 1px solid var(--color-header);
-  box-shadow: none;
+  background-color: var(--color-background-primary);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.landingHeader {
-  box-shadow: none;
+.header.scrolled {
+  background-color: transparent;
+  border-bottom-color: transparent;
+  box-shadow: 0 1px 6px rgb(64 64 65 / 20%);
 }
 
 .authenticatedHeader .desktopNav { display: none; }
-
-.landingHeader .container {
-  max-width: 1200px;
-  height: 64px;
-}
 
 .landingHeader .desktopNav {
   margin-left: var(--spacing-xl);
@@ -34,9 +32,10 @@
 }
 
 .container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  padding: 0 var(--page-gutter);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 10px;
   height: 72px;
   display: flex;
   align-items: center;
@@ -51,7 +50,7 @@
   align-items: center;
   gap: var(--spacing-sm);
   text-decoration: none;
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xl);
   white-space: nowrap;
@@ -61,12 +60,10 @@
   display: block;
   width: min(181px, 45vw);
   height: auto;
-  filter: brightness(0) invert(1);
 }
 
 .mobileLogoImage {
   display: none;
-  filter: brightness(0) invert(1);
 }
 
 .logo:hover {
@@ -90,7 +87,7 @@
 
 .navLink {
   font-size: var(--font-size-sm);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   transition: color var(--transition-fast);
@@ -98,11 +95,11 @@
 }
 
 .navLink:hover {
-  color: var(--color-text-inverse);
+  color: var(--color-primary-700);
 }
 
 .navLink:focus-visible {
-  color: var(--color-text-inverse);
+  color: var(--color-primary-700);
 }
 
 .navLink::after {
@@ -112,7 +109,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background-color: var(--color-text-inverse);
+  background-color: var(--color-primary-500);
   transition: width var(--transition-fast);
 }
 
@@ -139,9 +136,9 @@
   align-items: center;
   justify-content: center;
   background-color: transparent;
-  border: 1px solid var(--color-text-inverse);
+  border: 1px solid var(--color-text-primary);
   border-radius: var(--radius-md);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   padding: 0.375rem 0.75rem;
@@ -150,20 +147,26 @@
 }
 
 .signInLink:hover {
-  background-color: var(--color-text-inverse);
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+
+.signInLink:focus-visible,
+.signInLink:active {
+  border-color: var(--color-primary-700);
   color: var(--color-primary-700);
 }
 
 .employersLink {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 .employersLink:hover {
-  color: var(--color-text-inverse);
+  color: var(--color-primary-700);
 }
 
 .notificationSlot {
@@ -202,7 +205,7 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   text-decoration: none;
   border-radius: var(--radius-md);
   transition: color var(--transition-fast), background-color var(--transition-fast);
@@ -221,7 +224,7 @@
 
 .mobileSignInControl:hover,
 .mobileProfileLink:hover {
-  color: var(--color-text-inverse);
+  color: var(--color-primary-700);
   background-color: transparent;
 }
 
@@ -275,7 +278,7 @@
 .menuIcon {
   width: 24px;
   height: 2px;
-  background-color: var(--color-text-inverse);
+  background-color: var(--color-text-primary);
   transition: all var(--transition-fast);
 }
 
@@ -283,9 +286,9 @@
   display: none;
   flex-direction: column;
   gap: var(--spacing-md);
-  padding: var(--spacing-lg) var(--spacing-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  background-color: var(--color-header);
+  padding: var(--spacing-lg) 10px;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-background-primary);
 }
 
 .mobileSignInControl :global(svg) {
@@ -294,9 +297,8 @@
 
 @media (max-width: 1023px) {
   .header {
-    background-color: var(--color-header);
-    border-bottom-color: var(--color-header);
-    box-shadow: none;
+    background-color: var(--color-background-primary);
+    border-bottom-color: var(--color-border);
   }
 
   .container {
@@ -327,7 +329,7 @@
 
   .mobileMenuButton {
     position: absolute;
-    left: var(--spacing-md);
+    left: 10px;
   }
 
   .notificationSlot {
@@ -338,11 +340,11 @@
   .mobileProfileLink,
   .mobileSignInControl {
     position: absolute;
-    right: var(--spacing-md);
+    right: 10px;
   }
 
   .mobileProfileLink {
-    color: var(--color-text-inverse);
+    color: var(--color-text-primary);
   }
 
   .mobileAvatarInitials {
@@ -359,14 +361,14 @@
   min-height: 44px;
   align-items: center;
   font-size: var(--font-size-base);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   transition: color var(--transition-fast);
 }
 
 .mobileNavLink:hover {
-  color: var(--color-text-inverse);
+  color: var(--color-primary-700);
 }
 
 .mobileActions {
@@ -379,7 +381,7 @@
 
 .mobileSignIn {
   font-size: var(--font-size-base);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   padding: var(--spacing-md) 0;
@@ -388,7 +390,7 @@
 
 .mobileEmployers {
   font-size: var(--font-size-base);
-  color: var(--color-text-inverse);
+  color: var(--color-text-primary);
   text-decoration: none;
   font-weight: var(--font-weight-medium);
   padding: var(--spacing-md) 0;
@@ -396,8 +398,7 @@
 }
 
 .header {
-  border-bottom-color: var(--color-header-border);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
+  border-bottom-color: var(--color-border);
 }
 
 .navLink:hover,
@@ -405,7 +406,7 @@
 .employersLink:hover,
 .notificationSlot:hover,
 .mobileNavLink:hover {
-  color: var(--color-primary-300);
+  color: var(--color-primary-700);
 }
 
 .navLink::after {
@@ -413,29 +414,56 @@
 }
 
 .signInLink {
-  border-color: var(--color-header-control-border);
+  border-color: var(--color-text-primary);
 }
 
 .signInLink:hover {
-  background-color: var(--color-text-inverse);
-  color: var(--color-text-primary);
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
 }
 
 .mobileNav {
-  border-top-color: var(--color-header-border);
+  border-top-color: var(--color-border);
 }
 
 .landingHeader {
-  position: relative;
-  top: auto;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
+  position: sticky;
+  top: 0;
+  background: var(--color-background-primary);
+}
+
+.scrolled .logoImage,
+.scrolled .mobileLogoImage {
+  filter: drop-shadow(0 0 3px #fff) drop-shadow(0 1px 2px rgb(0 0 0 / 55%));
+}
+
+.scrolled .navLink,
+.scrolled .signInLink,
+.scrolled .employersLink,
+.scrolled .mobileNavLink,
+.scrolled .mobileSignInControl {
+  text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 1px 2px rgb(0 0 0 / 75%);
+}
+
+.scrolled .notificationSlot :global(a) {
+  filter: drop-shadow(0 0 3px #fff) drop-shadow(0 1px 2px rgb(0 0 0 / 60%));
+}
+
+.scrolled .mobileMenuButton .menuIcon {
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 1px 2px rgb(0 0 0 / 65%));
+}
+
+.notificationSlot :global(a) {
+  color: var(--color-text-primary);
+}
+
+.notificationSlot :global(a:hover) {
+  color: var(--color-primary-700);
 }
 
 .landingHeader .container {
   height: 72px;
-  max-width: var(--content-max-width);
+  max-width: none;
 }
 
 .landingHeader .desktopNav {
@@ -448,7 +476,7 @@
 
 .mobileNavLink:hover,
 .mobileNavLink:focus-visible {
-  color: var(--color-primary-300);
+  color: var(--color-primary-700);
 }
 
 .mobileMenuButton:focus-visible {

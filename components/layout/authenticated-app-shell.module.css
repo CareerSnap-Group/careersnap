@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: space-between;
   gap: .75rem;
-  padding: calc(.65rem + env(safe-area-inset-top)) 1rem .65rem;
+  padding: calc(.65rem + env(safe-area-inset-top)) 10px .65rem;
   border-bottom: 1px solid var(--color-border);
   background: rgb(255 255 255 / 97%);
   backdrop-filter: blur(12px);
@@ -136,8 +136,6 @@
 @media (min-width: 640px) {
   .topbar {
     min-height: calc(72px + env(safe-area-inset-top));
-    padding-right: 2rem;
-    padding-left: 2rem;
   }
 
   .greeting {
@@ -157,8 +155,6 @@
 
   .topbar {
     min-height: 80px;
-    padding-right: 2rem;
-    padding-left: 2rem;
   }
 
   .iconLink {
@@ -177,8 +173,8 @@
 @media (max-width: 380px) {
   .topbar {
     gap: .4rem;
-    padding-right: .65rem;
-    padding-left: .65rem;
+    padding-right: 10px;
+    padding-left: 10px;
   }
 
   .greeting {

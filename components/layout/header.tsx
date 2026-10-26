@@ -10,6 +10,7 @@ import { Icon } from '@/components/icons';
 import { createClient } from '@/lib/supabase/browser';
 import { isAuthenticatedAppRoute, useAccountRole } from './use-account-role';
 import { NotificationBell } from './notification-bell';
+import { useHeaderScroll } from './use-header-scroll';
 
 function getInitials(name: string) {
   const initials = name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase());
@@ -18,10 +19,11 @@ function getInitials(name: string) {
 
 export function Header({ variant }: { variant?: 'landing' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const scrolled = useHeaderScroll();
   const pathname = usePathname();
   const { signedIn, role, displayName, profilePhotoUrl, userId } = useAccountRole();
   const isAuthenticatedRoute = Boolean(signedIn && role && variant !== 'landing' && isAuthenticatedAppRoute(pathname, role));
-  const mobileLogoSrc = '/careersnap-pro-logo.png';
+  const mobileLogoSrc = '/careersnap-authenticated-logo.png';
 
   const handleSignOut = async () => {
     await createClient().auth.signOut();
@@ -33,7 +35,7 @@ export function Header({ variant }: { variant?: 'landing' }) {
 
   return (
     <>
-    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''}`} data-public-site-header="true">
+    <header className={`${styles.header} ${variant === 'landing' ? styles.landingHeader : ''} ${scrolled && !mobileMenuOpen ? styles.scrolled : ''}`} data-public-site-header="true">
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo} aria-label="CareerSnap home">
